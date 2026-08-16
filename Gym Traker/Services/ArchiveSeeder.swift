@@ -26,8 +26,11 @@ enum ArchiveSeeder {
         let rankAnchor: String?
         let tracking: String
         let glyph: Glyph
-        let images: [String]?
+        let illustrations: [String]?
+        let photos: [String]?
         let instructions: [String]?
+        let tips: [String]?
+        let primer: String?
         let level: String?
 
         struct Glyph: Decodable {
@@ -66,8 +69,11 @@ enum ArchiveSeeder {
                 row.trackingRaw = entry.tracking
                 row.glyphShape = entry.glyph.shape
                 row.glyphHue = entry.glyph.hue
-                row.imageNames = entry.images ?? []
+                row.illustrationNames = entry.illustrations ?? []
+                row.photoNames = entry.photos ?? []
                 row.instructions = entry.instructions ?? []
+                row.tips = entry.tips ?? []
+                row.primer = entry.primer
                 row.level = entry.level
             } else {
                 let exercise = Exercise(
@@ -80,8 +86,11 @@ enum ArchiveSeeder {
                     glyphShape: entry.glyph.shape,
                     glyphHue: entry.glyph.hue,
                     isCustom: false,
-                    imageNames: entry.images ?? [],
+                    illustrationNames: entry.illustrations ?? [],
+                    photoNames: entry.photos ?? [],
                     instructions: entry.instructions ?? [],
+                    tips: entry.tips ?? [],
+                    primer: entry.primer,
                     level: entry.level
                 )
                 context.insert(exercise)

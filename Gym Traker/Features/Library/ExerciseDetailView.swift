@@ -12,6 +12,7 @@ import SwiftData
 struct ExerciseDetailView: View {
     @Environment(\.modelContext) private var context
     let exercise: Exercise
+    @State private var showingPhotos = false
 
     private var units: Units { Store.units(in: context) }
     private var rank: RankResult? { Store.rank(for: exercise, in: context) }
@@ -30,10 +31,11 @@ struct ExerciseDetailView: View {
                     heading.entryTransition(0)
                     demoCard.entryTransition(1)
                     instructionsCard.entryTransition(2)
-                    tierCard.entryTransition(3)
-                    chartCard.entryTransition(4)
-                    schemeCard.entryTransition(5)
-                    registryCard.entryTransition(6)
+                    tipsCard.entryTransition(3)
+                    tierCard.entryTransition(4)
+                    chartCard.entryTransition(5)
+                    schemeCard.entryTransition(6)
+                    registryCard.entryTransition(7)
                 }
                 .padding(Theme.Spacing.screenMargin)
                 .padding(.bottom, 30)
@@ -42,6 +44,9 @@ struct ExerciseDetailView: View {
         .auroraVariant(.library)
         .navigationTitle(exercise.name)
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showingPhotos) {
+            NavigationStack { ExercisePhotoGallery(exercise: exercise) }
+        }
     }
 
     // MARK: - Heading
@@ -68,9 +73,48 @@ struct ExerciseDetailView: View {
 
     @ViewBuilder
     private var demoCard: some View {
-        if exercise.hasPhotos {
+        if exercise.hasIllustrations {
             GlassSection(title: "How it looks") {
-                ExerciseDemo(exercise: exercise)
+                VStack(spacing: 12) {
+                    ExerciseDemo(exercise: exercise)
+
+                    if exercise.hasPhotos {
+                        Button {
+                            showingPhotos = true
+                        } label: {
+                            HStack(spacing: 6) {
+                                Image(systemName: "photo.on.rectangle")
+                                Text("Reference photos")
+                            }
+                            .font(.captionM)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                        }
+                        .buttonStyle(.glass)
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var tipsCard: some View {
+        if !exercise.tips.isEmpty {
+            GlassSection(title: "Watch out for") {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(Array(exercise.tips.enumerated()), id: \.offset) { _, tip in
+                        HStack(alignment: .top, spacing: 8) {
+                            Image(systemName: "exclamationmark.circle.fill")
+                                .font(.system(size: 12))
+                                .foregroundStyle(Theme.Palette.decrease)
+                                .padding(.top, 2)
+                            Text(tip)
+                                .font(.bodyS)
+                                .foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                }
             }
         }
     }

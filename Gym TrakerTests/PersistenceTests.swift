@@ -154,7 +154,7 @@ struct PersistenceTests {
         // Pinned to the bundle rather than a literal, so growing the archive
         // does not break the test that guards against double-seeding.
         let bundled = try ArchiveSeeder.bundledCount()
-        #expect(bundled > 800, "The archive shrank unexpectedly: \(bundled)")
+        #expect(bundled > 250, "The archive shrank unexpectedly: \(bundled)")
 
         let firstPass = try ArchiveSeeder.seedIfNeeded(context, force: true)
         #expect(firstPass == bundled)
@@ -165,19 +165,59 @@ struct PersistenceTests {
         #expect(try context.fetch(FetchDescriptor<Exercise>()).count == bundled)
     }
 
-    @Test func everyArchiveExerciseCarriesPhotos() throws {
+    /// Every archive exercise must carry line art — that is the whole point of
+    /// swapping to an illustrated set.
+    @Test func everyArchiveExerciseCarriesIllustrations() throws {
         let container = try makeContainer()
         let context = ModelContext(container)
         try ArchiveSeeder.seedIfNeeded(context, force: true)
 
         let all = try context.fetch(FetchDescriptor<Exercise>())
-        let withoutPhotos = all.filter { !$0.hasPhotos }
-        #expect(withoutPhotos.isEmpty, "\(withoutPhotos.count) archive exercises have no image")
+        let bare = all.filter { !$0.hasIllustrations }
+        #expect(bare.isEmpty, "\(bare.count) archive exercises have no illustration")
 
         // And the files those names point at are actually in the bundle.
         let sample = try #require(all.first { $0.id == "barbell-squat" })
-        for name in sample.imageNames {
-            #expect(ExercisePhoto.load(name) != nil, "Missing bundled image \(name)")
+        #expect(sample.illustrationNames.count == 2, "Expected a two-phase demonstration")
+        for name in sample.illustrationNames {
+            #expect(ExerciseArtwork.illustration(name) != nil, "Missing bundled artwork \(name)")
+        }
+    }
+
+    /// Photographs are optional, but any name referenced must resolve.
+    @Test func referencedPhotosExistInTheBundle() throws {
+        let container = try makeContainer()
+        let context = ModelContext(container)
+        try ArchiveSeeder.seedIfNeeded(context, force: true)
+
+        let withPhotos = try context.fetch(FetchDescriptor<Exercise>()).filter(\.hasPhotos)
+        #expect(!withPhotos.isEmpty, "No exercise offers a reference gallery")
+
+        for exercise in withPhotos.prefix(20) {
+            for name in exercise.photoNames {
+                #expect(ExerciseArtwork.photo(name) != nil, "Missing bundled photo \(name)")
+            }
+        }
+    }
+
+    /// Every id the presets and the ranking anchors point at must exist.
+    @Test func presetAndAnchorIDsResolve() throws {
+        let container = try makeContainer()
+        let context = ModelContext(container)
+        try ArchiveSeeder.seedIfNeeded(context, force: true)
+
+        for preset in PlanPreset.all {
+            for day in preset.days {
+                for id in day.exerciseIDs {
+                    #expect(Store.exercise(id: id, in: context) != nil,
+                            "\(preset.name) references missing exercise \(id)")
+                }
+            }
+        }
+
+        for anchor in [RankAnchor.bench, .squat, .deadlift, .ohp, .row] {
+            #expect(Store.anchorExercise(anchor, in: context) != nil,
+                    "No archive exercise represents \(anchor.displayName)")
         }
     }
 

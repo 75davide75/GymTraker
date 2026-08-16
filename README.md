@@ -25,11 +25,11 @@ A plan is a set of lettered day templates — A, B, C and onward — plus a week
 
 Onboarding offers eight splits to start from — full body, upper/lower, push/pull/legs at three and six days, PPL+upper/lower, the Arnold split, a body-part split and a 5×5 strength template — or an empty plan.
 
-Each template holds a numbered, reorderable exercise list. Exercises come from a bundled archive of **873 exercises**, each with two demonstration photographs (start and end position) and step-by-step cues. Anything missing can be saved to your own archive and is then searchable, filterable and pickable like the rest; user-created exercises fall back to a generated diagram keyed to their equipment.
+Each template holds a numbered, reorderable exercise list. Exercises come from a bundled archive of **270 exercises**, every one of them carrying a two-phase line-art illustration — contracted and stretched — plus step-by-step cues and form warnings. Anything missing can be saved to your own archive and is then searchable, filterable and pickable like the rest; user-created exercises fall back to a generated diagram keyed to their equipment.
+
+The illustrations are rasterised to alpha-only PNGs and tinted at runtime, so they read as part of the interface in both light and dark rather than as pasted-in pictures. Reference photographs sit one tap deeper, in a gallery on the exercise detail screen, for the 183 exercises where a match exists.
 
 The plan also exports to a printable A4 PDF.
-
-The archive comes from [free-exercise-db](https://github.com/yuhonas/free-exercise-db), released under the Unlicense into the public domain. Images are resized to 320 px HEIC, about 16 MB in total.
 
 <p align="center">
   <img src="docs/screenshots/12-plan.png" width="30%" alt="Plan editor">
@@ -106,6 +106,12 @@ docs/                implementation plan and screenshots
 ```
 
 `design/SPEC.md` is the product spec, `design/DATA-MODEL.md` the persistence rules, `design/RANKING.md` the tier maths with its sources, and `design/Gym Tracker.dc.html` an interactive prototype of all nine screens.
+
+## Credits
+
+- Exercise illustrations © [Everkinetic](https://github.com/everkinetic/data), licensed [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). The attribution also appears in the app under You › Settings › About, as the licence requires.
+- Reference photographs from [free-exercise-db](https://github.com/yuhonas/free-exercise-db), released into the public domain under the Unlicense.
+- Strength standards and age coefficients as documented in `design/RANKING.md`.
 
 ## Scope
 

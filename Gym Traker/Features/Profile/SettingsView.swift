@@ -295,11 +295,27 @@ struct SettingsView: View {
 
     private var aboutSection: some View {
         GlassSection(title: "About") {
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Gym Tracker").font(.bodyM)
-                Text("Tiers come from bodyweight-relative strength standards with an age coefficient. They are guidelines, not measurements.")
-                    .font(.captionM)
-                    .foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Gym Tracker").font(.bodyM)
+                    Text("Tiers come from bodyweight-relative strength standards with an age coefficient. They are guidelines, not measurements.")
+                        .font(.captionM)
+                        .foregroundStyle(.secondary)
+                }
+
+                Divider().opacity(0.4)
+
+                // CC BY-SA requires the credit to travel with the work, so it
+                // lives in the app rather than only in the repository.
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Artwork").overlineStyle()
+                    Text("Exercise illustrations by Everkinetic, licensed CC BY-SA 4.0.")
+                        .font(.captionM)
+                        .foregroundStyle(.secondary)
+                    Text("Reference photographs from free-exercise-db, public domain.")
+                        .font(.captionM)
+                        .foregroundStyle(.secondary)
+                }
             }
         }
     }

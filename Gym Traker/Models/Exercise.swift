@@ -24,11 +24,15 @@ final class Exercise {
     var isCustom: Bool = false
     var notes: String?
     var createdAt: Date = Date.now
-    /// Bundle image names, start position first. Empty for user-created
-    /// exercises, which fall back to the generated glyph.
-    var imageNames: [String] = []
+    /// Line-art illustrations, contracted phase first. These are the images
+    /// the app shows: transparent PNGs it tints to match the appearance.
+    var illustrationNames: [String] = []
+    /// Optional photographs, shown only in the gallery on the detail screen.
+    var photoNames: [String] = []
     /// Step-by-step form cues from the archive.
     var instructions: [String] = []
+    var tips: [String] = []
+    var primer: String?
     var level: String?
 
     // Cached ranking output, recomputed on session save and on profile edit.
@@ -47,8 +51,11 @@ final class Exercise {
         glyphHue: Int? = nil,
         isCustom: Bool = false,
         notes: String? = nil,
-        imageNames: [String] = [],
+        illustrationNames: [String] = [],
+        photoNames: [String] = [],
         instructions: [String] = [],
+        tips: [String] = [],
+        primer: String? = nil,
         level: String? = nil
     ) {
         self.id = id
@@ -62,13 +69,18 @@ final class Exercise {
         self.isCustom = isCustom
         self.notes = notes
         self.createdAt = .now
-        self.imageNames = imageNames
+        self.illustrationNames = illustrationNames
+        self.photoNames = photoNames
         self.instructions = instructions
+        self.tips = tips
+        self.primer = primer
         self.level = level
     }
 
-    /// True when the archive shipped photographs for this exercise.
-    var hasPhotos: Bool { !imageNames.isEmpty }
+    /// True when the archive shipped line art for this exercise.
+    var hasIllustrations: Bool { !illustrationNames.isEmpty }
+    /// True when reference photographs are available for the gallery.
+    var hasPhotos: Bool { !photoNames.isEmpty }
 
     var equipment: Equipment {
         get { Equipment(rawValue: equipmentRaw) ?? .barbell }
