@@ -47,6 +47,8 @@ struct RootTabView: View {
 
     @State private var selection: AppSection = .home
 
+    private static let order: [AppSection] = [.home, .plan, .library, .registry, .you]
+
     var body: some View {
         TabView(selection: $selection) {
             Tab("Home", systemImage: "house.fill", value: AppSection.home) {
@@ -72,6 +74,7 @@ struct RootTabView: View {
             }
         }
         .tabBarMinimizeBehavior(.onScrollDown)
+        .swipeBetweenTabs(selection: $selection, order: Self.order)
     }
 }
 

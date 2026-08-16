@@ -26,6 +26,9 @@ struct RankingSnapshot: Equatable {
     /// The profile level, or nil while fewer than two big lifts have data.
     var global: RankResult?
     var sessionsLast4Weeks: Int = 0
+    /// True when the level came from the whole catalogue rather than the big
+    /// four, so the UI can say which it is.
+    var isGlobalFromAllExercises: Bool = false
     /// The set that produced each exercise's rank, for the "70 kg × 8" line.
     var bestSets: [String: PerformedSet] = [:]
 
@@ -65,28 +68,41 @@ extension Store {
         var snapshot = RankingSnapshot(sessionsLast4Weeks: recentCount)
         snapshot.bestSets = latestSet
 
+        // Every exercise gets a tier now, scaled off its anchor lift.
         for exercise in allExercises(in: context) {
-            guard let anchor = exercise.rankAnchor,
-                  let best = latestSet[exercise.id],
-                  let result = RankingEngine.rank(
-                      anchor: anchor,
-                      weightKg: best.weightKg,
-                      reps: best.reps,
-                      lifter: lifter,
-                      exerciseID: exercise.id
-                  )
-            else { continue }
+            guard let best = latestSet[exercise.id] else { continue }
+            let assignment = ExerciseStandards.assignment(for: exercise)
+            guard let result = RankingEngine.rank(
+                anchor: assignment.anchor,
+                weightKg: best.weightKg,
+                reps: best.reps,
+                lifter: lifter,
+                exerciseID: exercise.id,
+                coefficient: assignment.coefficient
+            ) else { continue }
 
             snapshot.perExercise[exercise.id] = result
-            if let existing = snapshot.perAnchor[anchor], existing.score >= result.score { continue }
-            snapshot.perAnchor[anchor] = result
-            snapshot.anchorExerciseIDs[anchor] = exercise.id
+
+            // Only the lift itself defines the anchor's own standing, so a
+            // curl never stands in for a bench press.
+            guard assignment.coefficient >= 0.99, exercise.rankAnchor == assignment.anchor else { continue }
+            if let existing = snapshot.perAnchor[assignment.anchor], existing.score >= result.score { continue }
+            snapshot.perAnchor[assignment.anchor] = result
+            snapshot.anchorExerciseIDs[assignment.anchor] = exercise.id
         }
 
         snapshot.global = RankingEngine.globalLevel(
             anchorScores: snapshot.perAnchor.mapValues(\.score),
             sessionsLast4Weeks: recentCount
         )
+        // Falls back to the whole trained catalogue when the big four are thin,
+        // so someone who only does machines still gets a level.
+        if snapshot.global == nil, snapshot.perExercise.count >= 3 {
+            let mean = snapshot.perExercise.values.map(\.score).reduce(0, +) / Double(snapshot.perExercise.count)
+            let consistency = min(5, Double(recentCount) / 16 * 5)
+            snapshot.global = RankingEngine.result(forScore: min(100, mean + consistency))
+            snapshot.isGlobalFromAllExercises = true
+        }
         return snapshot
     }
 }

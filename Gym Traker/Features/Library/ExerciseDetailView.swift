@@ -9,13 +9,20 @@
 import SwiftUI
 import SwiftData
 
+/// Wraps the page index so it can drive an item-based sheet.
+private struct ViewerStart: Identifiable {
+    let index: Int
+    var id: Int { index }
+}
+
 struct ExerciseDetailView: View {
     @Environment(\.modelContext) private var context
     let exercise: Exercise
-    @State private var showingPhotos = false
+    @State private var viewerIndex: Int?
+    @State private var ranking = RankingSnapshot.empty
 
     private var units: Units { Store.units(in: context) }
-    private var rank: RankResult? { Store.rank(for: exercise, in: context) }
+    private var rank: RankResult? { ranking.rank(for: exercise.id) }
     private var history: [SessionEntry] { Store.history(for: exercise.id, in: context, limit: 8) }
     private var records: [ChangeRecord] { Registry.forExercise(exercise.id, in: context, limit: 20) }
     private var planItem: PlanItem? {
@@ -42,10 +49,16 @@ struct ExerciseDetailView: View {
             }
         }
         .auroraVariant(.library)
+        .task { ranking = Store.rankingSnapshot(in: context) }
         .navigationTitle(exercise.name)
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showingPhotos) {
-            NavigationStack { ExercisePhotoGallery(exercise: exercise) }
+        .sheet(item: Binding(
+            get: { viewerIndex.map { ViewerStart(index: $0) } },
+            set: { viewerIndex = $0?.index }
+        )) { start in
+            NavigationStack {
+                ExerciseImageViewer(exercise: exercise, startIndex: start.index)
+            }
         }
     }
 
@@ -76,11 +89,13 @@ struct ExerciseDetailView: View {
         if exercise.hasIllustrations {
             GlassSection(title: "How it looks") {
                 VStack(spacing: 12) {
-                    ExerciseDemo(exercise: exercise)
+                    ExerciseDemo(exercise: exercise) { index in
+                        viewerIndex = index
+                    }
 
                     if exercise.hasPhotos {
                         Button {
-                            showingPhotos = true
+                            viewerIndex = exercise.illustrationNames.count
                         } label: {
                             HStack(spacing: 6) {
                                 Image(systemName: "photo.on.rectangle")
@@ -176,12 +191,6 @@ struct ExerciseDetailView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
-            }
-        } else if exercise.rankAnchor == nil {
-            GlassSection(title: "Strength tier") {
-                Text("Accessory work is tracked and charted but never tiered, which keeps the ladder meaningful.")
-                    .font(.bodyS)
-                    .foregroundStyle(.secondary)
             }
         } else {
             GlassSection(title: "Strength tier") {

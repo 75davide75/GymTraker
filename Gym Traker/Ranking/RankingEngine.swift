@@ -68,6 +68,9 @@ enum RankingEngine {
         reps: Int,
         lifter: LifterProfile,
         exerciseID: String? = nil,
+        /// How much of the anchor lift this exercise is expected to move.
+        /// 1.0 is the anchor itself; 0.4 is a strict curl against a bench.
+        coefficient: Double = 1.0,
         tables: RankingTables = .shared
     ) -> RankResult? {
         guard let anchor else { return nil }
@@ -76,7 +79,9 @@ enum RankingEngine {
             return rankBodyweight(loadKg: weightKg, reps: reps, lifter: lifter, exerciseID: exerciseID, tables: tables)
         }
 
-        guard let thresholds = tables.thresholds(anchor: anchor, lifter: lifter) else { return nil }
+        guard let base = tables.thresholds(anchor: anchor, lifter: lifter) else { return nil }
+        let factor = max(0.05, coefficient)
+        let thresholds = factor == 1 ? base : base.map { $0 * factor }
         let value = e1RM(weightKg: weightKg, reps: reps)
         let raw = score(value: value, thresholds: thresholds)
         return result(

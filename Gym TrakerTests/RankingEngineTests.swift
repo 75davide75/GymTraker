@@ -139,3 +139,64 @@ struct RankingEngineTests {
         #expect(third.division == 3)
     }
 }
+
+/// Every exercise carries a tier now, scaled off its anchor lift.
+struct ExerciseStandardsTests {
+
+    private let lifter = LifterProfile(sex: .male, age: 27, bodyweightKg: 78)
+
+    @Test func namedVariantsResolveToTheirAnchor() {
+        let incline = ExerciseStandards.assignment(
+            name: "Barbell Incline Bench Press", muscle: .chest, equipment: .barbell, declaredAnchor: .bench)
+        #expect(incline.anchor == .bench)
+        #expect(abs(incline.coefficient - 0.78) < 0.001)
+
+        let curl = ExerciseStandards.assignment(
+            name: "Biceps Curls With Barbell", muscle: .arms, equipment: .barbell, declaredAnchor: nil)
+        #expect(curl.anchor == .bench)
+        #expect(abs(curl.coefficient - 0.40) < 0.001)
+
+        let legPress = ExerciseStandards.assignment(
+            name: "Leg Press", muscle: .legs, equipment: .machine, declaredAnchor: .squat)
+        #expect(legPress.anchor == .squat)
+        #expect(legPress.coefficient > 1, "A leg press should ask for more than a squat")
+    }
+
+    @Test func unnamedWorkFallsBackToItsMuscleGroup() {
+        let assignment = ExerciseStandards.assignment(
+            name: "Some Machine Nobody Named", muscle: .shoulders, equipment: .machine, declaredAnchor: nil)
+        #expect(assignment.anchor == .ohp)
+        #expect(assignment.coefficient < 1)
+    }
+
+    @Test func bodyweightWorkKeepsRepScoring() {
+        let assignment = ExerciseStandards.assignment(
+            name: "Pull Ups", muscle: .back, equipment: .bodyweight, declaredAnchor: .bw)
+        #expect(assignment.anchor == .bw)
+    }
+
+    /// A curl at 40 % of a bench threshold should land in the same tier as a
+    /// bench at the full threshold — that is what makes accessory tiers mean
+    /// anything.
+    @Test func aScaledLiftTiersLikeItsAnchor() throws {
+        let benchIntermediate = 1.15 * 78            // 89.7 kg e1RM
+        let curlIntermediate = benchIntermediate * 0.40
+
+        let bench = try #require(RankingEngine.rank(
+            anchor: .bench, weightKg: benchIntermediate, reps: 0, lifter: lifter))
+        let curl = try #require(RankingEngine.rank(
+            anchor: .bench, weightKg: curlIntermediate, reps: 0, lifter: lifter, coefficient: 0.40))
+
+        #expect(bench.tier == .intermediate)
+        #expect(curl.tier == .intermediate)
+        #expect(abs(bench.score - curl.score) < 0.001)
+    }
+
+    @Test func aHeavierCoefficientDemandsMoreWeight() throws {
+        let light = try #require(RankingEngine.rank(
+            anchor: .squat, weightKg: 100, reps: 5, lifter: lifter, coefficient: 0.5))
+        let heavy = try #require(RankingEngine.rank(
+            anchor: .squat, weightKg: 100, reps: 5, lifter: lifter, coefficient: 1.8))
+        #expect(light.score > heavy.score, "The same load should score lower on a leg press than on a squat")
+    }
+}

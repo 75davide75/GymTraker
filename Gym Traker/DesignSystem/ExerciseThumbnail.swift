@@ -51,41 +51,15 @@ struct ExerciseThumbnail: View {
 
     private var tint: Color { Theme.Palette.glyph(hue: exercise.glyphHue, scheme: scheme) }
 
-    private var artwork: UIImage? {
-        exercise.illustrationNames.first.flatMap(ExerciseArtwork.illustration)
-    }
-
     var body: some View {
-        Group {
-            if let artwork {
-                ZStack {
-                    RoundedRectangle(cornerRadius: size * 0.3, style: .continuous)
-                        .fill(
-                            LinearGradient(
-                                colors: [tint.opacity(scheme == .dark ? 0.26 : 0.20),
-                                         tint.opacity(scheme == .dark ? 0.11 : 0.09)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .overlay {
-                            RoundedRectangle(cornerRadius: size * 0.3, style: .continuous)
-                                .strokeBorder(tint.opacity(0.32), lineWidth: 1)
-                        }
-
-                    Image(uiImage: artwork)
-                        .renderingMode(.template)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .padding(size * 0.08)
-                        .foregroundStyle(scheme == .dark ? Color.white.opacity(0.92) : Color.black.opacity(0.78))
-                }
-                .frame(width: size, height: size)
-            } else {
-                ExerciseGlyph(exercise: exercise, size: size)
-            }
-        }
-        .accessibilityHidden(true)
+        // A drawing of the movement is too fine to read at row size, so the
+        // list wears a muscle map instead and the drawings live on the detail
+        // screen at a size where they mean something.
+        MuscleMapIcon(
+            muscle: exercise.muscleGroup,
+            equipment: exercise.equipment,
+            size: size
+        )
     }
 }
 
@@ -97,6 +71,7 @@ struct ExerciseDemo: View {
     @Environment(\.colorScheme) private var scheme
 
     let exercise: Exercise
+    var onOpenViewer: ((Int) -> Void)?
     @State private var showingSecond = false
 
     private var names: [String] { exercise.illustrationNames }
@@ -132,16 +107,23 @@ struct ExerciseDemo: View {
                     }
                 }
                 .frame(maxWidth: .infinity)
-                .frame(height: 230)
+                .frame(height: 300)
                 .overlay {
                     RoundedRectangle(cornerRadius: Theme.Radius.card, style: .continuous)
                         .strokeBorder(tint.opacity(0.3), lineWidth: 1)
                 }
                 .contentShape(.rect(cornerRadius: Theme.Radius.card))
+                .overlay(alignment: .topTrailing) {
+                    Image(systemName: "arrow.up.left.and.arrow.down.right")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundStyle(.secondary)
+                        .padding(8)
+                        .background(Circle().fill(.ultraThinMaterial))
+                        .padding(10)
+                }
                 .onTapGesture {
-                    guard names.count > 1 else { return }
                     Haptics.light()
-                    withAnimation(Theme.Motion.spring) { showingSecond.toggle() }
+                    onOpenViewer?(showingSecond ? 1 : 0)
                 }
 
                 if names.count > 1 {
