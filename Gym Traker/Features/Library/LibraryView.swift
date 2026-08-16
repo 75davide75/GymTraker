@@ -121,7 +121,7 @@ struct LibraryView: View {
         if filtered.isEmpty {
             emptyState
         } else {
-            ForEach(Array(filtered.enumerated()), id: \.element.id) { index, exercise in
+            ForEach(filtered, id: \.id) { exercise in
                 Button {
                     if mode == .picker {
                         onSelect?(exercise)
@@ -133,7 +133,6 @@ struct LibraryView: View {
                     ExerciseRow(exercise: exercise)
                 }
                 .buttonStyle(.pressable)
-                .entryTransition(index)
             }
         }
     }

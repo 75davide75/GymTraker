@@ -2,14 +2,12 @@
 //  AuroraBackground.swift
 //  Gym Traker
 //
-//  Two radial gradient blooms drifting behind everything, so the glass has
-//  something worth refracting.
+//  Two radial gradient blooms behind everything, so the glass has something
+//  worth refracting.
 //
-//  There is one aurora for the whole app, living behind the tab bar. Each
-//  screen declares a variant with `.auroraVariant(_:)`; the root reads it
-//  through a preference and eases between variants, so moving between screens
-//  shifts the colour and the position of the blooms rather than cutting to a
-//  new background.
+//  Each screen declares its own variant with `.auroraVariant(_:)` and owns the
+//  background outright. Screens differ in bloom position, hue and intensity,
+//  so moving between them carries the gradients along with the transition.
 //
 
 import SwiftUI
@@ -37,50 +35,23 @@ struct AuroraVariant: Equatable {
                                        secondary: UnitPoint(x: 0.50, y: 1.02), intensity: 1.15)
 }
 
-// MARK: - Shared state
-
-/// The variant currently in force, shared by every screen.
-///
-/// A single aurora behind the tab bar would be tidier, but the tab container
-/// paints an opaque background over anything behind it. So each screen draws
-/// its own aurora and they all read this one value: arriving on a screen eases
-/// the blooms from wherever they were to where that screen wants them.
-@Observable
-final class AuroraState {
-    var variant: AuroraVariant = .home
-
-    func move(to variant: AuroraVariant) {
-        guard self.variant != variant else { return }
-        withAnimation(.smooth(duration: 0.85)) { self.variant = variant }
-    }
-}
-
-private struct AuroraStateKey: EnvironmentKey {
-    static let defaultValue = AuroraState()
-}
-
-extension EnvironmentValues {
-    var auroraState: AuroraState {
-        get { self[AuroraStateKey.self] }
-        set { self[AuroraStateKey.self] = newValue }
-    }
-}
+// MARK: - Attaching a variant
 
 extension View {
-    /// Declares which aurora this screen wants, and eases into it on arrival.
+    /// Puts this screen's aurora behind it.
+    ///
+    /// This used to route every screen's variant through one shared
+    /// `@Observable` object so the blooms could morph between screens. That
+    /// object was observed by every screen at once: arriving somewhere new
+    /// invalidated all of them, each re-rendering a full-screen blurred
+    /// background mid-transition, and a pushed screen would present its title
+    /// and never its content — the app looked frozen.
+    ///
+    /// Each screen now owns a plain value. Nothing is shared, nothing else
+    /// redraws, and the gradients still travel between screens because the
+    /// screens themselves slide.
     func auroraVariant(_ variant: AuroraVariant) -> some View {
-        modifier(AuroraVariantModifier(variant: variant))
-    }
-}
-
-private struct AuroraVariantModifier: ViewModifier {
-    @Environment(\.auroraState) private var state
-    let variant: AuroraVariant
-
-    func body(content: Content) -> some View {
-        content
-            .background(AuroraBackground(variant: state.variant).ignoresSafeArea())
-            .onAppear { state.move(to: variant) }
+        background(AuroraBackground(variant: variant).ignoresSafeArea())
     }
 }
 
@@ -88,8 +59,6 @@ private struct AuroraVariantModifier: ViewModifier {
 
 struct AuroraBackground: View {
     @Environment(\.colorScheme) private var scheme
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var drift = false
 
     var variant: AuroraVariant = .home
 
@@ -101,38 +70,40 @@ struct AuroraBackground: View {
             GeometryReader { geometry in
                 let size = geometry.size
                 let bloom = max(size.width, size.height) * 0.95
-                let sway = size.width * 0.09
 
                 ZStack {
                     bloomCircle(Theme.Palette.violetDeep)
                         .frame(width: bloom, height: bloom)
                         .position(
-                            x: variant.primary.x * size.width + (drift ? sway : -sway),
-                            y: variant.primary.y * size.height + (drift ? -sway * 0.7 : sway * 0.7)
+                            x: variant.primary.x * size.width,
+                            y: variant.primary.y * size.height
                         )
 
                     bloomCircle(Theme.Palette.cyan)
                         .frame(width: bloom * 0.85, height: bloom * 0.85)
                         .position(
-                            x: variant.secondary.x * size.width + (drift ? -sway : sway),
-                            y: variant.secondary.y * size.height + (drift ? sway * 0.7 : -sway * 0.7)
+                            x: variant.secondary.x * size.width,
+                            y: variant.secondary.y * size.height
                         )
                 }
                 .blur(radius: 34)
                 .opacity((scheme == .dark ? 0.85 : 0.5) * variant.intensity)
                 .hueRotation(.degrees(variant.hueShift))
+                // Rasterise the blurred blooms once instead of re-blurring
+                // them on every frame the glass above asks for a redraw.
+                .drawingGroup()
             }
             .ignoresSafeArea()
             .allowsHitTesting(false)
         }
-        // Moving between screens eases the blooms across rather than cutting.
+        // The blooms move only when the screen changes.
+        //
+        // They used to drift on a permanent `repeatForever` loop. With one
+        // aurora per screen, pushing a screen left two of them animating at
+        // once, and the display link never stopped re-rendering the glass on
+        // top — the app never went idle and felt frozen. Motion now happens
+        // when it means something: arriving somewhere new.
         .animation(.smooth(duration: 0.85), value: variant)
-        .onAppear {
-            guard !reduceMotion else { return }
-            withAnimation(.easeInOut(duration: 17).repeatForever(autoreverses: true)) {
-                drift = true
-            }
-        }
     }
 
     private func bloomCircle(_ color: Color) -> some View {

@@ -152,6 +152,10 @@ struct GlassProgressBar: View {
 // MARK: - Entry motion
 
 /// Screen entry: 14 pt upward offset plus opacity, staggered for list children.
+///
+/// Only for the fixed set of cards that make up a screen. Rows in a lazy list
+/// must never use it: they appear as you scroll, and a 0.4 s fade on each one
+/// cannot keep up with a flick.
 struct EntryTransition: ViewModifier {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let index: Int

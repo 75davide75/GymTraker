@@ -19,8 +19,23 @@ struct HomeView: View {
 
     var onOpenPlan: () -> Void = {}
 
-    @State private var startingDay: PlanDay?
-    @State private var showingRanks = false
+    /// One destination type for the whole screen.
+    ///
+    /// Home previously carried two `navigationDestination` modifiers — one
+    /// `item:` for the session and one `isPresented:` for the ladder. SwiftUI
+    /// pushed a screen it could not resolve: the Ranks title appeared with no
+    /// content and no back button, and the app was stuck there. A single
+    /// destination keyed off one enum leaves nothing to disambiguate.
+    private enum Route: Hashable, Identifiable {
+        case session(PlanDay)
+        case ranks
+        case registry
+
+        var id: Self { self }
+    }
+
+    @State private var route: Route?
+    @State private var ranking = RankingSnapshot.empty
 
     private var plan: Plan? { plans.first(where: \.isActive) ?? plans.first }
     private var profile: UserProfile? { profiles.first }
@@ -52,13 +67,15 @@ struct HomeView: View {
             }
         }
         .auroraVariant(.home)
+        .task { ranking = Store.rankingSnapshot(in: context) }
         .navigationTitle("Home")
         .navigationBarTitleDisplayMode(.large)
-        .navigationDestination(item: $startingDay) { day in
-            SessionView(day: day)
-        }
-        .navigationDestination(isPresented: $showingRanks) {
-            RankLadderView()
+        .navigationDestination(item: $route) { destination in
+            switch destination {
+            case .session(let day): SessionView(day: day)
+            case .ranks: RankLadderView()
+            case .registry: RegistryView()
+            }
         }
     }
 
@@ -143,7 +160,7 @@ struct HomeView: View {
                     }
 
                     Button {
-                        startingDay = day
+                        route = .session(day)
                     } label: {
                         Text("Start workout")
                             .font(.bodyM)
@@ -182,7 +199,7 @@ struct HomeView: View {
 
     private var rankTile: some View {
         Button {
-            showingRanks = true
+            route = .ranks
         } label: {
             rankTileBody
         }
@@ -193,7 +210,7 @@ struct HomeView: View {
         GlassCard(padding: 14, stretchVertically: true) {
             VStack(alignment: .leading, spacing: 8) {
                 Text("Rank").overlineStyle()
-                if let global = Store.globalLevel(in: context) {
+                if let global = ranking.global {
                     Text(global.label)
                         .font(.titleS)
                         .foregroundStyle(global.tier.tint)
@@ -217,6 +234,15 @@ struct HomeView: View {
     }
 
     private var lastChangeTile: some View {
+        Button {
+            route = .registry
+        } label: {
+            lastChangeTileBody
+        }
+        .buttonStyle(.pressable)
+    }
+
+    private var lastChangeTileBody: some View {
         GlassCard(padding: 14, stretchVertically: true) {
             VStack(alignment: .leading, spacing: 8) {
                 Text("Last change").overlineStyle()

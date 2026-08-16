@@ -14,11 +14,12 @@ struct RankLadderView: View {
     @Query private var profiles: [UserProfile]
 
     @State private var selectedLift: RankAnchor = .bench
+    @State private var ranking = RankingSnapshot.empty
 
     private var profile: UserProfile? { profiles.first }
     private var units: Units { profile?.units ?? .kg }
-    private var globalLevel: RankResult? { Store.globalLevel(in: context) }
-    private var anchorScores: [RankAnchor: RankResult] { Store.anchorScores(in: context) }
+    private var globalLevel: RankResult? { ranking.global }
+    private var anchorScores: [RankAnchor: RankResult] { ranking.perAnchor }
 
     private let lifts: [RankAnchor] = [.bench, .squat, .deadlift, .ohp, .row]
 
@@ -39,6 +40,7 @@ struct RankLadderView: View {
             .padding(.bottom, 30)
         }
         .auroraVariant(.profile)
+        .task { ranking = Store.rankingSnapshot(in: context) }
         .navigationTitle("Ranks")
         .navigationBarTitleDisplayMode(.large)
     }

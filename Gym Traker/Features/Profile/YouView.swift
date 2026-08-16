@@ -15,13 +15,14 @@ struct YouView: View {
     @Query private var sessions: [WorkoutSession]
 
     @State private var showingSettings = false
+    @State private var ranking = RankingSnapshot.empty
 
     private var profile: UserProfile? { profiles.first }
     private var units: Units { profile?.units ?? .kg }
 
-    private var globalLevel: RankResult? { Store.globalLevel(in: context) }
-    private var anchorScores: [RankAnchor: RankResult] { Store.anchorScores(in: context) }
-    private var sessionsLast4Weeks: Int { Store.sessionsLast4Weeks(in: context).count }
+    private var globalLevel: RankResult? { ranking.global }
+    private var anchorScores: [RankAnchor: RankResult] { ranking.perAnchor }
+    private var sessionsLast4Weeks: Int { ranking.sessionsLast4Weeks }
 
     private let bigFour: [RankAnchor] = [.squat, .bench, .deadlift, .ohp]
 
@@ -39,6 +40,7 @@ struct YouView: View {
             }
         }
         .auroraVariant(.profile)
+        .task { ranking = Store.rankingSnapshot(in: context) }
         .navigationTitle("You")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
@@ -190,8 +192,7 @@ struct YouView: View {
 
     private func liftRow(_ anchor: RankAnchor) -> some View {
         let result = anchorScores[anchor]
-        let exercise = Store.anchorExercise(anchor, in: context)
-        let best = exercise.flatMap { Store.history(for: $0.id, in: context, limit: 1).last?.bestSet }
+        let best = ranking.anchorExerciseIDs[anchor].flatMap { ranking.bestSet(for: $0) }
 
         return VStack(alignment: .leading, spacing: 7) {
             HStack {
