@@ -21,7 +21,7 @@ struct ExerciseCard: View {
     var onRepsChange: (Int, Int) -> Void
     var onToggleSet: (Int) -> Void
     var onAddSet: () -> Void
-    var onRestCycle: () -> Void
+    var onRestTap: () -> Void
     var onToggleProgression: () -> Void
     var onAcceptSuggestion: () -> Void
     var onDeclineSuggestion: () -> Void
@@ -91,6 +91,9 @@ struct ExerciseCard: View {
                                      ? Theme.Palette.increase
                                      : Color.secondary)
             }
+            // The gap between the name and the set count is dead space
+            // otherwise — the whole row is the button.
+            .contentShape(Rectangle())
         }
         .buttonStyle(.pressable)
     }
@@ -209,7 +212,7 @@ struct ExerciseCard: View {
 
     private var footerControls: some View {
         HStack(spacing: 10) {
-            Button(action: onRestCycle) {
+            Button(action: onRestTap) {
                 HStack(spacing: 6) {
                     Image(systemName: "timer").font(.system(size: 12, weight: .bold))
                     Text(UnitFormatter.rest(item.restSeconds)).font(.captionM)
@@ -218,9 +221,10 @@ struct ExerciseCard: View {
                 .padding(.horizontal, 14)
                 .frame(height: 36)
                 .glassEffect(.regular, in: .rect(cornerRadius: Theme.Radius.chip))
+                .contentShape(.rect(cornerRadius: Theme.Radius.chip))
             }
             .buttonStyle(.pressable)
-            .accessibilityLabel("Rest \(UnitFormatter.rest(item.restSeconds)). Tap to change")
+            .accessibilityLabel("Rest \(UnitFormatter.rest(item.restSeconds)). Tap to adjust")
 
             Spacer(minLength: 0)
 
@@ -233,6 +237,7 @@ struct ExerciseCard: View {
                 .padding(.horizontal, 14)
                 .frame(height: 36)
                 .glassEffect(.regular, in: .rect(cornerRadius: Theme.Radius.chip))
+                .contentShape(.rect(cornerRadius: Theme.Radius.chip))
             }
             .buttonStyle(.pressable)
         }

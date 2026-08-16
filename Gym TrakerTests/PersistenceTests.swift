@@ -151,13 +151,34 @@ struct PersistenceTests {
         let container = try makeContainer()
         let context = ModelContext(container)
 
+        // Pinned to the bundle rather than a literal, so growing the archive
+        // does not break the test that guards against double-seeding.
+        let bundled = try ArchiveSeeder.bundledCount()
+        #expect(bundled > 800, "The archive shrank unexpectedly: \(bundled)")
+
         let firstPass = try ArchiveSeeder.seedIfNeeded(context, force: true)
-        #expect(firstPass == 125)
+        #expect(firstPass == bundled)
 
         // A second run inserts nothing and leaves the archive intact.
         let secondPass = try ArchiveSeeder.seedIfNeeded(context, force: true)
         #expect(secondPass == 0)
-        #expect(try context.fetch(FetchDescriptor<Exercise>()).count == 125)
+        #expect(try context.fetch(FetchDescriptor<Exercise>()).count == bundled)
+    }
+
+    @Test func everyArchiveExerciseCarriesPhotos() throws {
+        let container = try makeContainer()
+        let context = ModelContext(container)
+        try ArchiveSeeder.seedIfNeeded(context, force: true)
+
+        let all = try context.fetch(FetchDescriptor<Exercise>())
+        let withoutPhotos = all.filter { !$0.hasPhotos }
+        #expect(withoutPhotos.isEmpty, "\(withoutPhotos.count) archive exercises have no image")
+
+        // And the files those names point at are actually in the bundle.
+        let sample = try #require(all.first { $0.id == "barbell-squat" })
+        for name in sample.imageNames {
+            #expect(ExercisePhoto.load(name) != nil, "Missing bundled image \(name)")
+        }
     }
 
     @Test func seedingNeverClobbersACustomExercise() throws {

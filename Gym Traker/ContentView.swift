@@ -11,6 +11,9 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    @Environment(\.modelContext) private var context
+    @Environment(HealthStore.self) private var health
+    @Environment(\.scenePhase) private var scenePhase
     @Query private var profiles: [UserProfile]
 
     private var profile: UserProfile? { profiles.first }
@@ -26,6 +29,11 @@ struct ContentView: View {
             }
         }
         .animation(Theme.Motion.spring, value: profile == nil)
+        // Watch workouts land in Health when they end, so pull on foreground.
+        .onChange(of: scenePhase) { _, phase in
+            guard phase == .active, health.availability == .ready else { return }
+            Task { await health.importWorkouts(into: context) }
+        }
         .preferredColorScheme(profile?.appearance.colorScheme ?? .dark)
         .tint(Theme.Palette.violet)
     }

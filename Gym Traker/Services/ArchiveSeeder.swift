@@ -26,6 +26,9 @@ enum ArchiveSeeder {
         let rankAnchor: String?
         let tracking: String
         let glyph: Glyph
+        let images: [String]?
+        let instructions: [String]?
+        let level: String?
 
         struct Glyph: Decodable {
             let shape: String
@@ -63,6 +66,9 @@ enum ArchiveSeeder {
                 row.trackingRaw = entry.tracking
                 row.glyphShape = entry.glyph.shape
                 row.glyphHue = entry.glyph.hue
+                row.imageNames = entry.images ?? []
+                row.instructions = entry.instructions ?? []
+                row.level = entry.level
             } else {
                 let exercise = Exercise(
                     id: entry.id,
@@ -73,7 +79,10 @@ enum ArchiveSeeder {
                     tracking: Tracking(rawValue: entry.tracking) ?? .weightReps,
                     glyphShape: entry.glyph.shape,
                     glyphHue: entry.glyph.hue,
-                    isCustom: false
+                    isCustom: false,
+                    imageNames: entry.images ?? [],
+                    instructions: entry.instructions ?? [],
+                    level: entry.level
                 )
                 context.insert(exercise)
                 byID[entry.id] = exercise

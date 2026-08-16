@@ -104,11 +104,11 @@ enum Store {
     /// screen's per-lift rows.
     static func anchorExercise(_ anchor: RankAnchor, in context: ModelContext) -> Exercise? {
         let canonical: [RankAnchor: String] = [
-            .bench: "bench-press",
-            .squat: "back-squat",
-            .deadlift: "conventional-deadlift",
-            .ohp: "overhead-press",
-            .row: "barbell-row"
+            .bench: "barbell-bench-press-medium-grip",
+            .squat: "barbell-squat",
+            .deadlift: "barbell-deadlift",
+            .ohp: "barbell-shoulder-press",
+            .row: "bent-over-barbell-row"
         ]
         if let id = canonical[anchor], let exercise = exercise(id: id, in: context) { return exercise }
         return allExercises(in: context).first { $0.rankAnchor == anchor }

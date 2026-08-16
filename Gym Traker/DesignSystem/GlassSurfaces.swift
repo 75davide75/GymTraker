@@ -18,12 +18,16 @@ struct GlassCard<Content: View>: View {
     var radius: CGFloat = Theme.Radius.card
     var padding: CGFloat = Theme.Spacing.cardPadding
     var tint: Color?
+    /// Fills the available height, so cards sitting side by side in an HStack
+    /// match instead of each shrinking to its own content.
+    var stretchVertically: Bool = false
     @ViewBuilder var content: Content
 
     var body: some View {
         content
             .padding(padding)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxHeight: stretchVertically ? .infinity : nil, alignment: .top)
             .glassEffect(
                 tint.map { .regular.tint($0.opacity(0.28)) } ?? .regular,
                 in: .rect(cornerRadius: radius)

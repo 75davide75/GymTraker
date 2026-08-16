@@ -12,6 +12,7 @@ import SwiftData
 struct Gym_TrakerApp: App {
 
     let container: ModelContainer
+    @State private var health = HealthStore()
 
     init() {
         // UI tests pass -resetStore so every run starts at onboarding.
@@ -39,6 +40,7 @@ struct Gym_TrakerApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(health)
         }
         .modelContainer(container)
     }

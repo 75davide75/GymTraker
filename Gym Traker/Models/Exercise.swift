@@ -24,6 +24,12 @@ final class Exercise {
     var isCustom: Bool = false
     var notes: String?
     var createdAt: Date = Date.now
+    /// Bundle image names, start position first. Empty for user-created
+    /// exercises, which fall back to the generated glyph.
+    var imageNames: [String] = []
+    /// Step-by-step form cues from the archive.
+    var instructions: [String] = []
+    var level: String?
 
     // Cached ranking output, recomputed on session save and on profile edit.
     var cachedScore: Double?
@@ -40,7 +46,10 @@ final class Exercise {
         glyphShape: String? = nil,
         glyphHue: Int? = nil,
         isCustom: Bool = false,
-        notes: String? = nil
+        notes: String? = nil,
+        imageNames: [String] = [],
+        instructions: [String] = [],
+        level: String? = nil
     ) {
         self.id = id
         self.name = name
@@ -53,7 +62,13 @@ final class Exercise {
         self.isCustom = isCustom
         self.notes = notes
         self.createdAt = .now
+        self.imageNames = imageNames
+        self.instructions = instructions
+        self.level = level
     }
+
+    /// True when the archive shipped photographs for this exercise.
+    var hasPhotos: Bool { !imageNames.isEmpty }
 
     var equipment: Equipment {
         get { Equipment(rawValue: equipmentRaw) ?? .barbell }

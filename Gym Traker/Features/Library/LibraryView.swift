@@ -37,8 +37,6 @@ struct LibraryView: View {
 
     var body: some View {
         ZStack {
-            AuroraBackground()
-
             ScrollView {
                 LazyVStack(spacing: 10, pinnedViews: []) {
                     header
@@ -50,6 +48,7 @@ struct LibraryView: View {
             }
             .scrollDismissesKeyboard(.immediately)
         }
+        .auroraVariant(.library)
         .navigationTitle(mode == .picker ? "Add exercise" : "Library")
         .navigationBarTitleDisplayMode(.large)
         .searchable(text: $search, prompt: "Search name or muscle")
@@ -170,7 +169,7 @@ struct ExerciseRow: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            ExerciseGlyph(exercise: exercise, size: 52)
+            ExerciseThumbnail(exercise: exercise, size: 52)
 
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 6) {

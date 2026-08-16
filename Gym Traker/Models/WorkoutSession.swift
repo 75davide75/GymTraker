@@ -38,6 +38,10 @@ final class WorkoutSession {
     var endedAt: Date?
     var planDayLetter: String = "A"
     var planDayTitle: String = "Workout"
+    /// Set when the session came from Health rather than being logged here —
+    /// an Apple Watch workout, typically. Keeps imports from duplicating.
+    var healthKitUUID: UUID?
+    var sourceName: String?
 
     @Relationship(deleteRule: .cascade, inverse: \SessionEntry.session)
     var entries: [SessionEntry]? = []
@@ -69,6 +73,9 @@ final class WorkoutSession {
     }
 
     var isFinished: Bool { endedAt != nil }
+
+    /// True for rows that arrived from Health and carry no set data.
+    var isImported: Bool { healthKitUUID != nil }
 }
 
 @Model

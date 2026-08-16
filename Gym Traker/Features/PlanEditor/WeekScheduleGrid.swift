@@ -6,6 +6,9 @@
 //  a letter is free to appear on several days — repeating a template within the
 //  week is the normal case, not an edge case.
 //
+//  Styling follows the prototype: today carries the violet gradient, days with
+//  a template sit on plain glass, rest days are just an outline.
+//
 
 import SwiftUI
 
@@ -15,6 +18,7 @@ struct WeekScheduleGrid: View {
     let letters: [String]                 // available day-template letters
     let assignments: [String]             // 7 entries, "" means rest
     var highlightToday: Bool = true
+    var isInteractive: Bool = true
     let onCycle: (Int) -> Void
 
     private let dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
@@ -24,44 +28,77 @@ struct WeekScheduleGrid: View {
     var body: some View {
         HStack(spacing: 6) {
             ForEach(dayIndices, id: \.self) { index in
-                let letter = assignments.indices.contains(index) ? assignments[index] : ""
-                let isToday = highlightToday && index == todayIndex
-
-                Button {
-                    Haptics.selection()
-                    withAnimation(Theme.Motion.spring) { onCycle(index) }
-                } label: {
-                    VStack(spacing: 6) {
-                        Text(dayNames[index])
-                            .font(.system(size: 10, weight: .semibold))
-                            .foregroundStyle(isToday ? Theme.Palette.violet : Color.secondary)
-
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .fill(letter.isEmpty
-                                      ? Theme.Palette.track(scheme)
-                                      : Theme.Palette.violet.opacity(0.85))
-                            Text(letter.isEmpty ? "—" : letter)
-                                .font(.system(size: 15, weight: .bold))
-                                .foregroundStyle(letter.isEmpty ? Color.secondary : Color.white)
-                                .contentTransition(.opacity)
-                        }
-                        .frame(height: 40)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 6)
-                    .overlay {
-                        if isToday {
-                            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .strokeBorder(Theme.Palette.violet.opacity(0.6), lineWidth: 1.5)
-                        }
-                    }
-                }
-                .buttonStyle(.pressable)
-                .accessibilityLabel("\(dayNames[index]): \(letter.isEmpty ? "rest" : "template \(letter)")")
-                .accessibilityHint("Tap to change")
+                cell(index)
             }
         }
+    }
+
+    private func cell(_ index: Int) -> some View {
+        let letter = assignments.indices.contains(index) ? assignments[index] : ""
+        let hasTemplate = !letter.isEmpty
+        let isToday = highlightToday && index == todayIndex
+
+        return Button {
+            guard isInteractive else { return }
+            Haptics.selection()
+            withAnimation(Theme.Motion.spring) { onCycle(index) }
+        } label: {
+            VStack(spacing: 5) {
+                Text(dayNames[index])
+                    .font(.system(size: 10, weight: .semibold))
+                    .tracking(0.5)
+                    .foregroundStyle(isToday ? Color.white.opacity(0.8) : Color.secondary)
+
+                Text(hasTemplate ? letter : "—")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundStyle(tagColor(isToday: isToday, hasTemplate: hasTemplate))
+                    .contentTransition(.opacity)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.top, 9)
+            .padding(.bottom, 10)
+            .background {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(background(isToday: isToday, hasTemplate: hasTemplate))
+            }
+            .overlay {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .strokeBorder(border(isToday: isToday, hasTemplate: hasTemplate), lineWidth: 1)
+            }
+            .contentShape(.rect(cornerRadius: 16))
+        }
+        .buttonStyle(.pressable)
+        .disabled(!isInteractive)
+        .accessibilityLabel("\(dayNames[index]): \(hasTemplate ? "template \(letter)" : "rest")")
+        .accessibilityHint(isInteractive ? "Tap to change" : "")
+    }
+
+    // MARK: - Styling
+
+    private func background(isToday: Bool, hasTemplate: Bool) -> AnyShapeStyle {
+        if isToday {
+            return AnyShapeStyle(
+                LinearGradient(
+                    colors: [Theme.Palette.violet.opacity(0.85), Theme.Palette.violetDeep.opacity(0.85)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
+        }
+        if hasTemplate {
+            return AnyShapeStyle(scheme == .dark ? Color.white.opacity(0.06) : Color.white.opacity(0.72))
+        }
+        return AnyShapeStyle(Color.clear)
+    }
+
+    private func border(isToday: Bool, hasTemplate: Bool) -> Color {
+        if isToday { return .clear }
+        return hasTemplate ? Theme.Palette.stroke(scheme) : Theme.Palette.separator(scheme)
+    }
+
+    private func tagColor(isToday: Bool, hasTemplate: Bool) -> Color {
+        if isToday { return .white }
+        return hasTemplate ? .primary : .secondary
     }
 }
 

@@ -14,6 +14,7 @@ struct SessionView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(HealthStore.self) private var health
 
     let day: PlanDay
 
@@ -24,6 +25,7 @@ struct SessionView: View {
     @State private var summary: SessionSummary?
     @State private var promotion: Promotion?
     @State private var statsExercise: Exercise?
+    @State private var restEditingItem: PlanItem?
 
     private var units: Units { Store.units(in: context) }
     private var items: [PlanItem] { day.orderedItems }
@@ -34,8 +36,6 @@ struct SessionView: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            AuroraBackground()
-
             ScrollView {
                 VStack(spacing: 12) {
                     header
@@ -50,6 +50,7 @@ struct SessionView: View {
                     .padding(.bottom, 12)
             }
         }
+        .auroraVariant(.session)
         .navigationTitle(day.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -72,6 +73,12 @@ struct SessionView: View {
         }
         .navigationDestination(item: $statsExercise) { exercise in
             ExerciseDetailView(exercise: exercise)
+        }
+        .sheet(item: $restEditingItem) { item in
+            RestSheet(item: item) { seconds in
+                item.restSeconds = seconds
+                try? context.save()
+            }
         }
     }
 
@@ -124,7 +131,7 @@ struct SessionView: View {
                     onRepsChange: { changeReps(item: item, entry: entry, setIndex: $0, to: $1) },
                     onToggleSet: { toggleSet(entry: entry, item: item, index: $0, cardIndex: index) },
                     onAddSet: { addSet(entry: entry, item: item) },
-                    onRestCycle: { cycleRest(item: item) },
+                    onRestTap: { restEditingItem = item },
                     onToggleProgression: { toggleProgression(item: item) },
                     onAcceptSuggestion: { acceptSuggestion(item: item, entry: entry) },
                     onDeclineSuggestion: { Progression.decline(item); try? context.save() },
@@ -177,6 +184,9 @@ struct SessionView: View {
 
         try? context.save()
         Haptics.success()
+
+        let finished = session
+        Task { await health.save(session: finished) }
 
         summary = SessionSummary(
             volumeKg: session.totalVolumeKg,
@@ -279,19 +289,6 @@ struct SessionView: View {
         )
         try? context.save()
         Haptics.medium()
-    }
-
-    private func cycleRest(item: PlanItem) {
-        let ladder = PlanItemEditor.restLadder
-        let old = item.restSeconds
-        let next = ladder.first { $0 > old } ?? ladder.first ?? 45
-        item.restSeconds = next
-        Registry.restChanged(
-            item: item, from: old, to: next,
-            sessionUUID: session?.uuid, in: context
-        )
-        try? context.save()
-        Haptics.selection()
     }
 
     private func toggleProgression(item: PlanItem) {

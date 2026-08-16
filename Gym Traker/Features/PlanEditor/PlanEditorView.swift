@@ -17,6 +17,8 @@ struct PlanEditorView: View {
     @State private var showingPicker = false
     @State private var editingItem: PlanItem?
     @State private var renamingDay: PlanDay?
+    /// Cleared whenever the plan changes, so a shared PDF is never stale.
+    @State private var pdfURL: URL?
 
     private var plan: Plan? { plans.first(where: \.isActive) ?? plans.first }
     private var units: Units { Store.units(in: context) }
@@ -29,16 +31,34 @@ struct PlanEditorView: View {
 
     var body: some View {
         ZStack {
-            AuroraBackground()
-
             if let plan {
                 content(plan)
             } else {
                 emptyState
             }
         }
+        .auroraVariant(.plan)
         .navigationTitle("Plan")
         .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            if let plan {
+                ToolbarItem(placement: .primaryAction) {
+                    if let pdfURL {
+                        ShareLink(item: pdfURL) {
+                            Label("Share PDF", systemImage: "square.and.arrow.up")
+                        }
+                    } else {
+                        Button {
+                            pdfURL = try? PlanPDF.write(plan: plan, profile: Store.profile(in: context))
+                            Haptics.success()
+                        } label: {
+                            Label("Export PDF", systemImage: "doc.richtext")
+                        }
+                    }
+                }
+            }
+        }
+        .onChange(of: selectedLetter) { _, _ in pdfURL = nil }
         .sheet(isPresented: $showingPicker) {
             NavigationStack {
                 LibraryView(mode: .picker) { exercise in

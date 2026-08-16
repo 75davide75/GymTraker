@@ -41,7 +41,11 @@ struct StepperControl<Label: View>: View {
             Image(systemName: systemName)
                 .font(.system(size: 17, weight: .bold))
                 .frame(width: buttonSize, height: buttonSize)
-                .glassEffect(.regular.interactive(), in: .rect(cornerRadius: Theme.Radius.smallControl))
+                .glassEffect(.regular, in: .rect(cornerRadius: Theme.Radius.smallControl))
+                // Without this the tappable area follows the glyph's own
+                // shape, and a minus sign is a thin bar — far harder to hit
+                // than a plus. The whole tile is the button.
+                .contentShape(.rect(cornerRadius: Theme.Radius.smallControl))
                 .opacity(enabled ? 1 : 0.35)
         }
         .buttonStyle(.pressable)
@@ -78,7 +82,12 @@ struct RepsStepper: View {
             Image(systemName: systemName)
                 .font(.system(size: 13, weight: .bold))
                 .frame(width: 34, height: 34)
-                .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 12))
+                .glassEffect(.regular, in: .rect(cornerRadius: 12))
+                // The tile reads as 34 pt but takes a 44 pt touch, the
+                // documented minimum, without pushing the row taller.
+                .contentShape(.rect(cornerRadius: 12))
+                .padding(5)
+                .contentShape(Rectangle())
                 .opacity(enabled ? 1 : 0.3)
         }
         .buttonStyle(.pressable)

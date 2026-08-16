@@ -19,11 +19,19 @@ struct RegistryView: View {
     @State private var exerciseFilter: String?
     @State private var visibleCount = 50
 
+    /// Fields the registry shows. Rest is excluded on purpose: it is a comfort
+    /// setting, not progression, and logging it buried the entries that matter.
+    private static let loggedFields = ChangeField.allCases.filter { $0 != .rest }
+
     private var filtered: [ChangeRecord] {
-        allRecords.filter { record in
-            (fieldFilter == nil || record.field == fieldFilter)
-                && (exerciseFilter == nil || record.exerciseID == exerciseFilter)
-        }
+        allRecords.filter(shouldShow)
+    }
+
+    private func shouldShow(_ record: ChangeRecord) -> Bool {
+        if record.field == .rest { return false }
+        if let fieldFilter, record.field != fieldFilter { return false }
+        if let exerciseFilter, record.exerciseID != exerciseFilter { return false }
+        return true
     }
 
     private var page: [ChangeRecord] { Array(filtered.prefix(visibleCount)) }
@@ -41,8 +49,6 @@ struct RegistryView: View {
 
     var body: some View {
         ZStack {
-            AuroraBackground()
-
             if allRecords.isEmpty {
                 emptyState
             } else {
@@ -82,6 +88,7 @@ struct RegistryView: View {
                 }
             }
         }
+        .auroraVariant(.registry)
         .navigationTitle("Registry")
         .navigationBarTitleDisplayMode(.large)
     }
@@ -93,7 +100,7 @@ struct RegistryView: View {
             Menu {
                 Button("All fields") { fieldFilter = nil }
                 Divider()
-                ForEach(ChangeField.allCases) { field in
+                ForEach(Self.loggedFields) { field in
                     Button(field.displayName) { fieldFilter = field }
                 }
             } label: {

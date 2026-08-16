@@ -28,7 +28,6 @@ struct PlanItemEditor: View {
                     weightCard
                     setsCard
                     restCard
-                    progressionCard
                 }
                 .padding(Theme.Spacing.screenMargin)
                 .padding(.bottom, 30)
@@ -133,51 +132,7 @@ struct PlanItemEditor: View {
 
     private var restCard: some View {
         GlassSection(title: "Rest between sets") {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(Self.restLadder, id: \.self) { seconds in
-                        GlassChip(
-                            title: UnitFormatter.rest(seconds),
-                            isSelected: item.restSeconds == seconds,
-                            tint: Theme.Palette.cyan
-                        ) {
-                            changeRest(to: seconds)
-                        }
-                    }
-                }
-                .padding(.vertical, 2)
-            }
-            .scrollClipDisabled()
-        }
-    }
-
-    // MARK: - Progression
-
-    private var progressionCard: some View {
-        GlassSection(title: "Progression") {
-            Button {
-                toggleProgression()
-            } label: {
-                HStack(spacing: 12) {
-                    Image(systemName: item.progressionArmed ? "checkmark.circle.fill" : "circle")
-                        .font(.system(size: 22))
-                        .foregroundStyle(item.progressionArmed ? Theme.Palette.increase : Color.secondary)
-
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text(Progression.label(for: item, units: units))
-                            .font(.bodyM)
-                            .foregroundStyle(.primary)
-                            .multilineTextAlignment(.leading)
-                        Text("The next session opens at the higher weight, and you can still override it.")
-                            .font(.captionM)
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.leading)
-                    }
-
-                    Spacer(minLength: 0)
-                }
-            }
-            .buttonStyle(.plain)
+            RestPicker(seconds: item.restSeconds) { changeRest(to: $0) }
         }
     }
 
@@ -216,7 +171,7 @@ struct PlanItemEditor: View {
         guard item.targetSets.count > 1, item.targetSets.indices.contains(index) else { return }
         let old = item.targetSets.count
         withAnimation(Theme.Motion.spring) {
-            item.targetSets.remove(at: index)
+            _ = item.targetSets.remove(at: index)
         }
         Registry.setsChanged(item: item, from: old, to: item.targetSets.count, in: context)
         try? context.save()
@@ -227,22 +182,8 @@ struct PlanItemEditor: View {
         let old = item.restSeconds
         guard old != seconds else { return }
         item.restSeconds = seconds
-        Registry.restChanged(item: item, from: old, to: seconds, in: context)
         try? context.save()
         Haptics.selection()
     }
 
-    private func toggleProgression() {
-        let armed = !item.progressionArmed
-        item.progressionArmed = armed
-        Registry.progressionToggled(
-            item: item,
-            armed: armed,
-            targetKg: item.workingWeightKg + item.stepKg,
-            units: units,
-            in: context
-        )
-        try? context.save()
-        Haptics.medium()
-    }
 }

@@ -20,6 +20,7 @@ struct HomeView: View {
     var onOpenPlan: () -> Void = {}
 
     @State private var startingDay: PlanDay?
+    @State private var showingRanks = false
 
     private var plan: Plan? { plans.first(where: \.isActive) ?? plans.first }
     private var profile: UserProfile? { profiles.first }
@@ -38,8 +39,6 @@ struct HomeView: View {
 
     var body: some View {
         ZStack {
-            AuroraBackground()
-
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     greeting.entryTransition(0)
@@ -52,10 +51,14 @@ struct HomeView: View {
                 .padding(.bottom, 30)
             }
         }
+        .auroraVariant(.home)
         .navigationTitle("Home")
         .navigationBarTitleDisplayMode(.large)
         .navigationDestination(item: $startingDay) { day in
             SessionView(day: day)
+        }
+        .navigationDestination(isPresented: $showingRanks) {
+            RankLadderView()
         }
     }
 
@@ -82,16 +85,15 @@ struct HomeView: View {
     // MARK: - Week strip
 
     private var weekStrip: some View {
-        Button(action: onOpenPlan) {
-            GlassCard(padding: 12) {
-                WeekScheduleGrid(
-                    letters: plan?.orderedDays.map(\.letter) ?? [],
-                    assignments: plan?.weekAssignmentsRaw ?? Array(repeating: "", count: 7)
-                ) { _ in onOpenPlan() }
-                .allowsHitTesting(false)
-            }
-        }
-        .buttonStyle(.pressable)
+        // The prototype puts the strip straight on the background, not inside
+        // a card — the day cells are the only surfaces here.
+        WeekScheduleGrid(
+            letters: plan?.orderedDays.map(\.letter) ?? [],
+            assignments: plan?.weekAssignmentsRaw ?? Array(repeating: "", count: 7),
+            isInteractive: false
+        ) { _ in }
+        .contentShape(Rectangle())
+        .onTapGesture { onOpenPlan() }
     }
 
     // MARK: - Up next
@@ -179,7 +181,16 @@ struct HomeView: View {
     }
 
     private var rankTile: some View {
-        GlassCard(padding: 14) {
+        Button {
+            showingRanks = true
+        } label: {
+            rankTileBody
+        }
+        .buttonStyle(.pressable)
+    }
+
+    private var rankTileBody: some View {
+        GlassCard(padding: 14, stretchVertically: true) {
             VStack(alignment: .leading, spacing: 8) {
                 Text("Rank").overlineStyle()
                 if let global = Store.globalLevel(in: context) {
@@ -206,7 +217,7 @@ struct HomeView: View {
     }
 
     private var lastChangeTile: some View {
-        GlassCard(padding: 14) {
+        GlassCard(padding: 14, stretchVertically: true) {
             VStack(alignment: .leading, spacing: 8) {
                 Text("Last change").overlineStyle()
                 if let record = records.first {

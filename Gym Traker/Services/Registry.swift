@@ -112,27 +112,6 @@ enum Registry {
         )
     }
 
-    @discardableResult
-    static func restChanged(
-        item: PlanItem,
-        from oldSeconds: Int,
-        to newSeconds: Int,
-        sessionUUID: UUID? = nil,
-        in context: ModelContext
-    ) -> ChangeRecord? {
-        guard oldSeconds != newSeconds else { return nil }
-        return record(
-            .rest,
-            exerciseID: item.exerciseID,
-            exerciseName: item.exerciseName,
-            from: UnitFormatter.rest(oldSeconds),
-            to: UnitFormatter.rest(newSeconds),
-            direction: newSeconds > oldSeconds ? .up : .down,
-            sessionUUID: sessionUUID,
-            in: context
-        )
-    }
-
     /// The "remind me to go up next time" flag. Recorded because the whole
     /// point of the flag is to be remembered.
     @discardableResult

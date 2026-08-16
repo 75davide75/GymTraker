@@ -20,6 +20,7 @@ struct OnboardingView: View {
     @State private var age = 27
     @State private var bodyweightKg: Double = 75
     @State private var selectedPreset: PlanPreset?
+    @FocusState private var nameFocused: Bool
 
     var body: some View {
         ZStack {
@@ -88,10 +89,11 @@ struct OnboardingView: View {
     // MARK: - Step 1
 
     private var welcomeStep: some View {
-        VStack(spacing: 24) {
-            Spacer()
+        ScrollView {
+            VStack(spacing: 24) {
+                Spacer(minLength: 30)
 
-            VStack(spacing: 12) {
+                VStack(spacing: 12) {
                 Image(systemName: "figure.strengthtraining.traditional")
                     .font(.system(size: 46, weight: .semibold))
                     .foregroundStyle(Theme.Palette.violet)
@@ -104,28 +106,34 @@ struct OnboardingView: View {
                     .padding(.horizontal, 20)
             }
 
-            GlassSection(title: "Your name") {
-                TextField("Optional", text: $name)
-                    .font(.bodyM)
-                    .textInputAutocapitalization(.words)
-            }
-
-            GlassSection(title: "Units") {
-                HStack(spacing: 10) {
-                    ForEach(Units.allCases) { unit in
-                        GlassChip(title: unit.rawValue.uppercased(), isSelected: units == unit) {
-                            units = unit
-                        }
-                    }
-                    Spacer()
-                    Text("Weights are always stored in kg.")
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundStyle(.tertiary)
+                GlassSection(title: "Your name") {
+                    TextField("Optional", text: $name)
+                        .font(.bodyM)
+                        .textInputAutocapitalization(.words)
+                        .focused($nameFocused)
+                        .submitLabel(.done)
+                        .onSubmit { advance() }
                 }
-            }
 
-            Spacer()
+                GlassSection(title: "Units") {
+                    HStack(spacing: 10) {
+                        ForEach(Units.allCases) { unit in
+                            GlassChip(title: unit.rawValue.uppercased(), isSelected: units == unit) {
+                                units = unit
+                            }
+                        }
+                        Spacer()
+                        Text("Weights are always stored in kg.")
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundStyle(.tertiary)
+                    }
+                }
+
+                Spacer(minLength: 20)
+            }
         }
+        .scrollIndicators(.hidden)
+        .scrollBounceBehavior(.basedOnSize)
     }
 
     // MARK: - Step 2
@@ -194,24 +202,25 @@ struct OnboardingView: View {
     // MARK: - Step 3
 
     private var planStep: some View {
-        VStack(spacing: 16) {
-            Spacer()
-
-            VStack(spacing: 8) {
-                Text("Pick a start").font(.system(size: 30, weight: .bold))
+        VStack(spacing: 12) {
+            VStack(spacing: 6) {
+                Text("Pick a split").font(.system(size: 28, weight: .bold))
                 Text("You can rearrange everything later.")
                     .font(.bodyS)
                     .foregroundStyle(.secondary)
             }
+            .padding(.top, 6)
 
-            VStack(spacing: 10) {
-                ForEach(PlanPreset.all) { preset in
-                    presetRow(preset)
+            ScrollView {
+                VStack(spacing: 10) {
+                    ForEach(PlanPreset.all) { preset in
+                        presetRow(preset)
+                    }
+                    presetRow(nil)
                 }
-                presetRow(nil)
+                .padding(.vertical, 4)
             }
-
-            Spacer()
+            .scrollIndicators(.hidden)
         }
     }
 
@@ -222,17 +231,35 @@ struct OnboardingView: View {
             Haptics.selection()
             withAnimation(Theme.Motion.snappy) { selectedPreset = preset }
         } label: {
-            HStack(spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 21))
                     .foregroundStyle(isSelected ? Theme.Palette.violet : Color.secondary)
 
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(preset?.name ?? "Start empty")
-                        .font(.titleS)
+                VStack(alignment: .leading, spacing: 3) {
+                    HStack(spacing: 8) {
+                        Text(preset?.name ?? "Start empty")
+                            .font(.titleS)
+                        if let days = preset?.dayCount {
+                            Text("\(days)×")
+                                .font(.system(size: 11, weight: .bold))
+                                .monospacedDigit()
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Capsule().fill(Theme.Palette.violet.opacity(0.22)))
+                                .foregroundStyle(Theme.Palette.violet)
+                        }
+                    }
                     Text(preset?.subtitle ?? "Build your own from the library")
                         .font(.captionM)
                         .foregroundStyle(.secondary)
+                    if let note = preset?.note {
+                        Text(note)
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundStyle(.tertiary)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .multilineTextAlignment(.leading)
+                    }
                 }
 
                 Spacer(minLength: 0)
@@ -243,6 +270,7 @@ struct OnboardingView: View {
                 isSelected ? .regular.tint(Theme.Palette.violet.opacity(0.3)) : .regular,
                 in: .rect(cornerRadius: Theme.Radius.row)
             )
+            .contentShape(.rect(cornerRadius: Theme.Radius.row))
         }
         .buttonStyle(.pressable)
     }
@@ -251,7 +279,12 @@ struct OnboardingView: View {
 
     private func advance() {
         guard step == 2 else {
-            withAnimation(Theme.Motion.spring) { step += 1 }
+            // Resign focus inside the same animation, so the keyboard slides
+            // away with the step transition instead of snapping first.
+            withAnimation(Theme.Motion.spring) {
+                nameFocused = false
+                step += 1
+            }
             Haptics.light()
             return
         }

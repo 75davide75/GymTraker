@@ -66,7 +66,6 @@ struct RegistryTests {
         Registry.weightChanged(item: item, from: 70, to: 70, units: .kg, in: context)
         Registry.repsChanged(item: item, setIndex: 0, from: 8, to: 8, in: context)
         Registry.setsChanged(item: item, from: 3, to: 3, in: context)
-        Registry.restChanged(item: item, from: 90, to: 90, in: context)
 
         #expect(Registry.all(in: context).isEmpty)
     }
@@ -82,17 +81,24 @@ struct RegistryTests {
         #expect(record.direction == .up)
     }
 
-    @Test func setCountAndRestAreRecorded() throws {
+    @Test func setCountIsRecorded() throws {
         let context = try makeContext()
         let item = makeItem()
 
         Registry.setsChanged(item: item, from: 3, to: 4, in: context)
-        Registry.restChanged(item: item, from: 90, to: 120, in: context)
 
         let records = Registry.all(in: context)
-        #expect(records.count == 2)
+        #expect(records.count == 1)
         #expect(records.contains { $0.field == .sets && $0.toValue == "4 sets" })
-        #expect(records.contains { $0.field == .rest && $0.fromValue == "1m 30s" && $0.toValue == "2m" })
+    }
+
+    /// Rest is deliberately not logged: it is a comfort setting, and it drowned
+    /// the progression history in noise.
+    @Test func restIsNotRecorded() throws {
+        let context = try makeContext()
+        let item = makeItem()
+        item.restSeconds = 120
+        #expect(Registry.all(in: context).allSatisfy { $0.field != .rest })
     }
 
     @Test func recordsAreWrittenInTheUsersUnits() throws {

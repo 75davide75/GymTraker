@@ -27,8 +27,6 @@ struct YouView: View {
 
     var body: some View {
         ZStack {
-            AuroraBackground()
-
             ScrollView {
                 VStack(spacing: 18) {
                     identity.entryTransition(0)
@@ -40,6 +38,7 @@ struct YouView: View {
                 .padding(.bottom, 30)
             }
         }
+        .auroraVariant(.profile)
         .navigationTitle("You")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {

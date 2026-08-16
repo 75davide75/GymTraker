@@ -25,20 +25,21 @@ struct ExerciseDetailView: View {
 
     var body: some View {
         ZStack {
-            AuroraBackground()
-
             ScrollView {
                 VStack(spacing: 18) {
                     heading.entryTransition(0)
-                    tierCard.entryTransition(1)
-                    chartCard.entryTransition(2)
-                    schemeCard.entryTransition(3)
-                    registryCard.entryTransition(4)
+                    demoCard.entryTransition(1)
+                    instructionsCard.entryTransition(2)
+                    tierCard.entryTransition(3)
+                    chartCard.entryTransition(4)
+                    schemeCard.entryTransition(5)
+                    registryCard.entryTransition(6)
                 }
                 .padding(Theme.Spacing.screenMargin)
                 .padding(.bottom, 30)
             }
         }
+        .auroraVariant(.library)
         .navigationTitle(exercise.name)
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -48,7 +49,7 @@ struct ExerciseDetailView: View {
     private var heading: some View {
         GlassCard(radius: Theme.Radius.hero) {
             HStack(spacing: 16) {
-                ExerciseGlyph(exercise: exercise, size: 76)
+                ExerciseThumbnail(exercise: exercise, size: 76)
                 VStack(alignment: .leading, spacing: 5) {
                     Text(exercise.name).font(.titleL).lineLimit(2)
                     Text(exercise.subtitle).font(.captionM).foregroundStyle(.secondary)
@@ -59,6 +60,41 @@ struct ExerciseDetailView: View {
                     }
                 }
                 Spacer(minLength: 0)
+            }
+        }
+    }
+
+    // MARK: - Demonstration
+
+    @ViewBuilder
+    private var demoCard: some View {
+        if exercise.hasPhotos {
+            GlassSection(title: "How it looks") {
+                ExerciseDemo(exercise: exercise)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var instructionsCard: some View {
+        if !exercise.instructions.isEmpty {
+            GlassSection(title: "How to do it") {
+                VStack(alignment: .leading, spacing: 12) {
+                    ForEach(Array(exercise.instructions.enumerated()), id: \.offset) { index, step in
+                        HStack(alignment: .top, spacing: 10) {
+                            Text("\(index + 1)")
+                                .font(.system(size: 11, weight: .bold))
+                                .monospacedDigit()
+                                .frame(width: 20, height: 20)
+                                .background(Circle().fill(Theme.Palette.violet.opacity(0.22)))
+                                .foregroundStyle(Theme.Palette.violet)
+                            Text(step)
+                                .font(.bodyS)
+                                .foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                }
             }
         }
     }
