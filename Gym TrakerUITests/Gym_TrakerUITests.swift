@@ -88,8 +88,12 @@ final class Gym_TrakerUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Set 1 done"].waitForExistence(timeout: 3), "Set did not complete")
         shoot("06-session-logged")
 
-        // Close and dismiss the summary.
-        app.buttons["Close"].tap()
+        // Finishing now asks first, and the button sits after the exercises.
+        app.buttons["Finish"].firstMatch.tap()
+        let confirm = app.buttons["End session"]
+        XCTAssertTrue(confirm.waitForExistence(timeout: 3), "Finish confirmation did not appear")
+        confirm.tap()
+
         let done = app.buttons["Done"]
         XCTAssertTrue(done.waitForExistence(timeout: 5), "Summary sheet did not appear")
         shoot("07-summary")
@@ -120,7 +124,7 @@ final class Gym_TrakerUITests: XCTestCase {
         app.buttons["Save to my library"].tap()
 
         // It is now searchable in the archive.
-        let search = app.searchFields.firstMatch
+        let search = app.textFields["Search name or muscle"]
         XCTAssertTrue(search.waitForExistence(timeout: 5))
         search.tap()
         search.typeText("Landmine")

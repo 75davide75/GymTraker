@@ -36,6 +36,7 @@ final class HealthStore {
         if let bodyMass = HKQuantityType.quantityType(forIdentifier: .bodyMass) { types.insert(bodyMass) }
         if let sex = HKCharacteristicType.characteristicType(forIdentifier: .biologicalSex) { types.insert(sex) }
         if let dob = HKCharacteristicType.characteristicType(forIdentifier: .dateOfBirth) { types.insert(dob) }
+        if let height = HKQuantityType.quantityType(forIdentifier: .height) { types.insert(height) }
         return types
     }
 
@@ -71,6 +72,8 @@ final class HealthStore {
         var bodyweightKg: Double?
         var sex: Sex?
         var birthYear: Int?
+        var heightCm: Double?
+        var name: String?
     }
 
     /// Pulls whatever Health is willing to give. Anything denied comes back nil
@@ -90,18 +93,19 @@ final class HealthStore {
             data.birthYear = year
         }
 
-        data.bodyweightKg = await latestBodyMassKg()
+        data.bodyweightKg = await latestQuantity(.bodyMass, unit: .gramUnit(with: .kilo))
+        data.heightCm = await latestQuantity(.height, unit: .meterUnit(with: .centi))
         return data
     }
 
-    private func latestBodyMassKg() async -> Double? {
-        guard let type = HKQuantityType.quantityType(forIdentifier: .bodyMass) else { return nil }
+    /// Newest sample of a quantity, in the unit asked for.
+    private func latestQuantity(_ identifier: HKQuantityTypeIdentifier, unit: HKUnit) async -> Double? {
+        guard let type = HKQuantityType.quantityType(forIdentifier: identifier) else { return nil }
         return await withCheckedContinuation { continuation in
             let sort = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
             let query = HKSampleQuery(sampleType: type, predicate: nil, limit: 1, sortDescriptors: [sort]) { _, samples, _ in
-                let kg = (samples?.first as? HKQuantitySample)?
-                    .quantity.doubleValue(for: .gramUnit(with: .kilo))
-                continuation.resume(returning: kg)
+                let value = (samples?.first as? HKQuantitySample)?.quantity.doubleValue(for: unit)
+                continuation.resume(returning: value)
             }
             store.execute(query)
         }

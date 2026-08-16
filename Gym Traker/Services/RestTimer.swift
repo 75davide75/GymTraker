@@ -10,6 +10,7 @@
 import Foundation
 import Observation
 import UserNotifications
+import AudioToolbox
 
 @Observable
 final class RestTimer {
@@ -46,7 +47,19 @@ final class RestTimer {
     /// The last five seconds pulse the ring.
     var isFinishing: Bool { isResting && remainingSeconds <= 5 }
 
+    /// Seconds served in the rest currently running.
+    var elapsedInCurrentRest: Int {
+        guard isResting else { return 0 }
+        return max(0, totalSeconds - remainingSeconds)
+    }
+
+    /// Length of the rest that just ended, for the session's work/rest split.
+    private(set) var lastRestDuration: Int = 0
+
     // MARK: - Control
+
+    /// How the end of a rest announces itself.
+    var alert: RestAlert = .soundAndHaptics
 
     func start(seconds: Int, exerciseName: String, nextSetNumber: Int, notify: Bool) {
         guard seconds > 0 else { return }
@@ -65,6 +78,7 @@ final class RestTimer {
     }
 
     func stop() {
+        lastRestDuration = fireDate == nil ? 0 : totalSeconds
         fireDate = nil
         totalSeconds = 0
         timer?.invalidate()
@@ -87,12 +101,26 @@ final class RestTimer {
                 self.now = .now
                 if let fire = self.fireDate, fire <= self.now {
                     self.stop()
-                    Haptics.success()
+                    self.announceEnd()
                 }
             }
         }
         RunLoop.main.add(timer, forMode: .common)
         self.timer = timer
+    }
+
+    /// Rest is over. What that sounds like is the user's choice: a chime with
+    /// vibration, vibration alone, or nothing at all for a quiet gym.
+    private func announceEnd() {
+        switch alert {
+        case .soundAndHaptics:
+            AudioServicesPlaySystemSound(1057)
+            Haptics.play(.success)
+        case .hapticsOnly:
+            Haptics.play(.success)
+        case .silent:
+            break
+        }
     }
 
     // MARK: - Notifications
@@ -105,7 +133,7 @@ final class RestTimer {
         let content = UNMutableNotificationContent()
         content.title = "Rest over"
         content.body = "\(exerciseName) · set \(setNumber)"
-        content.sound = .default
+        content.sound = alert.playsSound ? .default : nil
 
         let request = UNNotificationRequest(
             identifier: notificationID,

@@ -15,7 +15,6 @@ struct StepperControl<Label: View>: View {
     var canDecrease: Bool = true
     var canIncrease: Bool = true
     var buttonSize: CGFloat = 46
-    var haptic: () -> Void = Haptics.medium
     let onDecrease: () -> Void
     let onIncrease: () -> Void
     @ViewBuilder var label: Label
@@ -35,7 +34,6 @@ struct StepperControl<Label: View>: View {
     private func button(systemName: String, enabled: Bool, action: @escaping () -> Void) -> some View {
         Button {
             guard enabled else { return }
-            haptic()
             withAnimation(Theme.Motion.snappy) { action() }
         } label: {
             Image(systemName: systemName)
@@ -48,7 +46,7 @@ struct StepperControl<Label: View>: View {
                 .contentShape(.rect(cornerRadius: Theme.Radius.smallControl))
                 .opacity(enabled ? 1 : 0.35)
         }
-        .buttonStyle(.pressable)
+        .buttonStyle(.pressableControl)
         .disabled(!enabled)
         .accessibilityLabel(systemName == "minus" ? "Decrease" : "Increase")
     }
@@ -76,7 +74,6 @@ struct RepsStepper: View {
     private func smallButton(_ systemName: String, enabled: Bool, action: @escaping () -> Void) -> some View {
         Button {
             guard enabled else { return }
-            Haptics.light()
             withAnimation(Theme.Motion.snappy) { action() }
         } label: {
             Image(systemName: systemName)
@@ -90,7 +87,7 @@ struct RepsStepper: View {
                 .contentShape(Rectangle())
                 .opacity(enabled ? 1 : 0.3)
         }
-        .buttonStyle(.pressable)
+        .buttonStyle(.pressableControl)
         .disabled(!enabled)
         .accessibilityLabel(systemName == "minus" ? "One rep fewer" : "One rep more")
     }

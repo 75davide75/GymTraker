@@ -102,11 +102,22 @@ struct ProgressionTests {
         #expect(item.openingWeightKg == 72.5)
     }
 
-    @Test func checkboxCopyReflectsTheArmedState() {
+    /// The reminder names no figure: how much you add is decided at the bar,
+    /// and the step can change before the next session.
+    @Test func checkboxCopyCarriesNoWeight() {
         let item = makeItem()
-        #expect(Progression.label(for: item, units: .kg) == "Remind me to add 2.5 kg")
+        let off = Progression.label(for: item, units: .kg)
         item.progressionArmed = true
-        #expect(Progression.label(for: item, units: .kg) == "Progression armed · 72.5 kg next")
+        let on = Progression.label(for: item, units: .kg)
+
+        #expect(off == "Remind me to go up next time")
+        #expect(on == "Reminder set · go heavier next time")
+        for copy in [off, on] {
+            let mentionsUnits = copy.contains("kg") || copy.contains("lb")
+            let mentionsDigits = copy.rangeOfCharacter(from: .decimalDigits) != nil
+            #expect(!mentionsUnits, "The reminder should not quote a weight: \(copy)")
+            #expect(!mentionsDigits, "The reminder should not quote a number: \(copy)")
+        }
     }
 
     @Test func applyWritesSuggestionsAcrossTheWholeSession() {

@@ -160,6 +160,34 @@ enum ChangeField: String, Codable, CaseIterable, Identifiable {
     }
 }
 
+/// What happens when a rest timer runs out.
+enum RestAlert: String, Codable, CaseIterable, Identifiable {
+    case soundAndHaptics
+    case hapticsOnly
+    case silent
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .soundAndHaptics: "Sound & vibration"
+        case .hapticsOnly: "Vibration only"
+        case .silent: "Nothing"
+        }
+    }
+
+    var symbolName: String {
+        switch self {
+        case .soundAndHaptics: "bell.fill"
+        case .hapticsOnly: "iphone.radiowaves.left.and.right"
+        case .silent: "bell.slash"
+        }
+    }
+
+    var playsSound: Bool { self == .soundAndHaptics }
+    var playsHaptics: Bool { self != .silent }
+}
+
 enum ChangeDirection: String, Codable {
     case up, down, neutral
 

@@ -30,6 +30,7 @@ struct HomeView: View {
         case session(PlanDay)
         case ranks
         case registry
+        case history
 
         var id: Self { self }
     }
@@ -75,6 +76,7 @@ struct HomeView: View {
             case .session(let day): SessionView(day: day)
             case .ranks: RankLadderView()
             case .registry: RegistryView()
+            case .history: HistoryView()
             }
         }
     }
@@ -278,6 +280,15 @@ struct HomeView: View {
     // MARK: - Week volume
 
     private var weekVolume: some View {
+        Button {
+            route = .history
+        } label: {
+            weekVolumeBody
+        }
+        .buttonStyle(.pressable)
+    }
+
+    private var weekVolumeBody: some View {
         GlassSection(title: "This week") {
             VStack(alignment: .leading, spacing: 12) {
                 let volumes = weekdayVolumes()
@@ -301,9 +312,18 @@ struct HomeView: View {
                     }
                 }
 
-                Text(consistencyLine)
-                    .font(.captionM)
-                    .foregroundStyle(.secondary)
+                HStack(spacing: 6) {
+                    Text(consistencyLine)
+                        .font(.captionM)
+                        .foregroundStyle(.secondary)
+                    Spacer(minLength: 0)
+                    Text("All sessions")
+                        .font(.captionM)
+                        .foregroundStyle(Theme.Palette.violet)
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(Theme.Palette.violet)
+                }
             }
         }
     }

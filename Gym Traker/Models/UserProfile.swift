@@ -25,6 +25,9 @@ final class UserProfile {
     /// promotion moment fires once per tier per exercise.
     var celebratedPromotions: [String] = []
     var notificationsEnabled: Bool = true
+    var restAlertRaw: String = RestAlert.soundAndHaptics.rawValue
+    var heightCm: Double?
+    var avatarData: Data?
 
     init(
         name: String = "",
@@ -59,6 +62,11 @@ final class UserProfile {
     var appearance: Appearance {
         get { Appearance(rawValue: appearanceRaw) ?? .dark }
         set { appearanceRaw = newValue.rawValue }
+    }
+
+    var restAlert: RestAlert {
+        get { RestAlert(rawValue: restAlertRaw) ?? .soundAndHaptics }
+        set { restAlertRaw = newValue.rawValue }
     }
 
     var age: Int {

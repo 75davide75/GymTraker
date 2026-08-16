@@ -27,6 +27,8 @@ struct LibraryView: View {
     @State private var equipmentFilter: Equipment?
     @State private var showingNewExercise = false
     @State private var detailExercise: Exercise?
+    @State private var headerHeight: CGFloat = 120
+    @FocusState private var searchFocused: Bool
 
     private var filtered: [Exercise] {
         exercises.filter { exercise in
@@ -36,22 +38,28 @@ struct LibraryView: View {
     }
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .top) {
             ScrollView {
                 LazyVStack(spacing: 10, pinnedViews: []) {
-                    header
-                    filterChips
+                    // Leaves room for the pinned header, so rows scroll
+                    // underneath it rather than starting below it.
+                    Color.clear.frame(height: headerHeight)
                     rows
                 }
                 .padding(.horizontal, Theme.Spacing.screenMargin)
                 .padding(.bottom, 24)
             }
             .scrollDismissesKeyboard(.immediately)
+            .scrollIndicators(.hidden)
+
+            pinnedHeader
+                .onGeometryChange(for: CGFloat.self) { proxy in
+                    proxy.size.height
+                } action: { headerHeight = $0 }
         }
         .auroraVariant(.library)
         .navigationTitle(mode == .picker ? "Add exercise" : "Library")
-        .navigationBarTitleDisplayMode(.large)
-        .searchable(text: $search, prompt: "Search name or muscle")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             if mode == .picker {
                 ToolbarItem(placement: .cancellationAction) {
@@ -81,17 +89,76 @@ struct LibraryView: View {
         }
     }
 
-    // MARK: - Pieces
+    // MARK: - Pinned header
 
-    private var header: some View {
+    /// Search and filters stay put; the list passes behind them and fades out
+    /// under a soft edge rather than being clipped by a hard line.
+    private var pinnedHeader: some View {
+        VStack(spacing: 10) {
+            searchField
+            filterChips
+            countLine
+        }
+        .padding(.horizontal, Theme.Spacing.screenMargin)
+        .padding(.top, 6)
+        .padding(.bottom, 10)
+        .background {
+            ZStack(alignment: .bottom) {
+                Rectangle()
+                    .fill(.ultraThinMaterial)
+                    .mask {
+                        LinearGradient(
+                            stops: [
+                                .init(color: .black, location: 0),
+                                .init(color: .black, location: 0.72),
+                                .init(color: .clear, location: 1)
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    }
+            }
+            .ignoresSafeArea(edges: .top)
+        }
+    }
+
+    private var searchField: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(.secondary)
+            TextField("Search name or muscle", text: $search)
+                .font(.bodyM)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .focused($searchFocused)
+                .submitLabel(.search)
+            if !search.isEmpty {
+                Button {
+                    Haptics.play(.selection)
+                    search = ""
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 15))
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.pressableSilent)
+                .transition(.opacity)
+            }
+        }
+        .padding(.horizontal, 14)
+        .frame(height: 40)
+        .glassEffect(.regular, in: .rect(cornerRadius: Theme.Radius.control))
+        .animation(Theme.Motion.snappy, value: search.isEmpty)
+    }
+
+    private var countLine: some View {
         HStack {
             Text("\(filtered.count) of \(exercises.count) exercises")
-                .font(.bodyS)
-                .foregroundStyle(.secondary)
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(.tertiary)
             Spacer()
         }
-        .padding(.top, 4)
-        .padding(.bottom, 2)
     }
 
     private var filterChips: some View {
@@ -111,7 +178,7 @@ struct LibraryView: View {
                 }
             }
             .padding(.horizontal, 2)
-            .padding(.vertical, 4)
+            .padding(.vertical, 2)
         }
         .scrollClipDisabled()
     }

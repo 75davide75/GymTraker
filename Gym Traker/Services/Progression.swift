@@ -57,12 +57,12 @@ enum Progression {
         item.suggestedWeightKg = nil
     }
 
-    /// Copy for the progression checkbox.
+    /// Copy for the progression checkbox. Deliberately without a figure: the
+    /// reminder is an intention to go up, and what that means in kilograms is
+    /// decided when you are standing at the bar.
     static func label(for item: PlanItem, units: Units) -> String {
-        if item.progressionArmed {
-            let next = item.workingWeightKg + item.stepKg
-            return "Progression armed · \(UnitFormatter.weight(next, in: units)) next"
-        }
-        return "Remind me to add \(UnitFormatter.weight(item.stepKg, in: units))"
+        item.progressionArmed
+            ? "Reminder set · go heavier next time"
+            : "Remind me to go up next time"
     }
 }

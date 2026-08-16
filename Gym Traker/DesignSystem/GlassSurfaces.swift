@@ -80,18 +80,42 @@ struct GlassSection<Content: View>: View {
 
 // MARK: - Press feedback
 
-/// Every tappable glass surface scales to 0.98 on press.
+/// Press feedback for any tappable surface.
+///
+/// The spec asked for a 0.98 scale, which is right for a big card and
+/// invisible on a 46 pt stepper — under a point of movement. Scale is now
+/// chosen for the control's size, a dip in opacity backs it up, and the haptic
+/// fires on the way *down* rather than when the action runs, which is what
+/// makes a button feel like a button.
 struct PressableStyle: ButtonStyle {
-    var scale: CGFloat = 0.98
+    var scale: CGFloat = 0.97
+    var haptic: Haptics.Style? = .press
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .scaleEffect(configuration.isPressed ? scale : 1)
-            .animation(Theme.Motion.snappy, value: configuration.isPressed)
+            .opacity(configuration.isPressed ? 0.78 : 1)
+            .animation(.spring(response: 0.2, dampingFraction: 0.62), value: configuration.isPressed)
+            .onChange(of: configuration.isPressed) { _, isPressed in
+                guard isPressed, let haptic else { return }
+                haptic.fire()
+            }
     }
 }
 
 extension ButtonStyle where Self == PressableStyle {
+    /// Cards, rows and chips.
     static var pressable: PressableStyle { PressableStyle() }
+
+    /// Small controls, where a 3 % scale would not register.
+    static var pressableControl: PressableStyle {
+        PressableStyle(scale: 0.88, haptic: .step)
+    }
+
+    /// Surfaces that already fire their own haptic when the action lands.
+    static var pressableSilent: PressableStyle {
+        PressableStyle(haptic: nil)
+    }
 }
 
 // MARK: - Chips

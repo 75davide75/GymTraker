@@ -31,8 +31,10 @@ struct AuroraVariant: Equatable {
                                         secondary: UnitPoint(x: 0.92, y: 0.58), intensity: 0.88)
     static let profile = AuroraVariant(hueShift: 42, primary: UnitPoint(x: 0.62, y: 0.10),
                                        secondary: UnitPoint(x: 0.14, y: 0.78), intensity: 1.05)
-    static let session = AuroraVariant(hueShift: 8, primary: UnitPoint(x: 0.50, y: -0.04),
-                                       secondary: UnitPoint(x: 0.50, y: 1.02), intensity: 1.15)
+    /// Sport mode: the blooms swing round to red and sit low and wide, so the
+    /// session screen reads hot the moment it opens.
+    static let session = AuroraVariant(hueShift: -128, primary: UnitPoint(x: 0.14, y: 0.02),
+                                       secondary: UnitPoint(x: 0.88, y: 0.94), intensity: 1.25)
 }
 
 // MARK: - Attaching a variant

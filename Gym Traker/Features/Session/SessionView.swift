@@ -26,6 +26,9 @@ struct SessionView: View {
     @State private var promotion: Promotion?
     @State private var statsExercise: Exercise?
     @State private var restEditingItem: PlanItem?
+    /// Rest already served this session, in seconds.
+    @State private var restAccumulated: Int = 0
+    @State private var confirmingFinish = false
 
     private var units: Units { Store.units(in: context) }
     private var items: [PlanItem] { day.orderedItems }
@@ -40,14 +43,18 @@ struct SessionView: View {
                 VStack(spacing: 12) {
                     header
                     cards
+                    finishButton
                 }
                 .padding(.horizontal, Theme.Spacing.screenMargin)
-                .padding(.bottom, timer.isResting ? 110 : 40)
+                .padding(.bottom, timer.isResting ? 120 : 44)
             }
 
             if timer.isResting {
-                RestBar(timer: timer) { timer.skip() }
-                    .padding(.bottom, 12)
+                RestBar(timer: timer) {
+                    restAccumulated += timer.elapsedInCurrentRest
+                    timer.skip()
+                }
+                .padding(.bottom, 12)
             }
         }
         .auroraVariant(.session)
@@ -55,13 +62,31 @@ struct SessionView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                Button("Close") { finish() }
+                Button("Finish") { confirmingFinish = true }
                     .font(.bodyM)
+                    .tint(Theme.Palette.sportRed)
             }
         }
-        .task { startIfNeeded() }
+        .confirmationDialog(
+            "Finish this workout?",
+            isPresented: $confirmingFinish,
+            titleVisibility: .visible
+        ) {
+            Button("End session") { finish() }
+            Button("Keep going", role: .cancel) {}
+        } message: {
+            Text("\(completedSets) of \(totalSets) sets logged.")
+        }
+        .task {
+            timer.alert = Store.profile(in: context)?.restAlert ?? .soundAndHaptics
+            startIfNeeded()
+        }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { timer.refresh() }
+        }
+        .onChange(of: timer.isResting) { wasResting, isResting in
+            // A rest that ran to the end still counts towards the split.
+            if wasResting, !isResting { restAccumulated += timer.lastRestDuration }
         }
         .sheet(isPresented: $showingSummary) {
             if let summary {
@@ -84,32 +109,30 @@ struct SessionView: View {
 
     // MARK: - Header
 
+    @ViewBuilder
     private var header: some View {
-        GlassCard(radius: Theme.Radius.hero) {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack(alignment: .firstTextBaseline) {
-                    // Ticks on its own schedule so the whole card is not
-                    // rebuilt once a second.
-                    TimelineView(.periodic(from: .now, by: 1)) { context in
-                        Text(elapsedText(at: context.date))
-                            .font(.displayL)
-                    }
-                    Spacer()
-                    Text("\(completedSets) of \(totalSets) sets")
-                        .font(.numberS)
-                        .foregroundStyle(.secondary)
-                }
-                GlassProgressBar(
-                    value: totalSets == 0 ? 0 : Double(completedSets) / Double(totalSets)
-                )
-            }
+        if let session {
+            SessionDashboard(
+                startedAt: session.startedAt,
+                restSeconds: restAccumulated + timer.elapsedInCurrentRest,
+                completedSets: completedSets,
+                totalSets: totalSets,
+                segments: segments,
+                isResting: timer.isResting
+            )
+            .entryTransition(0)
         }
-        .entryTransition(0)
     }
 
-    private func elapsedText(at date: Date) -> String {
-        guard let session else { return "0:00" }
-        return UnitFormatter.clock(Int(date.timeIntervalSince(session.startedAt)))
+    private var segments: [SessionDashboard.SessionSegment] {
+        entries.enumerated().map { index, entry in
+            SessionDashboard.SessionSegment(
+                id: index,
+                name: entry.exerciseName,
+                total: entry.sets.count,
+                completed: entry.sets.filter(\.isCompleted).count
+            )
+        }
     }
 
     // MARK: - Cards
@@ -140,6 +163,39 @@ struct SessionView: View {
                 .entryTransition(index + 1)
             }
         }
+    }
+
+    /// Sits after the last exercise, where you actually are when you finish.
+    private var finishButton: some View {
+        VStack(spacing: 10) {
+            Button {
+                confirmingFinish = true
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "flag.checkered")
+                    Text("Finish workout")
+                }
+                .font(.bodyM)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+            }
+            .buttonStyle(.pressableSilent)
+            .background {
+                RoundedRectangle(cornerRadius: Theme.Radius.card, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [Theme.Palette.sportRed, Theme.Palette.sportEmber],
+                            startPoint: .leading, endPoint: .trailing
+                        )
+                    )
+            }
+            .foregroundStyle(.white)
+
+            Text("\(completedSets) of \(totalSets) sets logged")
+                .font(.captionM)
+                .foregroundStyle(.secondary)
+        }
+        .padding(.top, 6)
     }
 
     // MARK: - Session lifecycle

@@ -32,6 +32,7 @@ struct SettingsView: View {
                         appearanceSection(profile)
                         profileSection(profile)
                         healthSection(profile)
+                        restAlertSection(profile)
                         notificationsSection(profile)
                     }
                     exportSection
@@ -233,6 +234,43 @@ struct SettingsView: View {
             healthNotice = updates.isEmpty ? "Health is connected — nothing new to pull." : "Updated: \(updates.joined(separator: ", "))."
         }
         Haptics.success()
+    }
+
+    private func restAlertSection(_ profile: UserProfile) -> some View {
+        GlassSection(title: "When rest ends") {
+            VStack(alignment: .leading, spacing: 10) {
+                ForEach(RestAlert.allCases) { option in
+                    Button {
+                        Haptics.play(.selection)
+                        profile.restAlert = option
+                        try? context.save()
+                    } label: {
+                        HStack(spacing: 12) {
+                            Image(systemName: option.symbolName)
+                                .font(.system(size: 15))
+                                .frame(width: 24)
+                                .foregroundStyle(profile.restAlert == option
+                                                 ? Theme.Palette.violet : Color.secondary)
+                            Text(option.displayName)
+                                .font(.bodyM)
+                                .foregroundStyle(.primary)
+                            Spacer(minLength: 0)
+                            if profile.restAlert == option {
+                                Image(systemName: "checkmark")
+                                    .font(.system(size: 13, weight: .bold))
+                                    .foregroundStyle(Theme.Palette.violet)
+                            }
+                        }
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.pressableSilent)
+
+                    if option != RestAlert.allCases.last {
+                        Divider().opacity(0.4)
+                    }
+                }
+            }
+        }
     }
 
     private func notificationsSection(_ profile: UserProfile) -> some View {

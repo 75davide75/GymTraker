@@ -16,6 +16,7 @@ struct YouView: View {
 
     @State private var showingSettings = false
     @State private var ranking = RankingSnapshot.empty
+    @State private var editingProfile = false
 
     private var profile: UserProfile? { profiles.first }
     private var units: Units { profile?.units ?? .kg }
@@ -55,40 +56,55 @@ struct YouView: View {
         .sheet(isPresented: $showingSettings) {
             NavigationStack { SettingsView() }
         }
+        .sheet(isPresented: $editingProfile) {
+            if let profile {
+                NavigationStack { ProfileEditor(profile: profile) }
+            }
+        }
     }
 
     // MARK: - Identity
 
     private var identity: some View {
-        GlassCard(radius: Theme.Radius.hero) {
-            HStack(spacing: 16) {
-                ZStack {
-                    Circle()
-                        .fill(
-                            LinearGradient(
-                                colors: [Theme.Palette.violet, Theme.Palette.cyan],
-                                startPoint: .topLeading, endPoint: .bottomTrailing
-                            )
-                        )
-                        .frame(width: 64, height: 64)
-                    Text(initials)
-                        .font(.system(size: 24, weight: .bold))
-                        .foregroundStyle(.white)
-                }
+        Button {
+            editingProfile = true
+        } label: {
+            GlassCard(radius: Theme.Radius.hero) {
+                HStack(spacing: 16) {
+                    ProfileAvatar(profile: profile, size: 64)
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(profile?.name.isEmpty == false ? profile!.name : "Lifter")
-                        .font(.titleL)
-                    if let profile {
-                        Text("\(profile.sex.displayName) · \(profile.age) · \(UnitFormatter.weight(profile.bodyweightKg, in: units))")
-                            .font(.captionM)
-                            .foregroundStyle(.secondary)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(profile?.name.isEmpty == false ? profile!.name : "Lifter")
+                            .font(.titleL)
+                            .foregroundStyle(.primary)
+                        if let profile {
+                            Text(detailLine(profile))
+                                .font(.captionM)
+                                .foregroundStyle(.secondary)
+                        }
                     }
-                }
 
-                Spacer(minLength: 0)
+                    Spacer(minLength: 0)
+
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundStyle(.tertiary)
+                }
             }
         }
+        .buttonStyle(.pressable)
+    }
+
+    private func detailLine(_ profile: UserProfile) -> String {
+        var parts = [
+            profile.sex.displayName,
+            "\(profile.age)",
+            UnitFormatter.weight(profile.bodyweightKg, in: units)
+        ]
+        if let height = profile.heightCm {
+            parts.append("\(Int(height.rounded())) cm")
+        }
+        return parts.joined(separator: " · ")
     }
 
     private var initials: String {

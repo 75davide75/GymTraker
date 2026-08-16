@@ -24,6 +24,14 @@ enum Theme {
         /// Decreases — oklch(0.78 0.15 30)
         static let decrease = Color(red: 1.000, green: 0.562, blue: 0.489)
 
+        /// Sport mode. A session is the one screen where the app stops being
+        /// calm: the accents run hot, the way a car's dashboard does when you
+        /// put it in the aggressive setting.
+        static let sportRed = Color(red: 0.949, green: 0.278, blue: 0.271)
+        static let sportEmber = Color(red: 0.976, green: 0.478, blue: 0.180)
+        /// Rest is the cool half of that dashboard.
+        static let sportCool = Color(red: 0.176, green: 0.702, blue: 0.847)
+
         static let backgroundDark = Color(red: 0.027, green: 0.027, blue: 0.039)   // #07070A
         static let backgroundLight = Color(red: 0.937, green: 0.941, blue: 0.961)  // #EFF0F5
 

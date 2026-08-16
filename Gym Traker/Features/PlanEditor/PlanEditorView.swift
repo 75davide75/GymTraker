@@ -68,7 +68,9 @@ struct PlanEditorView: View {
         }
         .sheet(item: $editingItem) { item in
             NavigationStack {
-                PlanItemEditor(item: item, units: units)
+                PlanItemEditor(item: item, units: units) {
+                    if let day = item.day { remove(item, from: day) }
+                }
             }
             .presentationDetents([.large])
         }
@@ -195,17 +197,24 @@ struct PlanEditorView: View {
                     }
                 } else {
                     ForEach(day.orderedItems) { item in
-                        Button {
-                            editingItem = item
-                        } label: {
-                            PlanItemRow(item: item, units: units)
-                        }
-                        .buttonStyle(.pressable)
-                        .contextMenu {
-                            Button("Move up") { move(item, in: day, by: -1) }
-                            Button("Move down") { move(item, in: day, by: 1) }
-                            Button("Remove", role: .destructive) { remove(item, from: day) }
-                        }
+                        // The context menu sits on the row, not on the button.
+                        // Attached to the button it competed with the tap and
+                        // the long press only registered some of the time.
+                        PlanItemRow(item: item, units: units)
+                            .contentShape(.rect(cornerRadius: Theme.Radius.row))
+                            .onTapGesture { editingItem = item }
+                            .contextMenu {
+                                Button {
+                                    move(item, in: day, by: -1)
+                                } label: { Label("Move up", systemImage: "arrow.up") }
+                                Button {
+                                    move(item, in: day, by: 1)
+                                } label: { Label("Move down", systemImage: "arrow.down") }
+                                Divider()
+                                Button(role: .destructive) {
+                                    remove(item, from: day)
+                                } label: { Label("Remove", systemImage: "trash") }
+                            }
                     }
                 }
 

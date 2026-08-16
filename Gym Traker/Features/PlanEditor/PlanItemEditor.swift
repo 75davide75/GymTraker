@@ -15,6 +15,10 @@ struct PlanItemEditor: View {
 
     let item: PlanItem
     let units: Units
+    /// Called when the user removes the exercise from the plan.
+    var onDelete: (() -> Void)?
+
+    @State private var confirmingDelete = false
 
     /// Rest values the pill cycles through, per design/SPEC.md §2.3.
     static let restLadder = [45, 60, 75, 90, 105, 120, 150, 180]
@@ -36,12 +40,34 @@ struct PlanItemEditor: View {
         .navigationTitle(item.exerciseName)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .destructiveAction) {
+                Button(role: .destructive) {
+                    confirmingDelete = true
+                } label: {
+                    Label("Remove", systemImage: "trash")
+                }
+                .tint(Theme.Palette.decrease)
+            }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Done") {
                     try? context.save()
                     dismiss()
                 }
             }
+        }
+        .confirmationDialog(
+            "Remove \(item.exerciseName)?",
+            isPresented: $confirmingDelete,
+            titleVisibility: .visible
+        ) {
+            Button("Remove from plan", role: .destructive) {
+                Haptics.play(.remove)
+                onDelete?()
+                dismiss()
+            }
+            Button("Keep", role: .cancel) {}
+        } message: {
+            Text("The history stays in the registry.")
         }
     }
 
@@ -61,7 +87,7 @@ struct PlanItemEditor: View {
                 HStack(spacing: 8) {
                     Text("Step").font(.captionM).foregroundStyle(.secondary)
                     Spacer()
-                    ForEach([1.0, 2.0, 2.5, 5.0], id: \.self) { step in
+                    ForEach([0.5, 1.0, 2.0, 2.5, 5.0], id: \.self) { step in
                         GlassChip(
                             title: UnitFormatter.number(step, in: units),
                             isSelected: abs(item.stepKg - step) < 0.001
