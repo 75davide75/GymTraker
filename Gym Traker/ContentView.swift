@@ -6,16 +6,18 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
+    @Query private var exercises: [Exercise]
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        VStack(spacing: 8) {
+            Text("Gym Tracker")
+                .font(.largeTitle.bold())
+            Text("\(exercises.count) exercises in the archive")
+                .foregroundStyle(.secondary)
         }
-        .padding()
     }
 }
 
