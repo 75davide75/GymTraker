@@ -160,6 +160,47 @@ enum ChangeField: String, Codable, CaseIterable, Identifiable {
     }
 }
 
+/// How long the lifter has been training. Sets the rep scheme a preset opens
+/// with and which splits are suggested first.
+enum ExperienceLevel: String, Codable, CaseIterable, Identifiable {
+    case beginner, intermediate, advanced
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .beginner: "Beginner"
+        case .intermediate: "Intermediate"
+        case .advanced: "Advanced"
+        }
+    }
+
+    var blurb: String {
+        switch self {
+        case .beginner: "New to lifting, or back after a long break"
+        case .intermediate: "A year or two of steady training"
+        case .advanced: "Several years, and you know your numbers"
+        }
+    }
+
+    var symbolName: String {
+        switch self {
+        case .beginner: "leaf.fill"
+        case .intermediate: "flame.fill"
+        case .advanced: "bolt.fill"
+        }
+    }
+
+    /// How many sessions a week this level should reasonably commit to.
+    var suggestedDays: ClosedRange<Int> {
+        switch self {
+        case .beginner: 2...3
+        case .intermediate: 3...5
+        case .advanced: 4...6
+        }
+    }
+}
+
 /// What happens when a rest timer runs out.
 enum RestAlert: String, Codable, CaseIterable, Identifiable {
     case soundAndHaptics

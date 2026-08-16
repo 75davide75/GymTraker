@@ -27,6 +27,7 @@ final class UserProfile {
     var notificationsEnabled: Bool = true
     var restAlertRaw: String = RestAlert.soundAndHaptics.rawValue
     var heightCm: Double?
+    var experienceRaw: String = ExperienceLevel.beginner.rawValue
     var avatarData: Data?
 
     init(
@@ -62,6 +63,11 @@ final class UserProfile {
     var appearance: Appearance {
         get { Appearance(rawValue: appearanceRaw) ?? .dark }
         set { appearanceRaw = newValue.rawValue }
+    }
+
+    var experience: ExperienceLevel {
+        get { ExperienceLevel(rawValue: experienceRaw) ?? .beginner }
+        set { experienceRaw = newValue.rawValue }
     }
 
     var restAlert: RestAlert {

@@ -64,7 +64,7 @@ struct HomeView: View {
                     weekVolume.entryTransition(4)
                 }
                 .padding(.horizontal, Theme.Spacing.screenMargin)
-                .padding(.bottom, 30)
+                .padding(.bottom, 96)
             }
         }
         .auroraVariant(.home)

@@ -30,32 +30,10 @@ final class Gym_TrakerUITests: XCTestCase {
     }
 
     private func tapTab(_ name: String) {
-        let tab = app.tabBars.buttons[name]
+        // The bar is drawn by the app now, so its buttons are plain buttons.
+        let tab = app.buttons[name].firstMatch
         XCTAssertTrue(tab.waitForExistence(timeout: 5), "Tab \(name) is missing")
         tab.tap()
-    }
-
-    /// Runs the three onboarding steps and lands on Home with a PPL plan.
-    private func completeOnboarding() {
-        let name = app.textFields["Optional"]
-        XCTAssertTrue(name.waitForExistence(timeout: 10), "Onboarding did not appear")
-        name.tap()
-        name.typeText("Davide")
-
-        shoot("01-onboarding-welcome")
-        app.buttons["Continue"].tap()
-
-        XCTAssertTrue(app.staticTexts["Calibration"].waitForExistence(timeout: 5))
-        shoot("02-onboarding-calibration")
-        app.buttons["Continue"].tap()
-
-        let preset = app.buttons.containing(.staticText, identifier: "Push / Pull / Legs").firstMatch
-        XCTAssertTrue(preset.waitForExistence(timeout: 5), "Preset list did not appear")
-        preset.tap()
-        shoot("03-onboarding-plan")
-
-        app.buttons["Start training"].tap()
-        XCTAssertTrue(app.buttons["Start workout"].waitForExistence(timeout: 10), "Home did not load a session")
     }
 
     // MARK: - Tests
@@ -63,7 +41,7 @@ final class Gym_TrakerUITests: XCTestCase {
     /// The whole path: onboard, log a session with uneven sets, and confirm the
     /// registry recorded every parameter that moved.
     func testFullTrackingFlow() throws {
-        completeOnboarding()
+        completeOnboarding(in: app, shoot: shoot)
         shoot("04-home")
 
         app.buttons["Start workout"].tap()
@@ -108,7 +86,7 @@ final class Gym_TrakerUITests: XCTestCase {
     /// Acceptance check: a custom exercise appears in search, in the archive and
     /// carries a diagram matching the rest of the library.
     func testCustomExerciseReachesTheArchive() throws {
-        completeOnboarding()
+        completeOnboarding(in: app, shoot: shoot)
 
         tapTab("Library")
         XCTAssertTrue(app.navigationBars["Library"].waitForExistence(timeout: 5))
@@ -137,29 +115,39 @@ final class Gym_TrakerUITests: XCTestCase {
 
     /// Acceptance check: assigning one template to two weekdays works.
     func testTemplateCanRepeatWithinTheWeek() throws {
-        completeOnboarding()
+        completeOnboarding(in: app, shoot: shoot)
 
         tapTab("Plan")
         XCTAssertTrue(app.navigationBars["Plan"].waitForExistence(timeout: 5))
         shoot("12-plan")
 
-        // Tuesday starts as a rest day in the PPL preset; one tap assigns A,
-        // which Monday already holds.
-        let tuesday = app.buttons["Tue: rest"]
+        // Home shows a read-only copy of the same strip, so target the live
+        // one: only the editor's cells are enabled.
+        let tuesday = app.buttons
+            .matching(NSPredicate(format: "label == %@ AND enabled == true", "Tue: rest"))
+            .firstMatch
         XCTAssertTrue(tuesday.waitForExistence(timeout: 5), "Week grid is missing")
         tuesday.tap()
 
+        let assigned = app.buttons
+            .matching(NSPredicate(format: "label == %@ AND enabled == true", "Tue: template A"))
+            .firstMatch
         XCTAssertTrue(
-            app.buttons["Tue: template A"].waitForExistence(timeout: 3),
+            assigned.waitForExistence(timeout: 3),
             "Template A did not repeat on a second weekday"
         )
-        XCTAssertTrue(app.buttons["Mon: template A"].exists, "Monday lost its template")
+        XCTAssertTrue(
+            app.buttons
+                .matching(NSPredicate(format: "label == %@ AND enabled == true", "Mon: template A"))
+                .firstMatch.exists,
+            "Monday lost its template"
+        )
         shoot("13-plan-repeated-template")
     }
 
     /// The ranking screen renders and explains itself.
     func testProfileScreenRenders() throws {
-        completeOnboarding()
+        completeOnboarding(in: app, shoot: shoot)
 
         tapTab("You")
         XCTAssertTrue(app.navigationBars["You"].waitForExistence(timeout: 5))
@@ -169,7 +157,7 @@ final class Gym_TrakerUITests: XCTestCase {
 
     /// Both appearances are first-class, so the light pass gets walked too.
     func testLightAppearance() throws {
-        completeOnboarding()
+        completeOnboarding(in: app, shoot: shoot)
 
         tapTab("You")
         app.buttons["Settings"].tap()
@@ -195,7 +183,7 @@ final class Gym_TrakerUITests: XCTestCase {
 
     /// Export produces a shareable file rather than failing silently.
     func testDataExport() throws {
-        completeOnboarding()
+        completeOnboarding(in: app, shoot: shoot)
 
         tapTab("You")
         app.buttons["Settings"].tap()

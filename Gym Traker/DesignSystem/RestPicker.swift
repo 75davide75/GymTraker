@@ -26,6 +26,10 @@ struct RestPicker: View {
     var body: some View {
         VStack(spacing: 12) {
             HStack(spacing: 8) {
+                // Zero means no timer at all, for anyone who rests by feel.
+                GlassChip(title: "Off", isSelected: seconds <= 0, tint: Theme.Palette.decrease) {
+                    onChange(0)
+                }
                 ForEach(presets, id: \.self) { value in
                     GlassChip(
                         title: UnitFormatter.rest(value),
@@ -38,6 +42,13 @@ struct RestPicker: View {
                 Spacer(minLength: 0)
             }
 
+            if seconds <= 0 {
+                Text("No rest timer on this exercise — start the next set when you are ready.")
+                    .font(.captionM)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(height: 110)
+            } else {
             Picker("Rest between sets", selection: Binding(
                 get: { nearest(seconds) },
                 set: { newValue in
@@ -55,6 +66,7 @@ struct RestPicker: View {
             .pickerStyle(.wheel)
             .frame(height: 110)
             .clipped()
+            }
         }
     }
 

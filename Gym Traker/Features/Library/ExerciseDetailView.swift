@@ -23,7 +23,7 @@ struct ExerciseDetailView: View {
 
     private var units: Units { Store.units(in: context) }
     private var rank: RankResult? { ranking.rank(for: exercise.id) }
-    private var history: [SessionEntry] { Store.history(for: exercise.id, in: context, limit: 8) }
+    private var history: [SessionEntry] { Store.history(for: exercise.id, in: context, limit: 24) }
     private var records: [ChangeRecord] { Registry.forExercise(exercise.id, in: context, limit: 20) }
     private var planItem: PlanItem? {
         Store.activePlan(in: context)?.orderedDays
@@ -204,17 +204,13 @@ struct ExerciseDetailView: View {
     // MARK: - Chart
 
     private var chartCard: some View {
-        GlassSection(title: "Working weight · last \(max(history.count, 1)) sessions") {
+        GlassSection(title: "Trends") {
             if history.isEmpty {
                 Text("No sessions logged yet.")
                     .font(.bodyS)
                     .foregroundStyle(.secondary)
             } else {
-                WeightBarChart(
-                    values: history.map(\.topWeightKg),
-                    labels: history.map { shortDate($0.session?.startedAt) },
-                    units: units
-                )
+                ProgressCharts(history: history, units: units)
             }
         }
     }

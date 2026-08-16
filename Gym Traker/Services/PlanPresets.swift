@@ -31,6 +31,74 @@ struct PlanPreset: Identifiable {
 
     var dayCount: Int { weekAssignments.filter { !$0.isEmpty }.count }
 
+    /// Which lifters this split suits. Shown first for a matching level, and
+    /// still offered to everyone else.
+    var suits: [ExperienceLevel] {
+        switch dayCount {
+        case ...3: [.beginner, .intermediate]
+        case 4: [.intermediate, .advanced]
+        default: [.advanced]
+        }
+    }
+
+    /// The same split, run three ways. Rep scheme and rest change; the
+    /// exercises do not, because what makes a programme strength or hypertrophy
+    /// is how you load it, not a different list of movements.
+    enum Variant: String, CaseIterable, Identifiable {
+        case strength, balanced, hypertrophy
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .strength: "Strength"
+            case .balanced: "Balanced"
+            case .hypertrophy: "Hypertrophy"
+            }
+        }
+
+        var blurb: String {
+            switch self {
+            case .strength: "5 heavy sets of 5, three minutes between them"
+            case .balanced: "4 sets of 8 — the middle of the road"
+            case .hypertrophy: "3 sets of 12, short rests, chasing volume"
+            }
+        }
+
+        var sets: Int {
+            switch self {
+            case .strength: 5
+            case .balanced: 4
+            case .hypertrophy: 3
+            }
+        }
+
+        var reps: Int {
+            switch self {
+            case .strength: 5
+            case .balanced: 8
+            case .hypertrophy: 12
+            }
+        }
+
+        var restSeconds: Int {
+            switch self {
+            case .strength: 180
+            case .balanced: 90
+            case .hypertrophy: 60
+            }
+        }
+
+        /// What a lifter at this level should open with.
+        static func suggested(for level: ExperienceLevel) -> Variant {
+            switch level {
+            case .beginner: .balanced
+            case .intermediate: .hypertrophy
+            case .advanced: .strength
+            }
+        }
+    }
+
     static let all: [PlanPreset] = [
         fullBody, upperLower, pushPullLegs, pushPullLegsSix, pplul, arnold, bodyPart, strength5x5
     ]
@@ -220,16 +288,18 @@ struct PlanPreset: Identifiable {
 
     /// Materialises the preset into SwiftData, resolving names from the archive.
     @discardableResult
-    func build(in context: ModelContext) -> Plan {
-        let plan = Plan(name: name)
+    func build(in context: ModelContext, variant: Variant = .balanced) -> Plan {
+        let plan = Plan(name: "\(name) · \(variant.displayName)")
         context.insert(plan)
         plan.weekAssignmentsRaw = weekAssignments
 
-        // 5×5 means five sets of five; everything else opens at 3×8.
+        // The 5×5 template is a strength programme by definition, so it keeps
+        // its own scheme whatever variant is picked.
         let isStrength = id == "strength-5x5"
-        let targets = isStrength
-            ? Array(repeating: SetTarget(reps: 5), count: 5)
-            : Array(repeating: SetTarget(reps: 8), count: 3)
+        let sets = isStrength ? 5 : variant.sets
+        let reps = isStrength ? 5 : variant.reps
+        let rest = isStrength ? 180 : variant.restSeconds
+        let targets = Array(repeating: SetTarget(reps: reps), count: sets)
 
         for (dayIndex, template) in days.enumerated() {
             let day = PlanDay(letter: template.letter, title: template.title, order: dayIndex)
@@ -246,7 +316,7 @@ struct PlanPreset: Identifiable {
                     targetSets: targets.map { SetTarget(reps: $0.reps) },
                     workingWeightKg: exercise.equipment == .bodyweight ? 0 : 20,
                     stepKg: exercise.defaultStepKg,
-                    restSeconds: isStrength ? 180 : 90
+                    restSeconds: rest
                 )
                 item.day = day
                 context.insert(item)

@@ -31,6 +31,19 @@ struct WeekScheduleGrid: View {
                 cell(index)
             }
         }
+        // On Home the strip is a read-only summary, so it reads as one thing
+        // rather than seven buttons — which also stops it answering to the
+        // same queries as the real editor on the Plan screen.
+        .accessibilityElement(children: isInteractive ? .contain : .ignore)
+        .accessibilityLabel(isInteractive ? "" : summaryLabel)
+    }
+
+    private var summaryLabel: String {
+        let assigned = dayIndices.compactMap { index -> String? in
+            let letter = assignments.indices.contains(index) ? assignments[index] : ""
+            return letter.isEmpty ? nil : "\(dayNames[index]) \(letter)"
+        }
+        return assigned.isEmpty ? "No sessions scheduled this week" : "This week: " + assigned.joined(separator: ", ")
     }
 
     private func cell(_ index: Int) -> some View {
@@ -69,6 +82,9 @@ struct WeekScheduleGrid: View {
         }
         .buttonStyle(.pressable)
         .disabled(!isInteractive)
+        // The read-only copy on Home is decoration: the container already
+        // carries a summary label, so the cells stay out of the tree entirely.
+        .accessibilityHidden(!isInteractive)
         .accessibilityLabel("\(dayNames[index]): \(hasTemplate ? "template \(letter)" : "rest")")
         .accessibilityHint(isInteractive ? "Tap to change" : "")
     }

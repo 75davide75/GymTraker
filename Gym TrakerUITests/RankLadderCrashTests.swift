@@ -26,22 +26,8 @@ final class RankLadderCrashTests: XCTestCase {
         add(attachment)
     }
 
-    private func completeOnboarding() {
-        let name = app.textFields["Optional"]
-        XCTAssertTrue(name.waitForExistence(timeout: 15), "Onboarding did not appear")
-        app.buttons["Continue"].tap()
-        XCTAssertTrue(app.staticTexts["Calibration"].waitForExistence(timeout: 5))
-        app.buttons["Continue"].tap()
-
-        let preset = app.buttons.containing(.staticText, identifier: "Push / Pull / Legs").firstMatch
-        XCTAssertTrue(preset.waitForExistence(timeout: 5))
-        preset.tap()
-        app.buttons["Start training"].tap()
-        XCTAssertTrue(app.buttons["Start workout"].waitForExistence(timeout: 15), "Home did not load")
-    }
-
     func testTappingRankTileOpensTheLadder() throws {
-        completeOnboarding()
+        completeOnboarding(in: app)
 
         let rankTile = app.buttons.containing(.staticText, identifier: "RANK").firstMatch
         XCTAssertTrue(rankTile.waitForExistence(timeout: 5), "Rank tile is missing")

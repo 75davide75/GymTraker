@@ -49,9 +49,11 @@ enum UnitFormatter {
         return String(format: "%d:%02d", s / 60, s % 60)
     }
 
-    /// "90s" / "1m 30s" for rest pills.
+    /// "90s" / "1m 30s" for rest pills. Zero means the timer is switched off
+    /// for that exercise, not a zero-second rest.
     static func rest(_ seconds: Int) -> String {
-        seconds < 60 ? "\(seconds)s" : (seconds % 60 == 0 ? "\(seconds / 60)m" : "\(seconds / 60)m \(seconds % 60)s")
+        guard seconds > 0 else { return "No timer" }
+        return seconds < 60 ? "\(seconds)s" : (seconds % 60 == 0 ? "\(seconds / 60)m" : "\(seconds / 60)m \(seconds % 60)s")
     }
 
     /// Drops a trailing ".0" so 160.0 reads as "160" but 72.5 stays "72.5".

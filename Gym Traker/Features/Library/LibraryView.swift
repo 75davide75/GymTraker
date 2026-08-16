@@ -30,6 +30,13 @@ struct LibraryView: View {
     @State private var headerHeight: CGFloat = 120
     @FocusState private var searchFocused: Bool
 
+    /// Only equipment the archive actually has exercises for. A chip that
+    /// filters to nothing is a dead end.
+    private var availableEquipment: [Equipment] {
+        let present = Set(exercises.map(\.equipment))
+        return Equipment.allCases.filter(present.contains)
+    }
+
     private var filtered: [Exercise] {
         exercises.filter { exercise in
             exercise.matches(search)
@@ -47,7 +54,7 @@ struct LibraryView: View {
                     rows
                 }
                 .padding(.horizontal, Theme.Spacing.screenMargin)
-                .padding(.bottom, 24)
+                .padding(.bottom, 96)
             }
             .scrollDismissesKeyboard(.immediately)
             .scrollIndicators(.hidden)
@@ -167,7 +174,7 @@ struct LibraryView: View {
                 GlassChip(title: "All", isSelected: equipmentFilter == nil) {
                     equipmentFilter = nil
                 }
-                ForEach(Equipment.allCases) { equipment in
+                ForEach(availableEquipment) { equipment in
                     GlassChip(
                         title: equipment.rawValue,
                         isSelected: equipmentFilter == equipment,

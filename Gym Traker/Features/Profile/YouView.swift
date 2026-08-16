@@ -16,6 +16,7 @@ struct YouView: View {
 
     @State private var showingSettings = false
     @State private var ranking = RankingSnapshot.empty
+    @State private var muscleRanks: [MuscleRank] = []
     @State private var editingProfile = false
 
     private var profile: UserProfile? { profiles.first }
@@ -33,15 +34,19 @@ struct YouView: View {
                 VStack(spacing: 18) {
                     identity.entryTransition(0)
                     globalCard.entryTransition(1)
-                    perLift.entryTransition(2)
-                    ladder.entryTransition(3)
+                    muscleCard.entryTransition(2)
+                    perLift.entryTransition(3)
+                    ladder.entryTransition(4)
                 }
                 .padding(.horizontal, Theme.Spacing.screenMargin)
-                .padding(.bottom, 30)
+                .padding(.bottom, 96)
             }
         }
         .auroraVariant(.profile)
-        .task { ranking = Store.rankingSnapshot(in: context) }
+        .task {
+            ranking = Store.rankingSnapshot(in: context)
+            muscleRanks = Store.muscleRanks(in: context, snapshot: ranking)
+        }
         .navigationTitle("You")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
@@ -120,7 +125,10 @@ struct YouView: View {
             VStack(spacing: 16) {
                 if let global = globalLevel {
                     HStack(spacing: 20) {
-                        scoreRing(global)
+                        VStack(spacing: 10) {
+                            scoreRing(global)
+                            TierMedal(tier: global.tier, division: global.division, size: 44)
+                        }
 
                         VStack(alignment: .leading, spacing: 6) {
                             Text(global.label)
@@ -189,6 +197,30 @@ struct YouView: View {
             return "\(count) sessions in 4 weeks · full consistency bonus"
         }
         return "\(count) sessions in 4 weeks · \(missing) more for the full bonus"
+    }
+
+    // MARK: - Per muscle
+
+    @ViewBuilder
+    private var muscleCard: some View {
+        if muscleRanks.isEmpty {
+            GlassSection(title: "By muscle") {
+                Text("Log a few exercises and each muscle group gets its own standing.")
+                    .font(.bodyS)
+                    .foregroundStyle(.secondary)
+            }
+        } else {
+            GlassSection(title: "By muscle") {
+                VStack(spacing: 0) {
+                    ForEach(Array(muscleRanks.enumerated()), id: \.element.id) { index, rank in
+                        MuscleRankRow(rank: rank)
+                        if index < muscleRanks.count - 1 {
+                            Divider().opacity(0.4)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // MARK: - Per lift

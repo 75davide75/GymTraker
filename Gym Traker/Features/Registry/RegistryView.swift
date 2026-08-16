@@ -84,7 +84,7 @@ struct RegistryView: View {
                         }
                     }
                     .padding(.horizontal, Theme.Spacing.screenMargin)
-                    .padding(.bottom, 30)
+                    .padding(.bottom, 96)
                 }
             }
         }

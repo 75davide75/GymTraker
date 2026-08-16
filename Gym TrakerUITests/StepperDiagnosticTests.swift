@@ -20,10 +20,7 @@ final class StepperDiagnosticTests: XCTestCase {
     }
 
     func testMinusButtonOnCalibrationSteppers() throws {
-        let name = app.textFields["Optional"]
-        XCTAssertTrue(name.waitForExistence(timeout: 10))
-        app.buttons["Continue"].tap()
-        XCTAssertTrue(app.staticTexts["Calibration"].waitForExistence(timeout: 5))
+        advanceToCalibration(in: app)
 
         // Age stepper is the first Decrease/Increase pair on the screen.
         let decreaseButtons = app.buttons.matching(identifier: "Decrease")
@@ -64,9 +61,7 @@ final class StepperDiagnosticTests: XCTestCase {
     /// Prints the real hit rectangles. A synthesized tap always lands dead
     /// centre, so geometry — not logic — is what a finger actually fights.
     func testStepperHitGeometry() throws {
-        XCTAssertTrue(app.textFields["Optional"].waitForExistence(timeout: 10))
-        app.buttons["Continue"].tap()
-        XCTAssertTrue(app.staticTexts["Calibration"].waitForExistence(timeout: 5))
+        advanceToCalibration(in: app)
 
         let screen = app.frame
         print("SCREEN \(screen)")

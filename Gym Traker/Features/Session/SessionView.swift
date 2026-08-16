@@ -68,12 +68,8 @@ struct SessionView: View {
                     .tint(Theme.Palette.sportRed)
             }
         }
-        .confirmationDialog(
-            "Finish this workout?",
-            isPresented: $confirmingFinish,
-            titleVisibility: .visible
-        ) {
-            Button("End session") { finish() }
+        .alert("Finish this workout?", isPresented: $confirmingFinish) {
+            Button("End session", role: .destructive) { finish() }
             Button("Keep going", role: .cancel) {}
         } message: {
             Text("\(completedSets) of \(totalSets) sets logged.")
@@ -345,7 +341,7 @@ struct SessionView: View {
 
             // Completing a set starts this exercise's rest automatically.
             let nextSet = index + 2
-            if index < entry.sets.count - 1 {
+            if index < entry.sets.count - 1, item.restSeconds > 0 {
                 timer.start(
                     seconds: item.restSeconds,
                     exerciseName: entry.exerciseName,

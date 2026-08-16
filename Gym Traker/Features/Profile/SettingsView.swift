@@ -14,6 +14,7 @@ struct SettingsView: View {
     @Environment(HealthStore.self) private var health
 
     @State private var exportURL: URL?
+    @State private var planPDFURL: URL?
     @State private var recalcNotice: String?
     @State private var healthNotice: String?
     @State private var isSyncing = false
@@ -325,6 +326,41 @@ struct SettingsView: View {
                 }
 
                 Text("Profile, plan, custom exercises, every session and the whole registry in one file.")
+                    .font(.captionM)
+                    .foregroundStyle(.secondary)
+
+                Divider().opacity(0.4).padding(.vertical, 2)
+
+                if let planPDFURL {
+                    ShareLink(item: planPDFURL) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "square.and.arrow.up")
+                            Text("Share plan PDF")
+                        }
+                        .font(.bodyM)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                    }
+                    .buttonStyle(.glassProminent)
+                } else {
+                    Button {
+                        guard let plan = Store.activePlan(in: context) else { return }
+                        planPDFURL = try? PlanPDF.write(plan: plan, profile: profile)
+                        Haptics.play(.success)
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "doc.richtext")
+                            Text("Export plan as PDF")
+                        }
+                        .font(.bodyM)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                    }
+                    .buttonStyle(.glass)
+                    .disabled(Store.activePlan(in: context) == nil)
+                }
+
+                Text("A printable A4 sheet of your plan: the weekly schedule and every exercise with its scheme.")
                     .font(.captionM)
                     .foregroundStyle(.secondary)
             }

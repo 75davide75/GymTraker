@@ -93,7 +93,7 @@ struct PlanEditorView: View {
                 exerciseList.entryTransition(3)
             }
             .padding(.horizontal, Theme.Spacing.screenMargin)
-            .padding(.bottom, 40)
+            .padding(.bottom, 96)
         }
     }
 
