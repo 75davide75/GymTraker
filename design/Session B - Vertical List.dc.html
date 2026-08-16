@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><style>@keyframes bloomB{0%,100%{transform:translate3d(0,0,0) scale(1.02)}50%{transform:translate3d(12px,-14px,0) scale(1.1)}}body{margin:0}</style></helmet>
+<div style="width:393px;height:852px;position:relative;overflow:hidden;background:#07070a;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif;color:#fff;border-radius:44px">
+  <div style="position:absolute;inset:-25% -25% auto -25%;height:60%;background:radial-gradient(48% 58% at 22% 34%,oklch(0.64 0.18 200 / .8),transparent 70%),radial-gradient(46% 54% at 82% 12%,oklch(0.62 0.19 268 / .7),transparent 72%);filter:blur(34px);animation:bloomB 16s ease-in-out infinite"></div>
+
+  <div style="position:relative;height:100%;display:flex;flex-direction:column">
+    <div style="display:flex;justify-content:space-between;padding:16px 26px 2px;font-size:14px;font-weight:600"><span>9:41</span><span style="width:17px;height:10px;border:1.5px solid rgba(255,255,255,.75);border-radius:3px"></span></div>
+
+    <div style="padding:12px 22px 12px;display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:26px;font-weight:700;letter-spacing:-.6px">Day A · Push</span>
+        <span style="font-size:14px;font-weight:600;padding:6px 12px;border-radius:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);font-variant-numeric:tabular-nums">{{ elapsed }}</span>
+      </div>
+      <div style="height:5px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden"><div style="height:100%;width:{{ progress }};background:linear-gradient(90deg,oklch(0.7 0.16 200),oklch(0.7 0.17 268));transition:width .5s ease"></div></div>
+    </div>
+
+    <div style="flex:1;overflow-y:auto;padding:0 18px 12px;display:flex;flex-direction:column;gap:10px;scrollbar-width:none">
+      <sc-for list="{{ rows }}" as="r" hint-placeholder-count="5">
+        <div style="border-radius:24px;background:{{ r.cardBg }};border:1px solid {{ r.cardBorder }};backdrop-filter:blur(26px) saturate(180%);-webkit-backdrop-filter:blur(26px) saturate(180%);box-shadow:{{ r.shadow }};overflow:hidden;transition:all .35s cubic-bezier(.32,.72,0,1)">
+          <div onClick="{{ r.open }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer">
+            <div style="width:30px;height:30px;border-radius:10px;background:{{ r.badgeBg }};border:1px solid {{ r.badgeBorder }};display:grid;place-items:center;font-size:13px;font-weight:700;color:{{ r.badgeColor }}">{{ r.mark }}</div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+              <span style="font-size:16px;font-weight:620;letter-spacing:-.2px;color:{{ r.titleColor }}">{{ r.name }}</span>
+              <span style="font-size:12px;color:rgba(255,255,255,.5)">{{ r.summary }}</span>
+            </div>
+            <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,.45)">{{ r.chevron }}</span>
+          </div>
+
+          <sc-if value="{{ r.expanded }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:0 16px 16px;display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;gap:8px;align-items:stretch">
+                <div style="flex:1;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:10px 12px;display:flex;flex-direction:column;gap:3px">
+                  <span style="font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.5)">Working weight</span>
+                  <div style="display:flex;align-items:baseline;gap:5px"><span style="font-size:22px;font-weight:700;letter-spacing:-.5px">{{ r.weight }}</span><span style="font-size:12px;color:rgba(255,255,255,.6)">kg</span></div>
+                </div>
+                <div onClick="{{ r.minus }}" style="width:48px;border-radius:16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;font-size:20px;font-weight:600;cursor:pointer">−</div>
+                <div onClick="{{ r.plus }}" style="width:48px;border-radius:16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;font-size:20px;font-weight:600;cursor:pointer">+</div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+                <sc-for list="{{ r.sets }}" as="st" hint-placeholder-count="4">
+                  <div onClick="{{ st.toggle }}" style="border-radius:16px;padding:10px 6px;background:{{ st.bg }};border:1px solid {{ st.border }};display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:all .25s ease">
+                    <span style="font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.5)">Set {{ st.n }}</span>
+                    <span style="font-size:19px;font-weight:700;color:{{ st.color }}">{{ st.reps }}</span>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="display:flex;gap:8px">
+                <div onClick="{{ r.togglePr }}" style="flex:1;display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:16px;background:{{ r.prBg }};border:1px solid {{ r.prBorder }};cursor:pointer;transition:all .3s ease">
+                  <div style="width:18px;height:18px;border-radius:6px;border:1.5px solid {{ r.prDot }};background:{{ r.prFill }}"></div>
+                  <span style="font-size:12px;font-weight:550;line-height:1.25">Add {{ r.step }} kg next time</span>
+                </div>
+                <div style="padding:11px 14px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px">
+                  <span style="font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.5)">Rest</span>
+                  <span style="font-size:13px;font-weight:650">2:00</span>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="position:absolute;left:18px;right:18px;bottom:26px;padding:12px 16px;border-radius:28px;background:rgba(20,20,28,.6);backdrop-filter:blur(34px) saturate(200%);-webkit-backdrop-filter:blur(34px) saturate(200%);border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 18px 44px -14px rgba(0,0,0,.9);display:flex;align-items:center;gap:14px">
+      <div style="width:52px;height:52px;border-radius:50%;background:conic-gradient(oklch(0.72 0.16 200) {{ restDeg }},rgba(255,255,255,.13) 0);display:grid;place-items:center">
+        <div style="width:42px;height:42px;border-radius:50%;background:#0d0d13;display:grid;place-items:center;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums">{{ clock }}</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:14px;font-weight:620">Resting</span>
+        <span style="font-size:12px;color:rgba(255,255,255,.55)">Next · {{ nextUp }}</span>
+      </div>
+      <div onClick="{{ skip }}" style="padding:11px 18px;border-radius:18px;background:linear-gradient(160deg,oklch(0.74 0.15 200),oklch(0.64 0.17 232));font-size:13px;font-weight:700;cursor:pointer">Skip</div>
+    </div>
+    <div style="width:132px;height:5px;border-radius:3px;background:rgba(255,255,255,.35);margin:auto auto 9px"></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:393,&quot;height&quot;:852}}">
+class Component extends DCLogic {
+  state = {
+    open: 1, left: 74, total: 120,
+    data: [
+      {name:'Barbell Squat', muscle:'Legs', weight:95, step:2.5, pr:false, sets:[{n:1,reps:8,done:true},{n:2,reps:8,done:true},{n:3,reps:6,done:true}]},
+      {name:'Bench Press', muscle:'Chest', weight:72.5, step:2.5, pr:true, sets:[{n:1,reps:8,done:true},{n:2,reps:8,done:true},{n:3,reps:6,done:false},{n:4,reps:6,done:false}]},
+      {name:'Seated Cable Row', muscle:'Back', weight:55, step:5, pr:false, sets:[{n:1,reps:12,done:false},{n:2,reps:12,done:false},{n:3,reps:10,done:false}]},
+      {name:'Lateral Raise', muscle:'Shoulders', weight:10, step:2, pr:false, sets:[{n:1,reps:15,done:false},{n:2,reps:15,done:false},{n:3,reps:12,done:false},{n:4,reps:12,done:false}]},
+      {name:'Cable Triceps Pushdown', muscle:'Arms', weight:32, step:2, pr:false, sets:[{n:1,reps:12,done:false},{n:2,reps:12,done:false},{n:3,reps:10,done:false}]}
+    ]
+  };
+  componentDidMount(){ this.t=setInterval(()=>this.setState(s=>({left:s.left>0?s.left-1:0})),1000); }
+  componentWillUnmount(){ clearInterval(this.t); }
+  fmt(s){ return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+  renderVals(){
+    const d=this.state.data;
+    const allSets=d.reduce((a,e)=>a+e.sets.length,0);
+    const doneSets=d.reduce((a,e)=>a+e.sets.filter(s=>s.done).length,0);
+    return {
+      elapsed:'34:12', progress: Math.round(doneSets/allSets*100)+'%',
+      clock:this.fmt(this.state.left), restDeg:(this.state.left/this.state.total*360)+'deg',
+      nextUp:'Bench Press · Set 3', skip:()=>this.setState({left:0}),
+      rows: d.map((ex,ei)=>{
+        const done=ex.sets.every(s=>s.done), expanded=this.state.open===ei;
+        return {
+          name:ex.name, expanded, weight:ex.weight, step:ex.step,
+          summary: done ? ex.sets.length+' sets done · '+ex.weight+' kg' : ex.sets.length+' sets · '+ex.weight+' kg · '+ex.muscle,
+          mark: done ? '✓' : String(ei+1), chevron: expanded ? '▾' : '▸',
+          titleColor: done ? 'rgba(255,255,255,.55)' : '#fff',
+          cardBg: expanded ? 'rgba(255,255,255,.09)' : 'rgba(255,255,255,.045)',
+          cardBorder: expanded ? 'rgba(255,255,255,.18)' : 'rgba(255,255,255,.08)',
+          shadow: expanded ? 'inset 0 1px 0 rgba(255,255,255,.22),0 16px 40px -18px rgba(0,0,0,.9)' : 'none',
+          badgeBg: done ? 'oklch(0.74 0.15 200 / .9)' : 'rgba(255,255,255,.08)',
+          badgeBorder: done ? 'transparent' : 'rgba(255,255,255,.14)',
+          badgeColor: done ? '#07070a' : 'rgba(255,255,255,.7)',
+          open: ()=>this.setState(s=>({open: s.open===ei ? -1 : ei})),
+          plus: ()=>this.setState(s=>{const n=[...s.data];n[ei]={...n[ei],weight:+(n[ei].weight+n[ei].step).toFixed(1)};return{data:n};}),
+          minus: ()=>this.setState(s=>{const n=[...s.data];n[ei]={...n[ei],weight:+(n[ei].weight-n[ei].step).toFixed(1)};return{data:n};}),
+          togglePr: ()=>this.setState(s=>{const n=[...s.data];n[ei]={...n[ei],pr:!n[ei].pr};return{data:n};}),
+          prBg: ex.pr ? 'oklch(0.7 0.16 200 / .26)' : 'rgba(255,255,255,.05)',
+          prBorder: ex.pr ? 'oklch(0.76 0.14 200 / .5)' : 'rgba(255,255,255,.1)',
+          prDot: ex.pr ? 'oklch(0.85 0.1 200)' : 'rgba(255,255,255,.35)',
+          prFill: ex.pr ? 'oklch(0.78 0.14 200)' : 'transparent',
+          sets: ex.sets.map((st,si)=>({
+            n:st.n, reps:st.reps,
+            bg: st.done ? 'oklch(0.72 0.16 200 / .22)' : 'rgba(255,255,255,.05)',
+            border: st.done ? 'oklch(0.76 0.14 200 / .42)' : 'rgba(255,255,255,.09)',
+            color: st.done ? 'oklch(0.88 0.1 200)' : '#fff',
+            toggle: ()=>this.setState(s=>{const n=[...s.data];const sets=[...n[ei].sets];sets[si]={...sets[si],done:!sets[si].done};n[ei]={...n[ei],sets};return{data:n,left:120};})
+          }))
+        };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1631 @@
+{
+ "version": 1,
+ "count": 125,
+ "exercises": [
+  {
+   "id": "bench-press",
+   "name": "Bench Press",
+   "primaryMuscle": "Chest",
+   "equipment": "Barbell",
+   "rankAnchor": "bench",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "incline-bench-press",
+   "name": "Incline Bench Press",
+   "primaryMuscle": "Chest",
+   "equipment": "Barbell",
+   "rankAnchor": "bench",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "close-grip-bench-press",
+   "name": "Close-Grip Bench Press",
+   "primaryMuscle": "Arms",
+   "equipment": "Barbell",
+   "rankAnchor": "bench",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "overhead-press",
+   "name": "Overhead Press",
+   "primaryMuscle": "Shoulders",
+   "equipment": "Barbell",
+   "rankAnchor": "ohp",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "push-press",
+   "name": "Push Press",
+   "primaryMuscle": "Shoulders",
+   "equipment": "Barbell",
+   "rankAnchor": "ohp",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "back-squat",
+   "name": "Back Squat",
+   "primaryMuscle": "Legs",
+   "equipment": "Barbell",
+   "rankAnchor": "squat",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "front-squat",
+   "name": "Front Squat",
+   "primaryMuscle": "Legs",
+   "equipment": "Barbell",
+   "rankAnchor": "squat",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "box-squat",
+   "name": "Box Squat",
+   "primaryMuscle": "Legs",
+   "equipment": "Barbell",
+   "rankAnchor": "squat",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "conventional-deadlift",
+   "name": "Conventional Deadlift",
+   "primaryMuscle": "Back",
+   "equipment": "Barbell",
+   "rankAnchor": "deadlift",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "sumo-deadlift",
+   "name": "Sumo Deadlift",
+   "primaryMuscle": "Legs",
+   "equipment": "Barbell",
+   "rankAnchor": "deadlift",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "romanian-deadlift",
+   "name": "Romanian Deadlift",
+   "primaryMuscle": "Glutes",
+   "equipment": "Barbell",
+   "rankAnchor": "deadlift",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "barbell-row",
+   "name": "Barbell Row",
+   "primaryMuscle": "Back",
+   "equipment": "Barbell",
+   "rankAnchor": "row",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "pendlay-row",
+   "name": "Pendlay Row",
+   "primaryMuscle": "Back",
+   "equipment": "Barbell",
+   "rankAnchor": "row",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "barbell-hip-thrust",
+   "name": "Barbell Hip Thrust",
+   "primaryMuscle": "Glutes",
+   "equipment": "Barbell",
+   "rankAnchor": "deadlift",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "barbell-lunge",
+   "name": "Barbell Lunge",
+   "primaryMuscle": "Legs",
+   "equipment": "Barbell",
+   "rankAnchor": "squat",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "barbell-curl",
+   "name": "Barbell Curl",
+   "primaryMuscle": "Arms",
+   "equipment": "Barbell",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "barbell-shrug",
+   "name": "Barbell Shrug",
+   "primaryMuscle": "Back",
+   "equipment": "Barbell",
+   "rankAnchor": "row",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "good-morning",
+   "name": "Good Morning",
+   "primaryMuscle": "Glutes",
+   "equipment": "Barbell",
+   "rankAnchor": "deadlift",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "upright-row",
+   "name": "Upright Row",
+   "primaryMuscle": "Shoulders",
+   "equipment": "Barbell",
+   "rankAnchor": "row",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "barbell-split-squat",
+   "name": "Barbell Split Squat",
+   "primaryMuscle": "Legs",
+   "equipment": "Barbell",
+   "rankAnchor": "squat",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "landmine-press",
+   "name": "Landmine Press",
+   "primaryMuscle": "Shoulders",
+   "equipment": "Barbell",
+   "rankAnchor": "ohp",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "power-clean",
+   "name": "Power Clean",
+   "primaryMuscle": "Full body",
+   "equipment": "Barbell",
+   "rankAnchor": "deadlift",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "hang-clean",
+   "name": "Hang Clean",
+   "primaryMuscle": "Full body",
+   "equipment": "Barbell",
+   "rankAnchor": "deadlift",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "snatch",
+   "name": "Snatch",
+   "primaryMuscle": "Full body",
+   "equipment": "Barbell",
+   "rankAnchor": "ohp",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "overhead-squat",
+   "name": "Overhead Squat",
+   "primaryMuscle": "Legs",
+   "equipment": "Barbell",
+   "rankAnchor": "squat",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bar",
+    "hue": 268
+   }
+  },
+  {
+   "id": "dumbbell-bench-press",
+   "name": "Dumbbell Bench Press",
+   "primaryMuscle": "Chest",
+   "equipment": "Dumbbell",
+   "rankAnchor": "bench",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "incline-dumbbell-press",
+   "name": "Incline Dumbbell Press",
+   "primaryMuscle": "Chest",
+   "equipment": "Dumbbell",
+   "rankAnchor": "bench",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "dumbbell-fly",
+   "name": "Dumbbell Fly",
+   "primaryMuscle": "Chest",
+   "equipment": "Dumbbell",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "dumbbell-shoulder-press",
+   "name": "Dumbbell Shoulder Press",
+   "primaryMuscle": "Shoulders",
+   "equipment": "Dumbbell",
+   "rankAnchor": "ohp",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "arnold-press",
+   "name": "Arnold Press",
+   "primaryMuscle": "Shoulders",
+   "equipment": "Dumbbell",
+   "rankAnchor": "ohp",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "lateral-raise",
+   "name": "Lateral Raise",
+   "primaryMuscle": "Shoulders",
+   "equipment": "Dumbbell",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "front-raise",
+   "name": "Front Raise",
+   "primaryMuscle": "Shoulders",
+   "equipment": "Dumbbell",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "rear-delt-fly",
+   "name": "Rear Delt Fly",
+   "primaryMuscle": "Shoulders",
+   "equipment": "Dumbbell",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "one-arm-dumbbell-row",
+   "name": "One-Arm Dumbbell Row",
+   "primaryMuscle": "Back",
+   "equipment": "Dumbbell",
+   "rankAnchor": "row",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "dumbbell-pullover",
+   "name": "Dumbbell Pullover",
+   "primaryMuscle": "Back",
+   "equipment": "Dumbbell",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "dumbbell-curl",
+   "name": "Dumbbell Curl",
+   "primaryMuscle": "Arms",
+   "equipment": "Dumbbell",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "hammer-curl",
+   "name": "Hammer Curl",
+   "primaryMuscle": "Arms",
+   "equipment": "Dumbbell",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "concentration-curl",
+   "name": "Concentration Curl",
+   "primaryMuscle": "Arms",
+   "equipment": "Dumbbell",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "skull-crusher",
+   "name": "Skull Crusher",
+   "primaryMuscle": "Arms",
+   "equipment": "Dumbbell",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "overhead-triceps-extension",
+   "name": "Overhead Triceps Extension",
+   "primaryMuscle": "Arms",
+   "equipment": "Dumbbell",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "goblet-squat",
+   "name": "Goblet Squat",
+   "primaryMuscle": "Legs",
+   "equipment": "Dumbbell",
+   "rankAnchor": "squat",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "bulgarian-split-squat",
+   "name": "Bulgarian Split Squat",
+   "primaryMuscle": "Legs",
+   "equipment": "Dumbbell",
+   "rankAnchor": "squat",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "dumbbell-romanian-deadlift",
+   "name": "Dumbbell Romanian Deadlift",
+   "primaryMuscle": "Glutes",
+   "equipment": "Dumbbell",
+   "rankAnchor": "deadlift",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "step-up",
+   "name": "Step-Up",
+   "primaryMuscle": "Legs",
+   "equipment": "Dumbbell",
+   "rankAnchor": "squat",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "walking-lunge",
+   "name": "Walking Lunge",
+   "primaryMuscle": "Legs",
+   "equipment": "Dumbbell",
+   "rankAnchor": "squat",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "dumbbell-shrug",
+   "name": "Dumbbell Shrug",
+   "primaryMuscle": "Back",
+   "equipment": "Dumbbell",
+   "rankAnchor": "row",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "dumbbell-calf-raise",
+   "name": "Dumbbell Calf Raise",
+   "primaryMuscle": "Legs",
+   "equipment": "Dumbbell",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "thruster",
+   "name": "Thruster",
+   "primaryMuscle": "Full body",
+   "equipment": "Dumbbell",
+   "rankAnchor": "ohp",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "dumbbell",
+    "hue": 200
+   }
+  },
+  {
+   "id": "lat-pulldown",
+   "name": "Lat Pulldown",
+   "primaryMuscle": "Back",
+   "equipment": "Machine",
+   "rankAnchor": "row",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "frame",
+    "hue": 150
+   }
+  },
+  {
+   "id": "close-grip-pulldown",
+   "name": "Close-Grip Pulldown",
+   "primaryMuscle": "Back",
+   "equipment": "Machine",
+   "rankAnchor": "row",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "frame",
+    "hue": 150
+   }
+  },
+  {
+   "id": "seated-cable-row",
+   "name": "Seated Cable Row",
+   "primaryMuscle": "Back",
+   "equipment": "Machine",
+   "rankAnchor": "row",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "frame",
+    "hue": 150
+   }
+  },
+  {
+   "id": "chest-supported-row",
+   "name": "Chest-Supported Row",
+   "primaryMuscle": "Back",
+   "equipment": "Machine",
+   "rankAnchor": "row",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "frame",
+    "hue": 150
+   }
+  },
+  {
+   "id": "cable-fly",
+   "name": "Cable Fly",
+   "primaryMuscle": "Chest",
+   "equipment": "Cable",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "cable",
+    "hue": 100
+   }
+  },
+  {
+   "id": "cable-crossover",
+   "name": "Cable Crossover",
+   "primaryMuscle": "Chest",
+   "equipment": "Cable",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "cable",
+    "hue": 100
+   }
+  },
+  {
+   "id": "pec-deck",
+   "name": "Pec Deck",
+   "primaryMuscle": "Chest",
+   "equipment": "Machine",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "frame",
+    "hue": 150
+   }
+  },
+  {
+   "id": "chest-press-machine",
+   "name": "Chest Press Machine",
+   "primaryMuscle": "Chest",
+   "equipment": "Machine",
+   "rankAnchor": "bench",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "frame",
+    "hue": 150
+   }
+  },
+  {
+   "id": "shoulder-press-machine",
+   "name": "Shoulder Press Machine",
+   "primaryMuscle": "Shoulders",
+   "equipment": "Machine",
+   "rankAnchor": "ohp",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "frame",
+    "hue": 150
+   }
+  },
+  {
+   "id": "cable-lateral-raise",
+   "name": "Cable Lateral Raise",
+   "primaryMuscle": "Shoulders",
+   "equipment": "Cable",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "cable",
+    "hue": 100
+   }
+  },
+  {
+   "id": "face-pull",
+   "name": "Face Pull",
+   "primaryMuscle": "Shoulders",
+   "equipment": "Cable",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "cable",
+    "hue": 100
+   }
+  },
+  {
+   "id": "cable-triceps-pushdown",
+   "name": "Cable Triceps Pushdown",
+   "primaryMuscle": "Arms",
+   "equipment": "Cable",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "cable",
+    "hue": 100
+   }
+  },
+  {
+   "id": "rope-overhead-extension",
+   "name": "Rope Overhead Extension",
+   "primaryMuscle": "Arms",
+   "equipment": "Cable",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "cable",
+    "hue": 100
+   }
+  },
+  {
+   "id": "cable-curl",
+   "name": "Cable Curl",
+   "primaryMuscle": "Arms",
+   "equipment": "Cable",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "cable",
+    "hue": 100
+   }
+  },
+  {
+   "id": "preacher-curl",
+   "name": "Preacher Curl",
+   "primaryMuscle": "Arms",
+   "equipment": "Machine",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "frame",
+    "hue": 150
+   }
+  },
+  {
+   "id": "leg-press",
+   "name": "Leg Press",
+   "primaryMuscle": "Legs",
+   "equipment": "Machine",
+   "rankAnchor": "squat",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "frame",
+    "hue": 150
+   }
+  },
+  {
+   "id": "hack-squat",
+   "name": "Hack Squat",
+   "primaryMuscle": "Legs",
+   "equipment": "Machine",
+   "rankAnchor": "squat",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "frame",
+    "hue": 150
+   }
+  },
+  {
+   "id": "leg-extension",
+   "name": "Leg Extension",
+   "primaryMuscle": "Legs",
+   "equipment": "Machine",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "frame",
+    "hue": 150
+   }
+  },
+  {
+   "id": "seated-leg-curl",
+   "name": "Seated Leg Curl",
+   "primaryMuscle": "Legs",
+   "equipment": "Machine",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "frame",
+    "hue": 150
+   }
+  },
+  {
+   "id": "lying-leg-curl",
+   "name": "Lying Leg Curl",
+   "primaryMuscle": "Legs",
+   "equipment": "Machine",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "frame",
+    "hue": 150
+   }
+  },
+  {
+   "id": "standing-calf-raise",
+   "name": "Standing Calf Raise",
+   "primaryMuscle": "Legs",
+   "equipment": "Machine",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "frame",
+    "hue": 150
+   }
+  },
+  {
+   "id": "seated-calf-raise",
+   "name": "Seated Calf Raise",
+   "primaryMuscle": "Legs",
+   "equipment": "Machine",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "frame",
+    "hue": 150
+   }
+  },
+  {
+   "id": "hip-abduction",
+   "name": "Hip Abduction",
+   "primaryMuscle": "Glutes",
+   "equipment": "Machine",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "frame",
+    "hue": 150
+   }
+  },
+  {
+   "id": "cable-kickback",
+   "name": "Cable Kickback",
+   "primaryMuscle": "Glutes",
+   "equipment": "Cable",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "cable",
+    "hue": 100
+   }
+  },
+  {
+   "id": "cable-pull-through",
+   "name": "Cable Pull-Through",
+   "primaryMuscle": "Glutes",
+   "equipment": "Cable",
+   "rankAnchor": "deadlift",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "cable",
+    "hue": 100
+   }
+  },
+  {
+   "id": "smith-machine-squat",
+   "name": "Smith Machine Squat",
+   "primaryMuscle": "Legs",
+   "equipment": "Machine",
+   "rankAnchor": "squat",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "frame",
+    "hue": 150
+   }
+  },
+  {
+   "id": "assisted-pull-up",
+   "name": "Assisted Pull-Up",
+   "primaryMuscle": "Back",
+   "equipment": "Machine",
+   "rankAnchor": "row",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "frame",
+    "hue": 150
+   }
+  },
+  {
+   "id": "cable-woodchop",
+   "name": "Cable Woodchop",
+   "primaryMuscle": "Core",
+   "equipment": "Cable",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "cable",
+    "hue": 100
+   }
+  },
+  {
+   "id": "cable-crunch",
+   "name": "Cable Crunch",
+   "primaryMuscle": "Core",
+   "equipment": "Cable",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "cable",
+    "hue": 100
+   }
+  },
+  {
+   "id": "pull-up",
+   "name": "Pull-Up",
+   "primaryMuscle": "Back",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "chin-up",
+   "name": "Chin-Up",
+   "primaryMuscle": "Arms",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "push-up",
+   "name": "Push-Up",
+   "primaryMuscle": "Chest",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "diamond-push-up",
+   "name": "Diamond Push-Up",
+   "primaryMuscle": "Arms",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "dip",
+   "name": "Dip",
+   "primaryMuscle": "Chest",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "inverted-row",
+   "name": "Inverted Row",
+   "primaryMuscle": "Back",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "pike-push-up",
+   "name": "Pike Push-Up",
+   "primaryMuscle": "Shoulders",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "bodyweight-squat",
+   "name": "Bodyweight Squat",
+   "primaryMuscle": "Legs",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "pistol-squat",
+   "name": "Pistol Squat",
+   "primaryMuscle": "Legs",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "nordic-curl",
+   "name": "Nordic Curl",
+   "primaryMuscle": "Legs",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "glute-bridge",
+   "name": "Glute Bridge",
+   "primaryMuscle": "Glutes",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "plank",
+   "name": "Plank",
+   "primaryMuscle": "Core",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "side-plank",
+   "name": "Side Plank",
+   "primaryMuscle": "Core",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "hanging-leg-raise",
+   "name": "Hanging Leg Raise",
+   "primaryMuscle": "Core",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "crunch",
+   "name": "Crunch",
+   "primaryMuscle": "Core",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "russian-twist",
+   "name": "Russian Twist",
+   "primaryMuscle": "Core",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "mountain-climber",
+   "name": "Mountain Climber",
+   "primaryMuscle": "Core",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "burpee",
+   "name": "Burpee",
+   "primaryMuscle": "Full body",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "box-jump",
+   "name": "Box Jump",
+   "primaryMuscle": "Legs",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "muscle-up",
+   "name": "Muscle-Up",
+   "primaryMuscle": "Full body",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "handstand-push-up",
+   "name": "Handstand Push-Up",
+   "primaryMuscle": "Shoulders",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "back-extension",
+   "name": "Back Extension",
+   "primaryMuscle": "Back",
+   "equipment": "Bodyweight",
+   "rankAnchor": "bw",
+   "tracking": "repsOptionalLoad",
+   "isCustom": false,
+   "glyph": {
+    "shape": "ring",
+    "hue": 40
+   }
+  },
+  {
+   "id": "kettlebell-swing",
+   "name": "Kettlebell Swing",
+   "primaryMuscle": "Glutes",
+   "equipment": "Kettlebell",
+   "rankAnchor": "deadlift",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bell",
+    "hue": 330
+   }
+  },
+  {
+   "id": "kettlebell-goblet-squat",
+   "name": "Kettlebell Goblet Squat",
+   "primaryMuscle": "Legs",
+   "equipment": "Kettlebell",
+   "rankAnchor": "squat",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bell",
+    "hue": 330
+   }
+  },
+  {
+   "id": "kettlebell-clean",
+   "name": "Kettlebell Clean",
+   "primaryMuscle": "Full body",
+   "equipment": "Kettlebell",
+   "rankAnchor": "deadlift",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bell",
+    "hue": 330
+   }
+  },
+  {
+   "id": "kettlebell-snatch",
+   "name": "Kettlebell Snatch",
+   "primaryMuscle": "Full body",
+   "equipment": "Kettlebell",
+   "rankAnchor": "ohp",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bell",
+    "hue": 330
+   }
+  },
+  {
+   "id": "turkish-get-up",
+   "name": "Turkish Get-Up",
+   "primaryMuscle": "Full body",
+   "equipment": "Kettlebell",
+   "rankAnchor": "ohp",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bell",
+    "hue": 330
+   }
+  },
+  {
+   "id": "kettlebell-press",
+   "name": "Kettlebell Press",
+   "primaryMuscle": "Shoulders",
+   "equipment": "Kettlebell",
+   "rankAnchor": "ohp",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bell",
+    "hue": 330
+   }
+  },
+  {
+   "id": "front-rack-carry",
+   "name": "Front Rack Carry",
+   "primaryMuscle": "Core",
+   "equipment": "Kettlebell",
+   "rankAnchor": null,
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bell",
+    "hue": 330
+   }
+  },
+  {
+   "id": "farmer-s-carry",
+   "name": "Farmer's Carry",
+   "primaryMuscle": "Full body",
+   "equipment": "Kettlebell",
+   "rankAnchor": "deadlift",
+   "tracking": "weightReps",
+   "isCustom": false,
+   "glyph": {
+    "shape": "bell",
+    "hue": 330
+   }
+  },
+  {
+   "id": "treadmill-run",
+   "name": "Treadmill Run",
+   "primaryMuscle": "Cardio",
+   "equipment": "Cardio",
+   "rankAnchor": null,
+   "tracking": "timeDistance",
+   "isCustom": false,
+   "glyph": {
+    "shape": "wave",
+    "hue": 20
+   }
+  },
+  {
+   "id": "stationary-bike",
+   "name": "Stationary Bike",
+   "primaryMuscle": "Cardio",
+   "equipment": "Cardio",
+   "rankAnchor": null,
+   "tracking": "timeDistance",
+   "isCustom": false,
+   "glyph": {
+    "shape": "wave",
+    "hue": 20
+   }
+  },
+  {
+   "id": "rowing-machine",
+   "name": "Rowing Machine",
+   "primaryMuscle": "Cardio",
+   "equipment": "Cardio",
+   "rankAnchor": null,
+   "tracking": "timeDistance",
+   "isCustom": false,
+   "glyph": {
+    "shape": "wave",
+    "hue": 20
+   }
+  },
+  {
+   "id": "elliptical",
+   "name": "Elliptical",
+   "primaryMuscle": "Cardio",
+   "equipment": "Cardio",
+   "rankAnchor": null,
+   "tracking": "timeDistance",
+   "isCustom": false,
+   "glyph": {
+    "shape": "wave",
+    "hue": 20
+   }
+  },
+  {
+   "id": "stair-climber",
+   "name": "Stair Climber",
+   "primaryMuscle": "Cardio",
+   "equipment": "Cardio",
+   "rankAnchor": null,
+   "tracking": "timeDistance",
+   "isCustom": false,
+   "glyph": {
+    "shape": "wave",
+    "hue": 20
+   }
+  },
+  {
+   "id": "jump-rope",
+   "name": "Jump Rope",
+   "primaryMuscle": "Cardio",
+   "equipment": "Cardio",
+   "rankAnchor": null,
+   "tracking": "timeDistance",
+   "isCustom": false,
+   "glyph": {
+    "shape": "wave",
+    "hue": 20
+   }
+  },
+  {
+   "id": "assault-bike",
+   "name": "Assault Bike",
+   "primaryMuscle": "Cardio",
+   "equipment": "Cardio",
+   "rankAnchor": null,
+   "tracking": "timeDistance",
+   "isCustom": false,
+   "glyph": {
+    "shape": "wave",
+    "hue": 20
+   }
+  },
+  {
+   "id": "incline-treadmill-walk",
+   "name": "Incline Treadmill Walk",
+   "primaryMuscle": "Cardio",
+   "equipment": "Cardio",
+   "rankAnchor": null,
+   "tracking": "timeDistance",
+   "isCustom": false,
+   "glyph": {
+    "shape": "wave",
+    "hue": 20
+   }
+  },
+  {
+   "id": "hip-flexor-stretch",
+   "name": "Hip Flexor Stretch",
+   "primaryMuscle": "Mobility",
+   "equipment": "Mobility",
+   "rankAnchor": null,
+   "tracking": "time",
+   "isCustom": false,
+   "glyph": {
+    "shape": "arc",
+    "hue": 260
+   }
+  },
+  {
+   "id": "thoracic-rotation",
+   "name": "Thoracic Rotation",
+   "primaryMuscle": "Mobility",
+   "equipment": "Mobility",
+   "rankAnchor": null,
+   "tracking": "time",
+   "isCustom": false,
+   "glyph": {
+    "shape": "arc",
+    "hue": 260
+   }
+  },
+  {
+   "id": "hamstring-stretch",
+   "name": "Hamstring Stretch",
+   "primaryMuscle": "Mobility",
+   "equipment": "Mobility",
+   "rankAnchor": null,
+   "tracking": "time",
+   "isCustom": false,
+   "glyph": {
+    "shape": "arc",
+    "hue": 260
+   }
+  },
+  {
+   "id": "shoulder-dislocate",
+   "name": "Shoulder Dislocate",
+   "primaryMuscle": "Mobility",
+   "equipment": "Mobility",
+   "rankAnchor": null,
+   "tracking": "time",
+   "isCustom": false,
+   "glyph": {
+    "shape": "arc",
+    "hue": 260
+   }
+  },
+  {
+   "id": "cat-cow",
+   "name": "Cat-Cow",
+   "primaryMuscle": "Mobility",
+   "equipment": "Mobility",
+   "rankAnchor": null,
+   "tracking": "time",
+   "isCustom": false,
+   "glyph": {
+    "shape": "arc",
+    "hue": 260
+   }
+  },
+  {
+   "id": "deep-squat-hold",
+   "name": "Deep Squat Hold",
+   "primaryMuscle": "Mobility",
+   "equipment": "Mobility",
+   "rankAnchor": null,
+   "tracking": "time",
+   "isCustom": false,
+   "glyph": {
+    "shape": "arc",
+    "hue": 260
+   }
+  },
+  {
+   "id": "ankle-mobilization",
+   "name": "Ankle Mobilization",
+   "primaryMuscle": "Mobility",
+   "equipment": "Mobility",
+   "rankAnchor": null,
+   "tracking": "time",
+   "isCustom": false,
+   "glyph": {
+    "shape": "arc",
+    "hue": 260
+   }
+  },
+  {
+   "id": "foam-roll-quads",
+   "name": "Foam Roll Quads",
+   "primaryMuscle": "Mobility",
+   "equipment": "Mobility",
+   "rankAnchor": null,
+   "tracking": "time",
+   "isCustom": false,
+   "glyph": {
+    "shape": "arc",
+    "hue": 260
+   }
+  },
+  {
+   "id": "90-90-hip-switch",
+   "name": "90/90 Hip Switch",
+   "primaryMuscle": "Mobility",
+   "equipment": "Mobility",
+   "rankAnchor": null,
+   "tracking": "time",
+   "isCustom": false,
+   "glyph": {
+    "shape": "arc",
+    "hue": 260
+   }
+  },
+  {
+   "id": "wall-slide",
+   "name": "Wall Slide",
+   "primaryMuscle": "Mobility",
+   "equipment": "Mobility",
+   "rankAnchor": null,
+   "tracking": "time",
+   "isCustom": false,
+   "glyph": {
+    "shape": "arc",
+    "hue": 260
+   }
+  }
+ ]
+}

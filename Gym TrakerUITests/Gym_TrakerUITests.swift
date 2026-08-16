@@ -162,4 +162,48 @@ final class Gym_TrakerUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Beginner"].exists, "Ladder is missing")
         shoot("14-you")
     }
+
+    /// Both appearances are first-class, so the light pass gets walked too.
+    func testLightAppearance() throws {
+        completeOnboarding()
+
+        tapTab("You")
+        app.buttons["Settings"].tap()
+        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
+
+        let light = app.buttons["Light"]
+        XCTAssertTrue(light.waitForExistence(timeout: 5), "Appearance control is missing")
+        light.tap()
+        shoot("15-settings-light")
+
+        app.buttons["Done"].tap()
+        XCTAssertTrue(app.navigationBars["You"].waitForExistence(timeout: 5))
+        shoot("16-you-light")
+
+        tapTab("Home")
+        XCTAssertTrue(app.buttons["Start workout"].waitForExistence(timeout: 5))
+        shoot("17-home-light")
+
+        tapTab("Library")
+        XCTAssertTrue(app.navigationBars["Library"].waitForExistence(timeout: 5))
+        shoot("18-library-light")
+    }
+
+    /// Export produces a shareable file rather than failing silently.
+    func testDataExport() throws {
+        completeOnboarding()
+
+        tapTab("You")
+        app.buttons["Settings"].tap()
+
+        let export = app.buttons["Export data as JSON"]
+        XCTAssertTrue(export.waitForExistence(timeout: 5), "Export button is missing")
+        export.tap()
+
+        XCTAssertTrue(
+            app.buttons["Share export"].waitForExistence(timeout: 5),
+            "Export did not produce a file to share"
+        )
+        shoot("19-export-ready")
+    }
 }

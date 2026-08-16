@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><style>@keyframes bloom{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(0,-18px,0) scale(1.08)}}body{margin:0}</style></helmet>
+<div style="width:393px;height:852px;position:relative;overflow:hidden;background:#08080b;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif;color:#fff;border-radius:44px">
+  <div style="position:absolute;inset:-20% -30% auto -30%;height:70%;background:radial-gradient(50% 60% at 30% 30%,oklch(0.62 0.19 268 / .85),transparent 70%),radial-gradient(45% 55% at 78% 18%,oklch(0.66 0.17 32 / .6),transparent 72%);filter:blur(30px);animation:bloom 14s ease-in-out infinite"></div>
+  <div style="position:absolute;inset:auto -20% -18% -20%;height:45%;background:radial-gradient(50% 60% at 60% 80%,oklch(0.58 0.16 200 / .5),transparent 70%);filter:blur(36px)"></div>
+
+  <div style="position:relative;height:100%;display:flex;flex-direction:column">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 26px 2px;font-size:14px;font-weight:600;letter-spacing:.2px"><span>9:41</span><span style="display:flex;gap:5px;align-items:center"><span style="width:17px;height:10px;border:1.5px solid rgba(255,255,255,.75);border-radius:3px;display:block"></span></span></div>
+
+    <div style="padding:10px 22px 14px;display:flex;align-items:flex-end;justify-content:space-between">
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <span style="font-size:11px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:rgba(255,255,255,.55)">Day A · Push</span>
+        <span style="font-size:27px;font-weight:700;letter-spacing:-.6px">Exercise {{ currentIdx1 }} of 5</span>
+      </div>
+      <div style="width:46px;height:46px;border-radius:50%;background:conic-gradient(oklch(0.72 0.16 268) {{ pctDeg }},rgba(255,255,255,.14) 0);display:grid;place-items:center">
+        <div style="width:36px;height:36px;border-radius:50%;background:#0b0b10;display:grid;place-items:center;font-size:11px;font-weight:700">{{ pctLabel }}</div>
+      </div>
+    </div>
+
+    <div style="flex:1;display:flex;gap:14px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;padding:0 22px 8px;scrollbar-width:none">
+      <sc-for list="{{ exercises }}" as="ex" hint-placeholder-count="2">
+        <div style="scroll-snap-align:center;flex:0 0 349px;display:flex;flex-direction:column;gap:12px;background:rgba(255,255,255,.07);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 20px 50px -20px rgba(0,0,0,.8);border-radius:30px;padding:20px">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(150deg,rgba(255,255,255,.22),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.16);display:grid;place-items:center">
+              <div style="width:22px;height:6px;border-radius:3px;background:rgba(255,255,255,.85)"></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <span style="font-size:19px;font-weight:650;letter-spacing:-.3px">{{ ex.name }}</span>
+              <span style="font-size:12px;color:rgba(255,255,255,.55)">{{ ex.muscle }} · {{ ex.equip }}</span>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px">
+            <div style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:9px 12px;display:flex;flex-direction:column;gap:2px">
+              <span style="font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.5)">Weight</span>
+              <span style="font-size:17px;font-weight:650">{{ ex.weight }} kg</span>
+            </div>
+            <div style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:9px 12px;display:flex;flex-direction:column;gap:2px">
+              <span style="font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.5)">Rest</span>
+              <span style="font-size:17px;font-weight:650">{{ ex.rest }}</span>
+            </div>
+            <div style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:9px 12px;display:flex;flex-direction:column;gap:2px">
+              <span style="font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.5)">Tier</span>
+              <span style="font-size:17px;font-weight:650;color:oklch(0.8 0.14 90)">{{ ex.tier }}</span>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <sc-for list="{{ ex.sets }}" as="st" hint-placeholder-count="4">
+              <div onClick="{{ st.toggle }}" style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:16px;background:{{ st.bg }};border:1px solid {{ st.border }};cursor:pointer;transition:background .25s ease,transform .18s ease" style-active="transform:scale(.985)">
+                <div style="width:22px;height:22px;border-radius:50%;border:1.5px solid {{ st.dotBorder }};background:{{ st.dotBg }};display:grid;place-items:center;font-size:11px;font-weight:700;color:{{ st.dotColor }}">{{ st.n }}</div>
+                <span style="font-size:15px;font-weight:600;flex:1">{{ st.reps }} reps</span>
+                <span style="font-size:15px;font-weight:600;color:rgba(255,255,255,.7)">{{ st.load }}</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <div onClick="{{ ex.togglePr }}" style="display:flex;align-items:center;gap:11px;padding:12px 14px;border-radius:16px;background:{{ ex.prBg }};border:1px solid {{ ex.prBorder }};cursor:pointer;transition:all .3s ease">
+            <div style="width:20px;height:20px;border-radius:6px;border:1.5px solid {{ ex.prDot }};background:{{ ex.prFill }}"></div>
+            <span style="font-size:13px;font-weight:550;line-height:1.3;color:rgba(255,255,255,.9)">Go up to {{ ex.next }} kg next session</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex;justify-content:center;gap:6px;padding:2px 0 12px">
+      <sc-for list="{{ dots }}" as="d" hint-placeholder-count="5">
+        <div style="width:6px;height:6px;border-radius:50%;background:{{ d.bg }}"></div>
+      </sc-for>
+    </div>
+
+    <div style="margin:0 18px 14px;padding:14px 18px;border-radius:26px;background:rgba(255,255,255,.09);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.24);display:flex;align-items:center;gap:14px">
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.55)">Rest</span>
+        <span style="font-size:30px;font-weight:700;letter-spacing:-1px;font-variant-numeric:tabular-nums">{{ clock }}</span>
+        <div style="height:4px;border-radius:2px;background:rgba(255,255,255,.14);overflow:hidden"><div style="height:100%;width:{{ restPct }};background:linear-gradient(90deg,oklch(0.72 0.16 268),oklch(0.76 0.15 32));transition:width 1s linear"></div></div>
+      </div>
+      <div onClick="{{ toggleTimer }}" style="width:64px;height:64px;border-radius:50%;background:linear-gradient(160deg,oklch(0.72 0.16 268),oklch(0.6 0.19 285));display:grid;place-items:center;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 10px 26px -8px oklch(0.62 0.19 275 / .9)">{{ timerLabel }}</div>
+    </div>
+    <div style="width:132px;height:5px;border-radius:3px;background:rgba(255,255,255,.35);margin:0 auto 9px"></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:393,&quot;height&quot;:852}}">
+class Component extends DCLogic {
+  state = {
+    idx: 1, running: true, left: 92, total: 120,
+    data: [
+      {name:'Bench Press', muscle:'Chest', equip:'Barbell', weight:72.5, rest:'2:00', tier:'Interm.', next:75,
+       sets:[{n:1,reps:8,load:'72.5 kg',done:true},{n:2,reps:8,load:'72.5 kg',done:true},{n:3,reps:6,load:'72.5 kg',done:false},{n:4,reps:6,load:'70 kg',done:false}], pr:true},
+      {name:'Incline DB Press', muscle:'Chest', equip:'Dumbbell', weight:26, rest:'1:30', tier:'Novice', next:28,
+       sets:[{n:1,reps:10,load:'26 kg',done:false},{n:2,reps:10,load:'26 kg',done:false},{n:3,reps:8,load:'26 kg',done:false}], pr:false}
+    ]
+  };
+  componentDidMount(){ this.t = setInterval(()=>{ if(this.state.running) this.setState(s=>({left: s.left>0 ? s.left-1 : 0})); },1000); }
+  componentWillUnmount(){ clearInterval(this.t); }
+  fmt(s){ return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+  renderVals(){
+    const d = this.state.data;
+    const doneCount = d[0].sets.filter(s=>s.done).length;
+    const pct = Math.round(doneCount/d[0].sets.length*100);
+    return {
+      currentIdx1: 1, pctDeg: pct*3.6+'deg', pctLabel: pct+'%',
+      clock: this.fmt(this.state.left), restPct: (this.state.left/this.state.total*100)+'%',
+      timerLabel: this.state.running ? 'Pause' : 'Start',
+      toggleTimer: ()=>this.setState(s=>({running:!s.running})),
+      dots: [0,1,2,3,4].map(i=>({bg: i===0 ? '#fff' : 'rgba(255,255,255,.28)'})),
+      exercises: d.map((ex,ei)=>({
+        ...ex,
+        prBg: ex.pr ? 'oklch(0.72 0.16 268 / .28)' : 'rgba(255,255,255,.05)',
+        prBorder: ex.pr ? 'oklch(0.78 0.14 268 / .55)' : 'rgba(255,255,255,.1)',
+        prDot: ex.pr ? 'oklch(0.85 0.12 268)' : 'rgba(255,255,255,.35)',
+        prFill: ex.pr ? 'oklch(0.78 0.15 268)' : 'transparent',
+        togglePr: ()=>this.setState(s=>{ const n=[...s.data]; n[ei]={...n[ei],pr:!n[ei].pr}; return {data:n}; }),
+        sets: ex.sets.map((st,si)=>({
+          ...st,
+          bg: st.done ? 'oklch(0.72 0.16 268 / .22)' : 'rgba(255,255,255,.05)',
+          border: st.done ? 'oklch(0.78 0.14 268 / .4)' : 'rgba(255,255,255,.09)',
+          dotBorder: st.done ? 'transparent' : 'rgba(255,255,255,.3)',
+          dotBg: st.done ? 'oklch(0.78 0.15 268)' : 'transparent',
+          dotColor: st.done ? '#0b0b10' : 'rgba(255,255,255,.6)',
+          toggle: ()=>this.setState(s=>{ const n=[...s.data]; const sets=[...n[ei].sets]; sets[si]={...sets[si],done:!sets[si].done}; n[ei]={...n[ei],sets}; return {data:n, left:120, running:true}; })
+        }))
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>
