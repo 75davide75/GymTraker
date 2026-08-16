@@ -16,6 +16,7 @@ import AudioToolbox
 final class RestTimer {
 
     /// When the current rest ends. Nil when not resting.
+    /// Read by the Live Activity so the system can count the rest down.
     private(set) var fireDate: Date?
     private(set) var totalSeconds: Int = 0
     private(set) var exerciseName: String = ""

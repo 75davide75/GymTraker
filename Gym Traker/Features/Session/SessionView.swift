@@ -29,6 +29,7 @@ struct SessionView: View {
     /// Rest already served this session, in seconds.
     @State private var restAccumulated: Int = 0
     @State private var confirmingFinish = false
+    @State private var liveActivity = WorkoutLiveActivityController()
 
     private var units: Units { Store.units(in: context) }
     private var items: [PlanItem] { day.orderedItems }
@@ -87,7 +88,10 @@ struct SessionView: View {
         .onChange(of: timer.isResting) { wasResting, isResting in
             // A rest that ran to the end still counts towards the split.
             if wasResting, !isResting { restAccumulated += timer.lastRestDuration }
+            refreshActivity()
         }
+        .onChange(of: completedSets) { _, _ in refreshActivity() }
+        .onDisappear { liveActivity.end() }
         .sheet(isPresented: $showingSummary) {
             if let summary {
                 SummarySheet(summary: summary, units: units) { dismiss() }
@@ -198,6 +202,33 @@ struct SessionView: View {
         .padding(.top, 6)
     }
 
+    // MARK: - Live Activity
+
+    /// The activity carries the rest deadline and the session start, so the
+    /// system can keep the digits moving without the app being awake.
+    private func activityState(for session: WorkoutSession) -> WorkoutActivityAttributes.ContentState {
+        WorkoutActivityAttributes.ContentState(
+            restEndsAt: timer.isResting ? timer.fireDate : nil,
+            sessionStartedAt: session.startedAt,
+            exerciseName: timer.isResting ? timer.exerciseName : currentExerciseName,
+            nextSetNumber: timer.nextSetNumber,
+            completedSets: completedSets,
+            totalSets: totalSets
+        )
+    }
+
+    private var currentExerciseName: String {
+        guard entries.indices.contains(expandedIndex) else {
+            return entries.first?.exerciseName ?? day.title
+        }
+        return entries[expandedIndex].exerciseName
+    }
+
+    private func refreshActivity() {
+        guard let session else { return }
+        liveActivity.update(activityState(for: session))
+    }
+
     // MARK: - Session lifecycle
 
     /// Builds the session from the plan, opening each exercise at its suggested
@@ -227,10 +258,12 @@ struct SessionView: View {
 
         try? context.save()
         session = workout
+        liveActivity.start(dayTitle: day.title, state: activityState(for: workout))
     }
 
     private func finish() {
         guard let session else { dismiss(); return }
+        liveActivity.end()
         timer.stop()
         session.endedAt = .now
 
