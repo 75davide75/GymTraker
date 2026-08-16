@@ -14,27 +14,39 @@ import SwiftUI
 
 /// Where the blooms sit and how they are tinted on a given screen.
 struct AuroraVariant: Equatable {
-    /// Degrees added to both bloom hues.
+    /// Degrees added to both bloom hues. Fine for nudging the house palette
+    /// along; useless for landing on a specific colour, since rotating two
+    /// different hues by the same amount sends them to two different places.
+    /// When a screen needs particular colours, name them instead.
     var hueShift: Double
+    /// Overrides the bloom colours outright.
+    var primaryColor: Color?
+    var secondaryColor: Color?
     /// Bloom centres in unit coordinates, before the drift is applied.
     var primary: UnitPoint
     var secondary: UnitPoint
     var intensity: Double
 
-    static let home = AuroraVariant(hueShift: 0, primary: UnitPoint(x: 0.78, y: 0.08),
+    static let home = AuroraVariant(hueShift: 0, primaryColor: nil, secondaryColor: nil, primary: UnitPoint(x: 0.78, y: 0.08),
                                     secondary: UnitPoint(x: 0.18, y: 0.86), intensity: 1)
-    static let plan = AuroraVariant(hueShift: -18, primary: UnitPoint(x: 0.18, y: 0.14),
+    static let plan = AuroraVariant(hueShift: -18, primaryColor: nil, secondaryColor: nil, primary: UnitPoint(x: 0.18, y: 0.14),
                                     secondary: UnitPoint(x: 0.86, y: 0.72), intensity: 0.94)
-    static let library = AuroraVariant(hueShift: 22, primary: UnitPoint(x: 0.88, y: 0.32),
+    static let library = AuroraVariant(hueShift: 22, primaryColor: nil, secondaryColor: nil, primary: UnitPoint(x: 0.88, y: 0.32),
                                        secondary: UnitPoint(x: 0.10, y: 0.94), intensity: 0.9)
-    static let registry = AuroraVariant(hueShift: -34, primary: UnitPoint(x: 0.30, y: 0.06),
+    static let registry = AuroraVariant(hueShift: -34, primaryColor: nil, secondaryColor: nil, primary: UnitPoint(x: 0.30, y: 0.06),
                                         secondary: UnitPoint(x: 0.92, y: 0.58), intensity: 0.88)
-    static let profile = AuroraVariant(hueShift: 42, primary: UnitPoint(x: 0.62, y: 0.10),
+    static let profile = AuroraVariant(hueShift: 42, primaryColor: nil, secondaryColor: nil, primary: UnitPoint(x: 0.62, y: 0.10),
                                        secondary: UnitPoint(x: 0.14, y: 0.78), intensity: 1.05)
-    /// Sport mode: the blooms swing round to red and sit low and wide, so the
-    /// session screen reads hot the moment it opens.
-    static let session = AuroraVariant(hueShift: -128, primary: UnitPoint(x: 0.14, y: 0.02),
-                                       secondary: UnitPoint(x: 0.88, y: 0.94), intensity: 1.25)
+    /// Sport mode. Rotating the house hues landed on green and yellow, so the
+    /// session names its colours: red overhead, ember below.
+    static let session = AuroraVariant(
+        hueShift: 0,
+        primaryColor: Theme.Palette.sportRed,
+        secondaryColor: Theme.Palette.sportEmber,
+        primary: UnitPoint(x: 0.16, y: 0.02),
+        secondary: UnitPoint(x: 0.86, y: 0.96),
+        intensity: 1.15
+    )
 }
 
 // MARK: - Attaching a variant
@@ -74,14 +86,14 @@ struct AuroraBackground: View {
                 let bloom = max(size.width, size.height) * 0.95
 
                 ZStack {
-                    bloomCircle(Theme.Palette.violetDeep)
+                    bloomCircle(variant.primaryColor ?? Theme.Palette.violetDeep)
                         .frame(width: bloom, height: bloom)
                         .position(
                             x: variant.primary.x * size.width,
                             y: variant.primary.y * size.height
                         )
 
-                    bloomCircle(Theme.Palette.cyan)
+                    bloomCircle(variant.secondaryColor ?? Theme.Palette.cyan)
                         .frame(width: bloom * 0.85, height: bloom * 0.85)
                         .position(
                             x: variant.secondary.x * size.width,
