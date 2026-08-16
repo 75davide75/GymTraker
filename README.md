@@ -23,9 +23,13 @@ A per-exercise checkbox arms a *go up next time* reminder. The next session then
 
 A plan is a set of lettered day templates — A, B, C and onward — plus a weekly schedule. Tapping a weekday cycles it through `Rest → A → B → C → Rest`, and **the same letter can sit on several days**, which is how most real splits work.
 
-Each template holds a numbered, reorderable exercise list. Exercises come from a bundled archive of **125 exercises**; anything missing can be saved to your own archive and is then searchable, filterable and pickable like the rest.
+Onboarding offers eight splits to start from — full body, upper/lower, push/pull/legs at three and six days, PPL+upper/lower, the Arnold split, a body-part split and a 5×5 strength template — or an empty plan.
 
-Every archive diagram is generated from one grammar — a rounded tile tinted by equipment hue holding primitives keyed to the equipment type (`bar`, `dumbbell`, `frame`, `cable`, `ring`, `bell`, `wave`, `arc`). Custom exercises get a matching illustration for free.
+Each template holds a numbered, reorderable exercise list. Exercises come from a bundled archive of **873 exercises**, each with two demonstration photographs (start and end position) and step-by-step cues. Anything missing can be saved to your own archive and is then searchable, filterable and pickable like the rest; user-created exercises fall back to a generated diagram keyed to their equipment.
+
+The plan also exports to a printable A4 PDF.
+
+The archive comes from [free-exercise-db](https://github.com/yuhonas/free-exercise-db), released under the Unlicense into the public domain. Images are resized to 320 px HEIC, about 16 MB in total.
 
 <p align="center">
   <img src="docs/screenshots/12-plan.png" width="30%" alt="Plan editor">
@@ -53,6 +57,12 @@ Accessory work carries no tier at all — it is tracked and charted, but keeping
 
 **These are guidelines, not measurements,** and the app says so on the profile screen.
 
+### Apple Health
+
+Bodyweight, sex and age can be pulled from Health so the tiers are measured against real numbers, and finished workouts recorded elsewhere — including on an Apple Watch — are imported into the history. Sessions logged in the app are written back as strength-training workouts.
+
+One honest limit: Health only publishes a workout once it has been saved, which for a Watch workout means when it ends. Mirroring a session while it is still running would need a watchOS companion app, which this build does not have.
+
 ## Building
 
 Requires **Xcode 26.6** and an iPhone or simulator running **iOS 26**.
@@ -77,6 +87,7 @@ Unit tests (Swift Testing) cover the parts where being wrong is invisible:
 - **RegistryTests** — one entry per change, no entry when nothing changed, set indices in rep records, removal appending rather than deleting.
 - **ProgressionTests** — the automatic rule, the armed flag, accepting and declining a suggestion.
 - **UnitFormatterTests** — kg/lb round-tripping without drift.
+- **PersistenceTests** — uneven sets surviving a reload, repeated templates, idempotent seeding, and every archive exercise resolving to a bundled photo.
 
 UI tests (XCUITest) walk the acceptance checks against the running app: onboarding, logging a session with uneven sets, the registry recording it, a custom exercise reaching search, one template repeating on two weekdays, both appearances, and export.
 
@@ -85,7 +96,7 @@ UI tests (XCUITest) walk the acceptance checks against the running app: onboardi
 ```
 Gym Traker/
 ├── Models/          SwiftData entities
-├── Services/        registry, progression, seeding, rest timer, export
+├── Services/        registry, progression, seeding, rest timer, Health, export, PDF
 ├── Ranking/         threshold tables and the scoring engine
 ├── DesignSystem/    theme, glass surfaces, aurora, exercise glyphs
 ├── Features/        one folder per screen
