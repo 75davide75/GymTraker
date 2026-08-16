@@ -45,6 +45,7 @@ struct HistoryView: View {
                 }
             }
         }
+        .reportsScrollDirection()
         .auroraVariant(.registry)
         .navigationTitle("History")
         .navigationBarTitleDisplayMode(.large)

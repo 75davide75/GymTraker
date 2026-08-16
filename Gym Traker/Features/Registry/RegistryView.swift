@@ -54,6 +54,8 @@ struct RegistryView: View {
             } else {
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 18) {
+                        ScreenTitle("Registry")
+                            .padding(.horizontal, -Theme.Spacing.screenMargin)
                         filterBar
 
                         ForEach(RegistryGroup.group(page), id: \.title) { group in
@@ -88,9 +90,11 @@ struct RegistryView: View {
                 }
             }
         }
+        .reportsScrollDirection()
         .auroraVariant(.registry)
         .navigationTitle("Registry")
-        .navigationBarTitleDisplayMode(.large)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarVisibility(.hidden, for: .navigationBar)
     }
 
     // MARK: - Filters

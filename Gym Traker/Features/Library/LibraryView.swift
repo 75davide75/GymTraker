@@ -64,20 +64,24 @@ struct LibraryView: View {
                     proxy.size.height
                 } action: { headerHeight = $0 }
         }
+        .reportsScrollDirection()
         .auroraVariant(.library)
         .navigationTitle(mode == .picker ? "Add exercise" : "Library")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarVisibility(mode == .browse ? .hidden : .automatic, for: .navigationBar)
         .toolbar {
             if mode == .picker {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
                 }
             }
-            ToolbarItem(placement: .primaryAction) {
-                Button {
-                    showingNewExercise = true
-                } label: {
-                    Label("New", systemImage: "plus")
+            if mode == .picker {
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        showingNewExercise = true
+                    } label: {
+                        Label("New", systemImage: "plus")
+                    }
                 }
             }
         }
@@ -102,12 +106,28 @@ struct LibraryView: View {
     /// under a soft edge rather than being clipped by a hard line.
     private var pinnedHeader: some View {
         VStack(spacing: 10) {
+            if mode == .browse {
+                ScreenTitle(title: "Library") {
+                    Button {
+                        showingNewExercise = true
+                    } label: {
+                        Image(systemName: "plus")
+                            .font(.system(size: 17, weight: .semibold))
+                            .frame(width: 38, height: 38)
+                            .glassEffect(.regular, in: .circle)
+                            .contentShape(Circle())
+                    }
+                    .buttonStyle(.pressable)
+                    .accessibilityLabel("New")
+                }
+                .padding(.horizontal, -Theme.Spacing.screenMargin)
+            }
             searchField
             filterChips
             countLine
         }
         .padding(.horizontal, Theme.Spacing.screenMargin)
-        .padding(.top, 6)
+        .padding(.top, 4)
         .padding(.bottom, 10)
         .background {
             ZStack(alignment: .bottom) {

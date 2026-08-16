@@ -45,14 +45,16 @@ struct ExerciseCard: View {
         }
         .padding(Theme.Spacing.cardPadding)
         .frame(maxWidth: .infinity, alignment: .leading)
+        // Sport mode runs through the cards too: a violet card on a red screen
+        // read as a leftover from somewhere else.
         .glassEffect(
-            isExpanded ? .regular.tint(Theme.Palette.violet.opacity(0.16)) : .regular,
+            isExpanded ? .regular.tint(Theme.Palette.sportRed.opacity(0.18)) : .regular,
             in: .rect(cornerRadius: Theme.Radius.card)
         )
         .overlay {
             RoundedRectangle(cornerRadius: Theme.Radius.card, style: .continuous)
                 .strokeBorder(
-                    isExpanded ? Theme.Palette.violet.opacity(0.35) : Theme.Palette.stroke(scheme),
+                    isExpanded ? Theme.Palette.sportRed.opacity(0.4) : Theme.Palette.stroke(scheme),
                     lineWidth: 1
                 )
         }
@@ -68,8 +70,8 @@ struct ExerciseCard: View {
                     .font(.system(size: 12, weight: .bold))
                     .monospacedDigit()
                     .frame(width: 24, height: 24)
-                    .background(Circle().fill(Theme.Palette.violet.opacity(isExpanded ? 0.45 : 0.22)))
-                    .foregroundStyle(isExpanded ? Color.white : Theme.Palette.violet)
+                    .background(Circle().fill(Theme.Palette.sportRed.opacity(isExpanded ? 0.5 : 0.22)))
+                    .foregroundStyle(isExpanded ? Color.white : Theme.Palette.sportRed)
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(entry.exerciseName)
@@ -217,7 +219,7 @@ struct ExerciseCard: View {
                     Image(systemName: "timer").font(.system(size: 12, weight: .bold))
                     Text(UnitFormatter.rest(item.restSeconds)).font(.captionM)
                 }
-                .foregroundStyle(Theme.Palette.cyan)
+                .foregroundStyle(Theme.Palette.sportCool)
                 .padding(.horizontal, 14)
                 .frame(height: 36)
                 .glassEffect(.regular, in: .rect(cornerRadius: Theme.Radius.chip))

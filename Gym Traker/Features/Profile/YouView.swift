@@ -32,6 +32,20 @@ struct YouView: View {
         ZStack {
             ScrollView {
                 VStack(spacing: 18) {
+                    ScreenTitle(title: "You") {
+                        Button {
+                            showingSettings = true
+                        } label: {
+                            Image(systemName: "gearshape")
+                                .font(.system(size: 17, weight: .semibold))
+                                .frame(width: 38, height: 38)
+                                .glassEffect(.regular, in: .circle)
+                                .contentShape(Circle())
+                        }
+                        .buttonStyle(.pressable)
+                        .accessibilityLabel("Settings")
+                    }
+                    .padding(.horizontal, -Theme.Spacing.screenMargin)
                     identity.entryTransition(0)
                     globalCard.entryTransition(1)
                     muscleCard.entryTransition(2)
@@ -42,22 +56,15 @@ struct YouView: View {
                 .padding(.bottom, 96)
             }
         }
+        .reportsScrollDirection()
         .auroraVariant(.profile)
         .task {
             ranking = Store.rankingSnapshot(in: context)
             muscleRanks = Store.muscleRanks(in: context, snapshot: ranking)
         }
         .navigationTitle("You")
-        .navigationBarTitleDisplayMode(.large)
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button {
-                    showingSettings = true
-                } label: {
-                    Label("Settings", systemImage: "gearshape")
-                }
-            }
-        }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarVisibility(.hidden, for: .navigationBar)
         .sheet(isPresented: $showingSettings) {
             NavigationStack { SettingsView() }
         }

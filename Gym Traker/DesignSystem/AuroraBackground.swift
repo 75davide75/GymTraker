@@ -65,7 +65,17 @@ extension View {
     /// redraws, and the gradients still travel between screens because the
     /// screens themselves slide.
     func auroraVariant(_ variant: AuroraVariant) -> some View {
-        background(AuroraBackground(variant: variant).ignoresSafeArea())
+        // A `.background` takes the size of the view it is attached to. On a
+        // screen whose content is a centred empty state that meant a
+        // hard-edged rectangle of gradient floating in black, and on a long
+        // list it meant the gradient stopping partway down. The aurora is a
+        // layer behind the whole screen, so it is stacked, not attached.
+        ZStack {
+            AuroraBackground(variant: variant)
+                .ignoresSafeArea()
+            self
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
     }
 }
 

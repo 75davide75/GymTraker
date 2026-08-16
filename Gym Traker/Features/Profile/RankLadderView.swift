@@ -39,6 +39,7 @@ struct RankLadderView: View {
             .padding(.horizontal, Theme.Spacing.screenMargin)
             .padding(.bottom, 30)
         }
+        .reportsScrollDirection()
         .auroraVariant(.profile)
         .task { ranking = Store.rankingSnapshot(in: context) }
         .navigationTitle("Ranks")

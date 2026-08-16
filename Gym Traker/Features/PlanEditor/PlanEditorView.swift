@@ -37,27 +37,11 @@ struct PlanEditorView: View {
                 emptyState
             }
         }
+        .reportsScrollDirection()
         .auroraVariant(.plan)
         .navigationTitle("Plan")
-        .navigationBarTitleDisplayMode(.large)
-        .toolbar {
-            if let plan {
-                ToolbarItem(placement: .primaryAction) {
-                    if let pdfURL {
-                        ShareLink(item: pdfURL) {
-                            Label("Share PDF", systemImage: "square.and.arrow.up")
-                        }
-                    } else {
-                        Button {
-                            pdfURL = try? PlanPDF.write(plan: plan, profile: Store.profile(in: context))
-                            Haptics.success()
-                        } label: {
-                            Label("Export PDF", systemImage: "doc.richtext")
-                        }
-                    }
-                }
-            }
-        }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarVisibility(.hidden, for: .navigationBar)
         .onChange(of: selectedLetter) { _, _ in pdfURL = nil }
         .sheet(isPresented: $showingPicker) {
             NavigationStack {
@@ -82,11 +66,39 @@ struct PlanEditorView: View {
         }
     }
 
+    @ViewBuilder
+    private func planToolbar(_ plan: Plan) -> some View {
+        if let pdfURL {
+            ShareLink(item: pdfURL) {
+                Image(systemName: "square.and.arrow.up")
+                    .font(.system(size: 16, weight: .semibold))
+                    .frame(width: 38, height: 38)
+                    .glassEffect(.regular, in: .circle)
+            }
+            .buttonStyle(.pressable)
+        } else {
+            Button {
+                pdfURL = try? PlanPDF.write(plan: plan, profile: Store.profile(in: context))
+                Haptics.play(.success)
+            } label: {
+                Image(systemName: "doc.richtext")
+                    .font(.system(size: 16, weight: .semibold))
+                    .frame(width: 38, height: 38)
+                    .glassEffect(.regular, in: .circle)
+                    .contentShape(Circle())
+            }
+            .buttonStyle(.pressable)
+            .accessibilityLabel("Export PDF")
+        }
+    }
+
     // MARK: - Content
 
     private func content(_ plan: Plan) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
+                ScreenTitle(title: "Plan") { planToolbar(plan) }
+                    .padding(.horizontal, -Theme.Spacing.screenMargin)
                 planName(plan).entryTransition(0)
                 schedule(plan).entryTransition(1)
                 dayTabs(plan).entryTransition(2)

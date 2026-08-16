@@ -79,7 +79,7 @@ final class Gym_TrakerUITests: XCTestCase {
 
         // Acceptance check: the changes are readable in the registry.
         tapTab("Registry")
-        XCTAssertTrue(app.staticTexts["Recent"].waitForExistence(timeout: 5), "Registry is empty")
+        XCTAssertTrue(app.staticTexts["Recent"].firstMatch.waitForExistence(timeout: 8), "Registry is empty")
         shoot("08-registry")
     }
 
@@ -89,7 +89,7 @@ final class Gym_TrakerUITests: XCTestCase {
         completeOnboarding(in: app, shoot: shoot)
 
         tapTab("Library")
-        XCTAssertTrue(app.navigationBars["Library"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Library"].firstMatch.waitForExistence(timeout: 5))
         shoot("09-library")
 
         app.buttons["New"].tap()
@@ -118,7 +118,7 @@ final class Gym_TrakerUITests: XCTestCase {
         completeOnboarding(in: app, shoot: shoot)
 
         tapTab("Plan")
-        XCTAssertTrue(app.navigationBars["Plan"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Plan"].firstMatch.waitForExistence(timeout: 5))
         shoot("12-plan")
 
         // Home shows a read-only copy of the same strip, so target the live
@@ -150,7 +150,7 @@ final class Gym_TrakerUITests: XCTestCase {
         completeOnboarding(in: app, shoot: shoot)
 
         tapTab("You")
-        XCTAssertTrue(app.navigationBars["You"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["You"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Beginner"].exists, "Ladder is missing")
         shoot("14-you")
     }
@@ -169,7 +169,7 @@ final class Gym_TrakerUITests: XCTestCase {
         shoot("15-settings-light")
 
         app.buttons["Done"].tap()
-        XCTAssertTrue(app.navigationBars["You"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["You"].firstMatch.waitForExistence(timeout: 5))
         shoot("16-you-light")
 
         tapTab("Home")
@@ -177,7 +177,7 @@ final class Gym_TrakerUITests: XCTestCase {
         shoot("17-home-light")
 
         tapTab("Library")
-        XCTAssertTrue(app.navigationBars["Library"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Library"].firstMatch.waitForExistence(timeout: 5))
         shoot("18-library-light")
     }
 

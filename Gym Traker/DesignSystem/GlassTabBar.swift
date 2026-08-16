@@ -25,21 +25,29 @@ struct GlassTabBar<Section: Hashable & Identifiable>: View {
 
     @Binding var selection: Section
     let items: [Item]
+    /// Collapses to icons alone while the screen is being scrolled down, the
+    /// way the system bar does, so the list gets the room.
+    var isCompact: Bool = false
 
     var body: some View {
-        HStack(spacing: 2) {
-            ForEach(items) { item in
-                button(item)
+        // One GlassEffectContainer so the pills and the bar merge into a
+        // single piece of glass rather than stacking two sheets of it.
+        GlassEffectContainer(spacing: 8) {
+            HStack(spacing: 4) {
+                ForEach(items) { item in
+                    button(item)
+                }
             }
+            .padding(isCompact ? 4 : 6)
+            .glassEffect(.regular.interactive(), in: .capsule)
         }
-        .padding(5)
-        .glassEffect(.regular, in: .rect(cornerRadius: Theme.Radius.bar))
         .overlay {
-            RoundedRectangle(cornerRadius: Theme.Radius.bar, style: .continuous)
-                .strokeBorder(Theme.Palette.stroke(scheme), lineWidth: 1)
+            Capsule().strokeBorder(Theme.Palette.stroke(scheme), lineWidth: 1)
         }
-        .padding(.horizontal, 14)
-        .padding(.bottom, 4)
+        .shadow(color: .black.opacity(scheme == .dark ? 0.5 : 0.16), radius: 18, y: 8)
+        .padding(.horizontal, isCompact ? 78 : 16)
+        .padding(.bottom, 6)
+        .animation(.snappy(duration: 0.32, extraBounce: 0.04), value: isCompact)
     }
 
     private func button(_ item: Item) -> some View {
@@ -54,23 +62,24 @@ struct GlassTabBar<Section: Hashable & Identifiable>: View {
         } label: {
             VStack(spacing: 3) {
                 Image(systemName: item.symbol)
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.system(size: isCompact ? 18 : 17, weight: .semibold))
                     .symbolVariant(isSelected ? .fill : .none)
-                Text(item.title)
-                    .font(.system(size: 10, weight: .semibold))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                if !isCompact {
+                    Text(item.title)
+                        .font(.system(size: 10, weight: .semibold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                }
             }
             .foregroundStyle(isSelected ? Theme.Palette.violet : Color.secondary)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 7)
+            .padding(.vertical, isCompact ? 9 : 7)
             .background {
                 if isSelected {
-                    RoundedRectangle(cornerRadius: Theme.Radius.chip, style: .continuous)
-                        .fill(Theme.Palette.violet.opacity(0.16))
+                    Capsule().fill(Theme.Palette.violet.opacity(0.18))
                 }
             }
-            .contentShape(.rect(cornerRadius: Theme.Radius.chip))
+            .contentShape(Capsule())
         }
         .buttonStyle(.pressableSilent)
         .accessibilityLabel(item.title)

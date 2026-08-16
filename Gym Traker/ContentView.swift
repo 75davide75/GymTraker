@@ -68,8 +68,7 @@ struct RootTabView: View {
     }
 
     @State private var selection: AppSection = .home
-    /// Where the pager actually sits, which trails `selection` during a drag.
-    @State private var scrolled: AppSection?
+    @State private var isBarCompact = false
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -78,42 +77,36 @@ struct RootTabView: View {
                 selection: $selection,
                 items: AppSection.allCases.map {
                     GlassTabBar.Item(section: $0, title: $0.title, symbol: $0.symbol)
-                }
+                },
+                isCompact: isBarCompact
             )
         }
-        .onChange(of: selection) { _, section in
-            guard scrolled != section else { return }
-            withAnimation(.snappy(duration: 0.35, extraBounce: 0.05)) { scrolled = section }
+        .onPreferenceChange(ScrollDirectionKey.self) { goingDown in
+            guard isBarCompact != goingDown else { return }
+            isBarCompact = goingDown
         }
-        .onChange(of: scrolled) { _, section in
-            guard let section, selection != section else { return }
-            selection = section
-        }
-        .task { scrolled = selection }
     }
 
-    /// A paging scroll rather than a TabView.
+    /// Paging TabView, with the system bar hidden and our own drawn on top.
     ///
-    /// Swiping anywhere moves between sections and each screen carries its own
-    /// gradient across as it slides. It also fixes two problems a hand-rolled
-    /// drag gesture caused: as a simultaneous gesture it stole horizontal
-    /// scrolls from chip rows, and as a plain gesture it delayed every tap in
-    /// the app. Nested scroll views are something UIKit already arbitrates.
+    /// Three approaches got here. A drag gesture on the standard TabView stole
+    /// horizontal scrolls as a simultaneous gesture and delayed every tap as a
+    /// plain one. A horizontal paging ScrollView fixed the taps but swallowed
+    /// the swipe: with a vertical scroll view on each page, the inner one wins
+    /// the gesture and the page never turns. A page-style TabView is backed by
+    /// UIPageViewController, which is built for exactly this nesting — so the
+    /// swipe lands, the slide is interactive, and each screen carries its own
+    /// gradient across with it.
     private var pages: some View {
-        ScrollView(.horizontal) {
-            LazyHStack(spacing: 0) {
-                ForEach(AppSection.allCases) { section in
-                    screen(section)
-                        .containerRelativeFrame(.horizontal)
-                        .id(section)
-                }
+        TabView(selection: $selection) {
+            ForEach(AppSection.allCases) { section in
+                screen(section)
+                    .tag(section)
             }
-            .scrollTargetLayout()
         }
-        .scrollTargetBehavior(.paging)
-        .scrollPosition(id: $scrolled)
-        .scrollIndicators(.hidden)
-        .ignoresSafeArea(edges: .bottom)
+        .tabViewStyle(.page(indexDisplayMode: .never))
+        .ignoresSafeArea()
+        .background(Theme.Palette.backgroundDark.ignoresSafeArea())
     }
 
     @ViewBuilder
