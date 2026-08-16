@@ -68,6 +68,20 @@ final class Plan {
         return day(withLetter: letter)
     }
 
+    /// The next scheduled template, starting with today and looking a week
+    /// ahead. On a rest day this is what "up next" should mean — otherwise the
+    /// app would offer nothing to do on four days out of seven.
+    func nextScheduled(from date: Date = .now) -> (day: PlanDay, daysAhead: Int)? {
+        let start = Self.mondayBasedIndex(for: date)
+        for offset in 0..<7 {
+            let index = (start + offset) % 7
+            guard let letter = letter(forWeekdayIndex: index),
+                  let day = day(withLetter: letter) else { continue }
+            return (day, offset)
+        }
+        return nil
+    }
+
     /// Converts Foundation's Sunday-first weekday into a Monday-first index.
     static func mondayBasedIndex(for date: Date) -> Int {
         let weekday = Calendar.current.component(.weekday, from: date) // 1 = Sunday

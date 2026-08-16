@@ -61,3 +61,19 @@ enum UnitFormatter {
             : String(format: "%.1f", value)
     }
 }
+
+extension Date {
+    /// "now · 8s · 12m · 3h · 2d", then a plain date past a week. Fixed-width
+    /// enough that a registry row never truncates it.
+    var compactRelative: String {
+        let seconds = Int(Date.now.timeIntervalSince(self))
+        switch seconds {
+        case ..<5: return "now"
+        case ..<60: return "\(seconds)s"
+        case ..<3600: return "\(seconds / 60)m"
+        case ..<86_400: return "\(seconds / 3600)h"
+        case ..<604_800: return "\(seconds / 86_400)d"
+        default: return formatted(.dateTime.day().month(.abbreviated))
+        }
+    }
+}

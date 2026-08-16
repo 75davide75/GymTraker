@@ -14,6 +14,9 @@ struct Gym_TrakerApp: App {
     let container: ModelContainer
 
     init() {
+        // UI tests pass -resetStore so every run starts at onboarding.
+        let isResetting = ProcessInfo.processInfo.arguments.contains("-resetStore")
+
         do {
             let container = try ModelContainer(
                 for: UserProfile.self,
@@ -23,9 +26,10 @@ struct Gym_TrakerApp: App {
                 PlanItem.self,
                 WorkoutSession.self,
                 SessionEntry.self,
-                ChangeRecord.self
+                ChangeRecord.self,
+                configurations: ModelConfiguration(isStoredInMemoryOnly: isResetting)
             )
-            try ArchiveSeeder.seedIfNeeded(container.mainContext)
+            try ArchiveSeeder.seedIfNeeded(container.mainContext, force: isResetting)
             self.container = container
         } catch {
             fatalError("Could not start the data store: \(error)")

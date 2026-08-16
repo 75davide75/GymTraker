@@ -225,11 +225,12 @@ struct RegistryRow: View {
 
             Spacer(minLength: 4)
 
-            Text(record.date.formatted(.relative(presentation: .numeric)))
+            Text(record.date.compactRelative)
                 .font(.system(size: 11, weight: .medium))
+                .monospacedDigit()
                 .foregroundStyle(.tertiary)
                 .lineLimit(1)
-                .layoutPriority(-1)
+                .fixedSize()
         }
         .padding(.vertical, 10)
     }

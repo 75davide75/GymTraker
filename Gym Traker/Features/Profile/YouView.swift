@@ -1,0 +1,277 @@
+//
+//  YouView.swift
+//  Gym Traker
+//
+//  Where the lifter sits: one global score, four anchor lifts, and the ladder
+//  they climb. Every number here is a guideline, and the screen says so.
+//
+
+import SwiftUI
+import SwiftData
+
+struct YouView: View {
+    @Environment(\.modelContext) private var context
+    @Query private var profiles: [UserProfile]
+    @Query private var sessions: [WorkoutSession]
+
+    @State private var showingSettings = false
+
+    private var profile: UserProfile? { profiles.first }
+    private var units: Units { profile?.units ?? .kg }
+
+    private var globalLevel: RankResult? { Store.globalLevel(in: context) }
+    private var anchorScores: [RankAnchor: RankResult] { Store.anchorScores(in: context) }
+    private var sessionsLast4Weeks: Int { Store.sessionsLast4Weeks(in: context).count }
+
+    private let bigFour: [RankAnchor] = [.squat, .bench, .deadlift, .ohp]
+
+    var body: some View {
+        ZStack {
+            AuroraBackground()
+
+            ScrollView {
+                VStack(spacing: 18) {
+                    identity.entryTransition(0)
+                    globalCard.entryTransition(1)
+                    perLift.entryTransition(2)
+                    ladder.entryTransition(3)
+                }
+                .padding(.horizontal, Theme.Spacing.screenMargin)
+                .padding(.bottom, 30)
+            }
+        }
+        .navigationTitle("You")
+        .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    showingSettings = true
+                } label: {
+                    Label("Settings", systemImage: "gearshape")
+                }
+            }
+        }
+        .sheet(isPresented: $showingSettings) {
+            NavigationStack { SettingsView() }
+        }
+    }
+
+    // MARK: - Identity
+
+    private var identity: some View {
+        GlassCard(radius: Theme.Radius.hero) {
+            HStack(spacing: 16) {
+                ZStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [Theme.Palette.violet, Theme.Palette.cyan],
+                                startPoint: .topLeading, endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 64, height: 64)
+                    Text(initials)
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundStyle(.white)
+                }
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(profile?.name.isEmpty == false ? profile!.name : "Lifter")
+                        .font(.titleL)
+                    if let profile {
+                        Text("\(profile.sex.displayName) · \(profile.age) · \(UnitFormatter.weight(profile.bodyweightKg, in: units))")
+                            .font(.captionM)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                Spacer(minLength: 0)
+            }
+        }
+    }
+
+    private var initials: String {
+        let name = profile?.name.trimmingCharacters(in: .whitespaces) ?? ""
+        guard !name.isEmpty else { return "GT" }
+        return name.split(separator: " ").prefix(2).compactMap { $0.first }.map(String.init).joined().uppercased()
+    }
+
+    // MARK: - Global rank
+
+    private var globalCard: some View {
+        GlassSection(title: "Global rank") {
+            VStack(spacing: 16) {
+                if let global = globalLevel {
+                    HStack(spacing: 20) {
+                        scoreRing(global)
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text(global.label)
+                                .font(.titleL)
+                                .foregroundStyle(global.tier.tint)
+                            Text(global.tier.note)
+                                .font(.captionM)
+                                .foregroundStyle(.secondary)
+                            Text(consistencyLine)
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundStyle(.tertiary)
+                        }
+
+                        Spacer(minLength: 0)
+                    }
+                } else {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Unranked").font(.titleL).foregroundStyle(.secondary)
+                        Text("Log at least two of squat, bench, deadlift and overhead press to get a global level.")
+                            .font(.captionM)
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+
+                Text("Standards are guidelines, not measurements — they benchmark you against lifters of the same bodyweight, sex and age band.")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.tertiary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+    }
+
+    private func scoreRing(_ result: RankResult) -> some View {
+        ZStack {
+            Circle()
+                .stroke(Theme.Palette.track(.dark), lineWidth: 8)
+            Circle()
+                .trim(from: 0, to: result.score / 100)
+                .stroke(
+                    AngularGradient(
+                        colors: [result.tier.tint.opacity(0.7), result.tier.tint],
+                        center: .center
+                    ),
+                    style: StrokeStyle(lineWidth: 8, lineCap: .round)
+                )
+                .rotationEffect(.degrees(-90))
+                .animation(Theme.Motion.spring, value: result.score)
+
+            VStack(spacing: 0) {
+                Text("\(Int(result.score.rounded()))")
+                    .font(.system(size: 26, weight: .bold))
+                    .monospacedDigit()
+                Text("/ 100")
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .frame(width: 96, height: 96)
+    }
+
+    private var consistencyLine: String {
+        let count = sessionsLast4Weeks
+        let missing = RankingEngine.sessionsToFullConsistency(count)
+        if missing == 0 {
+            return "\(count) sessions in 4 weeks · full consistency bonus"
+        }
+        return "\(count) sessions in 4 weeks · \(missing) more for the full bonus"
+    }
+
+    // MARK: - Per lift
+
+    private var perLift: some View {
+        GlassSection(title: "Tier per lift") {
+            VStack(spacing: 0) {
+                ForEach(Array(bigFour.enumerated()), id: \.element) { index, anchor in
+                    liftRow(anchor)
+                    if index < bigFour.count - 1 {
+                        Divider().opacity(0.4).padding(.vertical, 2)
+                    }
+                }
+            }
+        }
+    }
+
+    private func liftRow(_ anchor: RankAnchor) -> some View {
+        let result = anchorScores[anchor]
+        let exercise = Store.anchorExercise(anchor, in: context)
+        let best = exercise.flatMap { Store.history(for: $0.id, in: context, limit: 1).last?.bestSet }
+
+        return VStack(alignment: .leading, spacing: 7) {
+            HStack {
+                Text(anchor.displayName)
+                    .font(.bodyM)
+                Spacer()
+                Text(result?.label ?? "Unranked")
+                    .font(.captionM)
+                    .foregroundStyle(result?.tier.tint ?? Color.secondary)
+            }
+
+            GlassProgressBar(
+                value: result?.progressInTier ?? 0,
+                tint: result?.tier.tint ?? Color.secondary,
+                height: 6
+            )
+
+            HStack {
+                if let best {
+                    Text("\(UnitFormatter.weight(best.weightKg, in: units)) × \(best.reps)")
+                        .font(.system(size: 11, weight: .semibold))
+                        .monospacedDigit()
+                        .foregroundStyle(.secondary)
+                } else {
+                    Text("No sets logged")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(.tertiary)
+                }
+                Spacer()
+                if let result, !result.isRepBased {
+                    Text("\(UnitFormatter.weight(result.value, in: units)) e1RM")
+                        .font(.system(size: 11, weight: .semibold))
+                        .monospacedDigit()
+                        .foregroundStyle(.tertiary)
+                }
+            }
+        }
+        .padding(.vertical, 10)
+    }
+
+    // MARK: - Ladder
+
+    private var ladder: some View {
+        GlassSection(title: "The ladder") {
+            VStack(spacing: 0) {
+                ForEach(Tier.allCases) { tier in
+                    let isCurrent = globalLevel?.tier == tier
+
+                    HStack(spacing: 12) {
+                        Circle()
+                            .fill(tier.tint)
+                            .frame(width: 9, height: 9)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(tier.displayName)
+                                .font(.bodyM)
+                                .foregroundStyle(isCurrent ? .primary : .secondary)
+                            Text(tier.note)
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundStyle(.tertiary)
+                        }
+
+                        Spacer(minLength: 0)
+
+                        Text(tier.scoreRangeLabel)
+                            .font(.system(size: 11, weight: .semibold))
+                            .monospacedDigit()
+                            .foregroundStyle(.tertiary)
+                    }
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, isCurrent ? 10 : 0)
+                    .background {
+                        if isCurrent {
+                            RoundedRectangle(cornerRadius: Theme.Radius.chip, style: .continuous)
+                                .fill(tier.tint.opacity(0.14))
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
