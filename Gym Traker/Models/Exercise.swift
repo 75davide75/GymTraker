@@ -16,6 +16,10 @@ final class Exercise {
     var id: String = ""                 // slug, e.g. "bench-press"
     var name: String = ""
     var primaryMuscle: String = ""
+    /// The finer group, from the archive's classifier. Empty on rows written
+    /// before this existed and on user-created exercises, which fall back to
+    /// the coarse muscle below.
+    var muscleGroupRaw: String = ""
     var equipmentRaw: String = Equipment.barbell.rawValue
     var rankAnchorRaw: String?
     var trackingRaw: String = Tracking.weightReps.rawValue
@@ -98,6 +102,22 @@ final class Exercise {
     }
 
     var subtitle: String { "\(primaryMuscle) · \(equipmentRaw)" }
+
+    /// Falls back to the coarse muscle's own best guess, so a user-created
+    /// exercise is still coloured and still ranked.
+    var group: MuscleGroup {
+        if let stored = MuscleGroup(rawValue: muscleGroupRaw) { return stored }
+        return switch primaryMuscle {
+        case "Chest": .chest
+        case "Back": .back
+        case "Shoulders": .delts
+        case "Arms": .biceps
+        case "Legs": .quads
+        case "Glutes": .glutes
+        case "Core": .abs
+        default: .fullBody
+        }
+    }
 
     var defaultStepKg: Double { equipment.defaultStepKg }
 

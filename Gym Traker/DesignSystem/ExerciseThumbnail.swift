@@ -95,13 +95,14 @@ struct ExerciseThumbnail: View {
     let exercise: Exercise
     var size: CGFloat = 52
 
-    /// One tint for the whole archive.
+    /// The muscle worked, not the equipment used.
     ///
-    /// These used to be tinted per equipment, which put a gold tile between two
-    /// violet ones and made a list of the same kind of thing look like a list of
-    /// different kinds of thing. The equipment is already written under the
-    /// name, where it can be read rather than decoded.
-    private var tint: Color { Theme.Palette.violet }
+    /// Tinting by equipment put a gold tile between two violet ones and made a
+    /// list of the same kind of thing look like a list of different kinds. The
+    /// muscle is the thing you scan a library for, so it is the thing the
+    /// colour answers — and the equipment gets a badge, which is exact rather
+    /// than a colour you have to learn.
+    private var tint: Color { exercise.group.tint }
 
     /// The contracted phase — the position that identifies the movement.
     private var artwork: UIImage? {
@@ -117,8 +118,8 @@ struct ExerciseThumbnail: View {
         // across the whole archive beats a diagram that means the same thing
         // for every press.
         ZStack {
-            Circle().fill(tint.opacity(scheme == .dark ? 0.16 : 0.12))
-            Circle().strokeBorder(tint.opacity(0.28), lineWidth: 1)
+            Circle().fill(tint.opacity(scheme == .dark ? 0.18 : 0.13))
+            Circle().strokeBorder(tint.opacity(0.32), lineWidth: 1)
 
             if let artwork {
                 Image(uiImage: artwork)
@@ -137,7 +138,24 @@ struct ExerciseThumbnail: View {
             }
         }
         .frame(width: size, height: size)
+        .overlay(alignment: .bottomTrailing) { equipmentBadge }
         .accessibilityHidden(true)
+    }
+
+    /// On the lower corner rather than the lower edge: centred, it landed on
+    /// the figure's legs, and a badge over the drawing is two pictures fighting
+    /// for the same forty points.
+    private var equipmentBadge: some View {
+        Image(systemName: exercise.equipment.symbolName)
+            .font(.system(size: size * 0.22, weight: .semibold))
+            .foregroundStyle(scheme == .dark ? Color.white : Color.black.opacity(0.78))
+            .frame(width: size * 0.38, height: size * 0.38)
+            .background {
+                Circle()
+                    .fill(.regularMaterial)
+                    .overlay(Circle().strokeBorder(tint.opacity(0.5), lineWidth: 1))
+            }
+            .offset(x: size * 0.06, y: size * 0.06)
     }
 }
 

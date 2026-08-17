@@ -23,9 +23,14 @@ struct StepperControl<Label: View>: View {
         HStack(spacing: 12) {
             button(systemName: "minus", enabled: canDecrease, action: onDecrease)
 
+            // No content transition here. Every caller already puts a
+            // `.numericText(value:)` on the number itself, and that one knows
+            // which way the value went. Wrapping it in a second, valueless
+            // transition put an outer animation with no idea of direction
+            // around an inner one that had it — so a digit would roll upwards
+            // while being decreased, then correct itself on the next press.
             label
                 .frame(maxWidth: .infinity)
-                .contentTransition(.numericText())
 
             button(systemName: "plus", enabled: canIncrease, action: onIncrease)
         }

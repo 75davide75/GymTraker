@@ -84,12 +84,10 @@ struct OnboardingView: View {
             .buttonStyle(.glassProminent)
 
             if step > 0 {
-                Button("Back") {
-                    withAnimation(Theme.Motion.spring) { step -= 1 }
-                }
-                .font(.captionM)
-                .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
+                Button("Back") { goBack() }
+                    .font(.captionM)
+                    .buttonStyle(.plain)
+                    .foregroundStyle(.secondary)
             }
         }
         .padding(.bottom, 8)
@@ -204,9 +202,10 @@ struct OnboardingView: View {
                     } label: {
                         HStack(spacing: 14) {
                             Image(systemName: level.symbolName)
-                                .font(.system(size: 18))
-                                .frame(width: 28)
-                                .foregroundStyle(experience == level ? Theme.Palette.violet : Color.secondary)
+                                .font(.system(size: 18, weight: .semibold))
+                                .frame(width: 34, height: 34)
+                                .foregroundStyle(level.tint)
+                                .background(Circle().fill(level.tint.opacity(experience == level ? 0.26 : 0.14)))
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(level.displayName).font(.titleS).foregroundStyle(.primary)
                                 Text(level.blurb).font(.captionM).foregroundStyle(.secondary)
@@ -214,13 +213,15 @@ struct OnboardingView: View {
                             Spacer(minLength: 0)
                             if experience == level {
                                 Image(systemName: "checkmark.circle.fill")
-                                    .foregroundStyle(Theme.Palette.violet)
+                                    .foregroundStyle(level.tint)
                             }
                         }
                         .padding(14)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        // Each level carries its own colour, so the three read
+                        // as a scale of effort rather than three identical rows.
                         .glassEffect(
-                            experience == level ? .regular.tint(Theme.Palette.violet.opacity(0.3)) : .regular,
+                            experience == level ? .regular.tint(level.tint.opacity(0.3)) : .regular,
                             in: .rect(cornerRadius: Theme.Radius.row)
                         )
                         .contentShape(.rect(cornerRadius: Theme.Radius.row))
@@ -351,20 +352,20 @@ struct OnboardingView: View {
     private var planStep: some View {
         VStack(spacing: 12) {
             VStack(spacing: 6) {
-                Text(wantsPlan == nil ? "Where do you start?" : "Pick a split")
+                Text(planStepTitle)
                     .font(.system(size: 28, weight: .bold))
-                Text(wantsPlan == nil
-                     ? "Either way you can change everything afterwards."
-                     : "Suggested for a \(experience.displayName.lowercased()) lifter first.")
+                    .multilineTextAlignment(.center)
+                Text(planStepSubtitle)
                     .font(.bodyS)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
             .padding(.top, 6)
 
-            if wantsPlan == nil {
+            switch wantsPlan {
+            case nil:
                 startChoice
-            } else {
+            case true?:
                 ScrollView {
                     PlanPresetList(
                         experience: experience,
@@ -374,8 +375,47 @@ struct OnboardingView: View {
                     .padding(.vertical, 4)
                 }
                 .scrollIndicators(.hidden)
+            case false?:
+                // Choosing to start empty used to drop you into the list of
+                // ready-made plans anyway, which reads as the choice not having
+                // registered.
+                emptyChoiceConfirmation
             }
 
+            Spacer(minLength: 0)
+        }
+    }
+
+    private var planStepTitle: String {
+        switch wantsPlan {
+        case nil: "Where do you start?"
+        case true?: "Pick a split"
+        case false?: "Nothing to pick"
+        }
+    }
+
+    private var planStepSubtitle: String {
+        switch wantsPlan {
+        case nil: "Either way you can change everything afterwards."
+        case true?: "Suggested for a \(experience.displayName.lowercased()) lifter first."
+        case false?: "Tap Back if you would rather take one after all."
+        }
+    }
+
+    private var emptyChoiceConfirmation: some View {
+        VStack(spacing: 14) {
+            Spacer(minLength: 0)
+            Image(systemName: "square.dashed")
+                .font(.system(size: 40, weight: .semibold))
+                .foregroundStyle(Theme.Palette.violet)
+            Text("You'll start with an empty plan")
+                .font(.titleL)
+                .multilineTextAlignment(.center)
+            Text("Build it from the library whenever you like. The ready-made splits stay available on the Plan screen, so this is not a door closing.")
+                .font(.bodyS)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 24)
             Spacer(minLength: 0)
         }
     }
@@ -451,6 +491,24 @@ struct OnboardingView: View {
     }
 
     // MARK: - Completion
+
+    /// Back is not always the previous step.
+    ///
+    /// The last step asks two questions in one place: whether you want a plan
+    /// at all, and if so which. Answering the first replaced the screen with
+    /// the second, and Back skipped to the step before — so choosing "start
+    /// empty" was final, and the only way to change your mind was to answer a
+    /// question you had already answered again. Back undoes the last answer.
+    private func goBack() {
+        withAnimation(Theme.Motion.spring) {
+            if step == lastStep, wantsPlan != nil {
+                wantsPlan = nil
+                selectedPreset = nil
+            } else {
+                step -= 1
+            }
+        }
+    }
 
     private func advance() {
         guard step == lastStep else {

@@ -116,6 +116,10 @@ enum Equipment: String, Codable, CaseIterable, Identifiable {
         }
     }
 
+    /// True when the exercise is timed rather than loaded: a treadmill asks
+    /// how long, not how heavy.
+    var isTimed: Bool { self == .cardio }
+
     /// Default stepper increment in kilograms.
     var defaultStepKg: Double {
         switch self {
@@ -188,6 +192,17 @@ enum ExperienceLevel: String, Codable, CaseIterable, Identifiable {
         case .beginner: "leaf.fill"
         case .intermediate: "flame.fill"
         case .advanced: "bolt.fill"
+        }
+    }
+
+    /// Green, amber, red — read as intensity rather than as a ranking of
+    /// people. Muted a long way from the pure hues so three of them in a
+    /// column still look like one app.
+    var tint: Color {
+        switch self {
+        case .beginner: Color(red: 0.35, green: 0.78, blue: 0.51)
+        case .intermediate: Color(red: 0.96, green: 0.64, blue: 0.26)
+        case .advanced: Color(red: 0.94, green: 0.36, blue: 0.35)
         }
     }
 

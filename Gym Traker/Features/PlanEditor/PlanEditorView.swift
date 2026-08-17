@@ -20,6 +20,7 @@ struct PlanEditorView: View {
     @State private var renamingDay: PlanDay?
     /// Cleared whenever the plan changes, so a shared PDF is never stale.
     @State private var pdfURL: URL?
+    @State private var sharing = false
 
     private var plan: Plan? { plans.first(where: \.isActive) ?? plans.first }
     private var units: Units { Store.units(in: context) }
@@ -47,12 +48,18 @@ struct PlanEditorView: View {
             }
         }
         .onChange(of: selectedLetter) { _, _ in pdfURL = nil }
+        .sheet(isPresented: $sharing) {
+            if let pdfURL {
+                ShareSheet(items: [pdfURL])
+            }
+        }
         .sheet(isPresented: $showingPresets) {
             NavigationStack {
                 PlanPresetSheet { built in
                     selectedLetter = built.orderedDays.first?.letter
                 }
             }
+            .appAppearance()
         }
         .sheet(isPresented: $showingPicker) {
             NavigationStack {
@@ -60,6 +67,7 @@ struct PlanEditorView: View {
                     append(exercise)
                 }
             }
+            .appAppearance()
         }
         .sheet(item: $editingItem) { item in
             NavigationStack {
@@ -67,6 +75,7 @@ struct PlanEditorView: View {
                     if let day = item.day { remove(item, from: day) }
                 }
             }
+            .appAppearance()
             .presentationDetents([.large])
         }
         .alert("Rename day", isPresented: Binding(
@@ -77,23 +86,20 @@ struct PlanEditorView: View {
         }
     }
 
+    /// One button, one icon, from the first tap.
+    ///
     /// The bar button already sits on system glass, so the icon is drawn plain
     /// — a second sheet of glass inside the first reads as a smudge.
-    @ViewBuilder
     private func planToolbar(_ plan: Plan) -> some View {
-        if let pdfURL {
-            ShareLink(item: pdfURL) {
-                Image(systemName: "square.and.arrow.up")
-            }
-        } else {
-            Button {
-                pdfURL = try? PlanPDF.write(plan: plan, profile: Store.profile(in: context))
-                Haptics.play(.success)
-            } label: {
-                Image(systemName: "doc.richtext")
-            }
-            .accessibilityLabel("Export PDF")
+        Button {
+            pdfURL = try? PlanPDF.write(plan: plan, profile: Store.profile(in: context))
+            guard pdfURL != nil else { return }
+            Haptics.play(.success)
+            sharing = true
+        } label: {
+            Image(systemName: "square.and.arrow.up")
         }
+        .accessibilityLabel("Share plan as PDF")
     }
 
     // MARK: - Content

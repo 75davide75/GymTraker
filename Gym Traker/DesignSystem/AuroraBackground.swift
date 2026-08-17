@@ -22,39 +22,49 @@ struct AuroraVariant: Equatable {
     var secondary: UnitPoint
     var intensity: Double
 
-    // Every screen names its two colours.
+    // Five screens, five shades of one light.
     //
-    // They used to be one pair rotated by a per-screen number of degrees, which
-    // is not a way to choose a colour: rotating violet and cyan by the same
-    // amount sends them to two unrelated places, and the registry came out
-    // green while sport mode came out yellow. Naming them keeps the whole app
-    // inside one blue-to-magenta arc, and lets the workout step outside it on
-    // purpose.
+    // Two things were wrong before. The colours came from rotating one pair of
+    // hues by a per-screen number of degrees, which is not a way to choose a
+    // colour — rotating violet and cyan by the same amount sends them to two
+    // unrelated places, and the registry came out green while sport mode came
+    // out yellow. And the blooms were parked in a different corner on every
+    // screen, so moving between two of them swept a bright patch right across
+    // the display: a movement, not a change.
+    //
+    // The blooms now sit in nearly the same place everywhere and differ mostly
+    // in colour, within one blue-to-orchid arc. Going next door is a shift in
+    // the light. Sport mode is the deliberate exception, and it announces
+    // itself.
+
+    private static let orchid = Color(red: 0.71, green: 0.44, blue: 0.93)
+    private static let indigo = Color(red: 0.36, green: 0.44, blue: 0.92)
+    private static let teal = Color(red: 0.24, green: 0.62, blue: 0.86)
 
     static let home = AuroraVariant(
         primaryColor: Theme.Palette.violetDeep, secondaryColor: Theme.Palette.cyan,
-        primary: UnitPoint(x: 0.78, y: 0.08), secondary: UnitPoint(x: 0.18, y: 0.86),
+        primary: UnitPoint(x: 0.76, y: 0.06), secondary: UnitPoint(x: 0.18, y: 0.86),
         intensity: 1
     )
     static let plan = AuroraVariant(
-        primaryColor: Theme.Palette.violet, secondaryColor: Theme.Palette.violetDeep,
-        primary: UnitPoint(x: 0.18, y: 0.14), secondary: UnitPoint(x: 0.86, y: 0.72),
-        intensity: 0.94
+        primaryColor: indigo, secondaryColor: Theme.Palette.violetDeep,
+        primary: UnitPoint(x: 0.72, y: 0.10), secondary: UnitPoint(x: 0.22, y: 0.84),
+        intensity: 0.97
     )
     static let library = AuroraVariant(
-        primaryColor: Theme.Palette.cyan, secondaryColor: Theme.Palette.violetDeep,
-        primary: UnitPoint(x: 0.88, y: 0.32), secondary: UnitPoint(x: 0.10, y: 0.94),
-        intensity: 0.9
+        primaryColor: teal, secondaryColor: Theme.Palette.violet,
+        primary: UnitPoint(x: 0.80, y: 0.09), secondary: UnitPoint(x: 0.16, y: 0.88),
+        intensity: 0.95
     )
     static let registry = AuroraVariant(
         primaryColor: Theme.Palette.sportCool, secondaryColor: Theme.Palette.violetDeep,
-        primary: UnitPoint(x: 0.30, y: 0.06), secondary: UnitPoint(x: 0.92, y: 0.58),
-        intensity: 0.88
+        primary: UnitPoint(x: 0.70, y: 0.07), secondary: UnitPoint(x: 0.24, y: 0.82),
+        intensity: 0.93
     )
     static let profile = AuroraVariant(
-        primaryColor: Theme.Palette.violet, secondaryColor: Theme.Palette.sportEmber,
-        primary: UnitPoint(x: 0.62, y: 0.10), secondary: UnitPoint(x: 0.14, y: 0.78),
-        intensity: 1.02
+        primaryColor: orchid, secondaryColor: Theme.Palette.violetDeep,
+        primary: UnitPoint(x: 0.78, y: 0.11), secondary: UnitPoint(x: 0.20, y: 0.87),
+        intensity: 1
     )
     /// Sport mode: red overhead, ember below.
     static let session = AuroraVariant(
@@ -157,7 +167,9 @@ struct AuroraLayer: View {
                 // same turn of the run loop collapses them into one state and
                 // there is nothing left to interpolate.
                 try? await Task.sleep(for: .milliseconds(16))
-                withAnimation(.smooth(duration: 0.7)) { shown = chrome.variant }
+                // Slow enough to read as the light changing rather than as
+                // something being swapped.
+                withAnimation(.smooth(duration: 1.1)) { shown = chrome.variant }
             }
     }
 }

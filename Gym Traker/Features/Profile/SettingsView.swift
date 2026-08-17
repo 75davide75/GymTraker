@@ -80,19 +80,14 @@ struct SettingsView: View {
 
     private func unitsSection(_ profile: UserProfile) -> some View {
         GlassSection(title: "Units") {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack(spacing: 10) {
-                    ForEach(Units.allCases) { unit in
-                        GlassChip(title: unit.rawValue.uppercased(), isSelected: profile.units == unit) {
-                            profile.units = unit
-                            try? context.save()
-                        }
+            HStack(spacing: 10) {
+                ForEach(Units.allCases) { unit in
+                    GlassChip(title: unit.rawValue.uppercased(), isSelected: profile.units == unit) {
+                        profile.units = unit
+                        try? context.save()
                     }
-                    Spacer()
                 }
-                Text("Display only. Everything is stored in kilograms, so tiers are identical in both units.")
-                    .font(.captionM)
-                    .foregroundStyle(.secondary)
+                Spacer()
             }
         }
     }

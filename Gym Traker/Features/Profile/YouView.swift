@@ -61,10 +61,12 @@ struct YouView: View {
         }
         .sheet(isPresented: $showingSettings) {
             NavigationStack { SettingsView() }
+                .appAppearance()
         }
         .sheet(isPresented: $editingProfile) {
             if let profile {
                 NavigationStack { ProfileEditor(profile: profile) }
+                    .appAppearance()
             }
         }
     }

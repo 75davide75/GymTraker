@@ -187,8 +187,12 @@ struct EntryTransition: ViewModifier {
 
     func body(content: Content) -> some View {
         content
+            // Opacity only. This used to lift each card fourteen points as it
+            // faded in, so arriving anywhere was a small stampede of things
+            // sliding into place — and with five sections that is five
+            // stampedes. Fading in is a change of state; sliding in is an
+            // event, and arriving on a screen is not an event.
             .opacity(shown ? 1 : 0)
-            .offset(y: shown ? 0 : Theme.Motion.entryOffset)
             .onAppear {
                 guard !reduceMotion else { shown = true; return }
                 withAnimation(

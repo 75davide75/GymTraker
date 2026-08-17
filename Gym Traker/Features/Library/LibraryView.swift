@@ -27,6 +27,7 @@ struct LibraryView: View {
     @State private var equipmentFilter: Equipment?
     @State private var showingNewExercise = false
     @State private var detailExercise: Exercise?
+    @State private var scrollPosition = ScrollPosition()
     @FocusState private var searchFocused: Bool
 
     /// Only equipment the archive actually has exercises for. A chip that
@@ -51,8 +52,18 @@ struct LibraryView: View {
             .padding(.horizontal, Theme.Spacing.screenMargin)
             .padding(.bottom, 24)
         }
+        .scrollPosition($scrollPosition)
         .scrollDismissesKeyboard(.immediately)
         .scrollIndicators(.hidden)
+        // Changing the filter changes what the list is, so it starts at the
+        // start. Landing halfway down a different set of exercises reads as a
+        // scroll position that failed to reset.
+        .onChange(of: equipmentFilter) { _, _ in scrollPosition.scrollTo(edge: .top) }
+        .onChange(of: search) { _, _ in scrollPosition.scrollTo(edge: .top) }
+        // The system's own fade under a pinned header. The hand-made version
+        // was a masked material: soft along the bottom, hard along the top,
+        // which left a dark panel sitting over the aurora.
+        .scrollEdgeEffectStyle(.soft, for: .top)
         // A safe-area inset is what "pinned" should have been all along: the
         // header stays put, the list scrolls under it, and the scroll view
         // works out its own top inset instead of being handed a measured one.
@@ -83,6 +94,7 @@ struct LibraryView: View {
                     }
                 }
             }
+            .appAppearance()
         }
         .navigationDestination(item: $detailExercise) { exercise in
             ExerciseDetailView(exercise: exercise)
@@ -102,21 +114,6 @@ struct LibraryView: View {
         .padding(.horizontal, Theme.Spacing.screenMargin)
         .padding(.top, 4)
         .padding(.bottom, 10)
-        .background {
-            Rectangle()
-                .fill(.ultraThinMaterial)
-                .mask {
-                    LinearGradient(
-                        stops: [
-                            .init(color: .black, location: 0),
-                            .init(color: .black, location: 0.72),
-                            .init(color: .clear, location: 1)
-                        ],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                }
-        }
     }
 
     private var searchField: some View {

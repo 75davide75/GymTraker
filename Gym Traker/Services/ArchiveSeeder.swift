@@ -22,6 +22,7 @@ enum ArchiveSeeder {
         let id: String
         let name: String
         let primaryMuscle: String
+        let muscleGroup: String?
         let equipment: String
         let rankAnchor: String?
         let tracking: String
@@ -64,6 +65,7 @@ enum ArchiveSeeder {
                 guard !row.isCustom else { continue }
                 row.name = entry.name
                 row.primaryMuscle = entry.primaryMuscle
+                row.muscleGroupRaw = entry.muscleGroup ?? ""
                 row.equipmentRaw = entry.equipment
                 row.rankAnchorRaw = entry.rankAnchor
                 row.trackingRaw = entry.tracking
@@ -93,6 +95,7 @@ enum ArchiveSeeder {
                     primer: entry.primer,
                     level: entry.level
                 )
+                exercise.muscleGroupRaw = entry.muscleGroup ?? ""
                 context.insert(exercise)
                 byID[entry.id] = exercise
                 written += 1
