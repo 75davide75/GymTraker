@@ -128,6 +128,10 @@ struct ExerciseThumbnail: View {
                     .aspectRatio(contentMode: .fit)
                     .padding(size * 0.17)
                     .foregroundStyle(tint)
+            } else if exercise.equipment == .cardio {
+                // No drawing exists for a treadmill, and inventing one would
+                // put a picture of a machine among pictures of a body.
+                CardioGlyph(tint: tint, size: size * 0.58)
             } else {
                 // Only a user-created exercise gets here.
                 MuscleMapIcon(

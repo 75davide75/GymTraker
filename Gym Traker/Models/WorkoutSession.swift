@@ -43,6 +43,18 @@ final class WorkoutSession {
     var healthKitUUID: UUID?
     var sourceName: String?
 
+    /// What Health knows and the app cannot work out for itself. All optional:
+    /// a session logged in the app has none of it, and an imported one has
+    /// whatever the recording device bothered to measure.
+    ///
+    /// `energyKcal` was already being read at import and then thrown away.
+    var energyKcal: Double?
+    var averageHeartRate: Double?
+    var maxHeartRate: Double?
+    var distanceMeters: Double?
+    /// "Traditional strength training", "Running" — the workout's own kind.
+    var activityName: String?
+
     @Relationship(deleteRule: .cascade, inverse: \SessionEntry.session)
     var entries: [SessionEntry]? = []
 

@@ -6,10 +6,12 @@
 import SwiftUI
 import SwiftData
 import UniformTypeIdentifiers
+import UIKit
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.openURL) private var openURL
     @Query private var profiles: [UserProfile]
 
     @Environment(HealthStore.self) private var health
@@ -23,6 +25,9 @@ struct SettingsView: View {
     @State private var pendingBackup: URL?
     @State private var backupNotice: String?
     @State private var backupFailed = false
+    @State private var feedbackNotice: String?
+
+    private static let feedbackAddress = "davidesogos@gmail.com"
 
     private var profile: UserProfile? { profiles.first }
     private var units: Units { profile?.units ?? .kg }
@@ -42,6 +47,7 @@ struct SettingsView: View {
                         notificationsSection(profile)
                     }
                     exportSection
+                    feedbackSection
                     aboutSection
                 }
                 .padding(Theme.Spacing.screenMargin)
@@ -383,6 +389,64 @@ struct SettingsView: View {
         .font(.bodyM)
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
+    }
+
+    /// Straight to a mail draft, addressed and with the version already in it.
+    ///
+    /// No form, no server, no account. A mailto: link costs nothing to run and
+    /// nothing to trust, and it puts the reply address in the user's hands
+    /// rather than in a database.
+    private var feedbackSection: some View {
+        GlassSection(title: "Feedback") {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Something broken, missing or just wrong? Say so — it goes straight to the person who builds this.")
+                    .font(.bodyS)
+                    .foregroundStyle(.secondary)
+
+                Button {
+                    openFeedbackMail()
+                } label: {
+                    rowLabel("envelope", "Write feedback")
+                }
+                .buttonStyle(.glass)
+
+                if let feedbackNotice {
+                    Text(feedbackNotice)
+                        .font(.captionM)
+                        .foregroundStyle(Theme.Palette.decrease)
+                }
+            }
+        }
+    }
+
+    private func openFeedbackMail() {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "?"
+        // The device and version go in the body so a report never arrives
+        // without the two things that make it reproducible.
+        let body = """
+
+
+        —
+        Gym Tracker \(version) (\(build))
+        \(UIDevice.current.systemName) \(UIDevice.current.systemVersion)
+        """
+
+        var components = URLComponents()
+        components.scheme = "mailto"
+        components.path = Self.feedbackAddress
+        components.queryItems = [
+            URLQueryItem(name: "subject", value: "Gym Tracker feedback"),
+            URLQueryItem(name: "body", value: body)
+        ]
+
+        guard let url = components.url else { return }
+        openURL(url) { accepted in
+            guard !accepted else { return }
+            withAnimation(Theme.Motion.spring) {
+                feedbackNotice = "No mail account is set up on this device. Write to \(Self.feedbackAddress)."
+            }
+        }
     }
 
     private var aboutSection: some View {

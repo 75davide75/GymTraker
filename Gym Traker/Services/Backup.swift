@@ -104,6 +104,11 @@ struct BackupArchive: Codable {
         var planDayTitle: String
         var healthKitUUID: UUID?
         var sourceName: String?
+        var energyKcal: Double?
+        var averageHeartRate: Double?
+        var maxHeartRate: Double?
+        var distanceMeters: Double?
+        var activityName: String?
         var entries: [Entry]
     }
 
@@ -252,6 +257,11 @@ enum Backup {
                 planDayTitle: session.planDayTitle,
                 healthKitUUID: session.healthKitUUID,
                 sourceName: session.sourceName,
+                energyKcal: session.energyKcal,
+                averageHeartRate: session.averageHeartRate,
+                maxHeartRate: session.maxHeartRate,
+                distanceMeters: session.distanceMeters,
+                activityName: session.activityName,
                 entries: session.orderedEntries.map { entry in
                     BackupArchive.Entry(
                         order: entry.order,
@@ -423,6 +433,11 @@ enum Backup {
             session.endedAt = stored.endedAt
             session.healthKitUUID = stored.healthKitUUID
             session.sourceName = stored.sourceName
+            session.energyKcal = stored.energyKcal
+            session.averageHeartRate = stored.averageHeartRate
+            session.maxHeartRate = stored.maxHeartRate
+            session.distanceMeters = stored.distanceMeters
+            session.activityName = stored.activityName
             context.insert(session)
 
             for storedEntry in stored.entries {

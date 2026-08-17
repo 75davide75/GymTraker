@@ -89,7 +89,7 @@ struct RegistryView: View {
             }
         }
         .auroraVariant(.registry)
-        .navigationTitle("Registry")
+        .navigationTitle("Log")
         .navigationBarTitleDisplayMode(.large)
     }
 

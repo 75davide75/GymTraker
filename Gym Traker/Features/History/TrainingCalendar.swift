@@ -15,48 +15,55 @@ import SwiftUI
 struct TrainingCalendar: View {
     /// The days that have a finished session, and how many sets were logged.
     let days: [Date: Int]
-    let units: Units
     /// Total volume per day, for the tooltip line under the grid.
     let volume: [Date: Double]
-
-    @State private var selected: Date?
+    /// Opening the workout that day is what a day cell is for.
+    var onSelectDay: (Date) -> Void = { _ in }
 
     private var calendar: Calendar { Calendar.current }
 
-    /// Every month from the first session to this one, oldest last so the
-    /// current month is what you land on.
+    /// Every month back to 1999, newest first.
+    ///
+    /// It used to start at the first logged session, which meant a new install
+    /// showed exactly one month and there was nowhere to scroll to. The point
+    /// of a calendar is that the empty years are visible too — and a workout
+    /// imported from Health can be older than anything logged here.
     private var months: [Date] {
         let today = calendar.startOfDay(for: .now)
         let thisMonth = calendar.dateInterval(of: .month, for: today)?.start ?? today
-        guard let earliest = days.keys.min(),
-              var cursor = calendar.dateInterval(of: .month, for: earliest)?.start
-        else { return [thisMonth] }
+
+        var floor = calendar.date(from: DateComponents(year: 1999, month: 1, day: 1)) ?? thisMonth
+        if let earliest = days.keys.min(),
+           let earliestMonth = calendar.dateInterval(of: .month, for: earliest)?.start,
+           earliestMonth < floor {
+            floor = earliestMonth
+        }
 
         var result: [Date] = []
-        while cursor <= thisMonth {
+        var cursor = thisMonth
+        while cursor >= floor {
             result.append(cursor)
-            guard let next = calendar.date(byAdding: .month, value: 1, to: cursor) else { break }
-            cursor = next
+            guard let previous = calendar.date(byAdding: .month, value: -1, to: cursor) else { break }
+            cursor = previous
         }
-        return result.reversed()
+        return result
     }
 
+    /// A card per month rather than one card holding three hundred of them.
+    ///
+    /// Every month back to 1999 is a lot of grids, and a single self-sizing
+    /// card would have to build all of them to know how tall it is. One card
+    /// each, in the caller's lazy stack, builds only what is on screen.
     var body: some View {
-        GlassSection(title: "Calendar") {
-            VStack(alignment: .leading, spacing: 18) {
-                // Newest month first, and every earlier one below it. The whole
-                // thing scrolls with the screen rather than in its own box:
-                // a scroll view inside a scroll view is a trap for a thumb.
-                ForEach(months, id: \.self) { month in
-                    monthGrid(month)
-                }
+        LazyVStack(alignment: .leading, spacing: 12) {
+            Text("\(days.count) day\(days.count == 1 ? "" : "s") trained in total.")
+                .font(.captionM)
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, 4)
 
-                if let selected, let sets = days[selected] {
-                    selectionLine(selected, sets: sets)
-                } else {
-                    Text("\(days.count) day\(days.count == 1 ? "" : "s") trained in total.")
-                        .font(.captionM)
-                        .foregroundStyle(.secondary)
+            ForEach(months, id: \.self) { month in
+                GlassCard(radius: Theme.Radius.row, padding: 14) {
+                    monthGrid(month)
                 }
             }
         }
@@ -115,14 +122,11 @@ struct TrainingCalendar: View {
     private func dayCell(_ day: Date) -> some View {
         let sets = days[day]
         let isToday = calendar.isDateInToday(day)
-        let isSelected = selected == day
 
         return Button {
             guard sets != nil else { return }
             Haptics.play(.selection)
-            withAnimation(Theme.Motion.snappy) {
-                selected = isSelected ? nil : day
-            }
+            onSelectDay(day)
         } label: {
             Text("\(calendar.component(.day, from: day))")
                 .font(.system(size: 11, weight: sets != nil ? .bold : .medium))
@@ -133,7 +137,7 @@ struct TrainingCalendar: View {
                 .background {
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
                         .fill(sets != nil
-                              ? Theme.Palette.violet.opacity(isSelected ? 0.85 : 0.5)
+                              ? Theme.Palette.violet.opacity(0.55)
                               : Color.secondary.opacity(0.08))
                 }
                 .overlay {
@@ -151,21 +155,6 @@ struct TrainingCalendar: View {
     private func foreground(trained: Bool, isToday: Bool) -> Color {
         if trained { return .white }
         return isToday ? Theme.Palette.cyan : .secondary
-    }
-
-    private func selectionLine(_ day: Date, sets: Int) -> some View {
-        HStack(spacing: 6) {
-            Image(systemName: "dumbbell.fill").font(.system(size: 11, weight: .bold))
-            Text(day.formatted(date: .abbreviated, time: .omitted))
-            Text("·")
-            Text("\(sets) set\(sets == 1 ? "" : "s")")
-            if let moved = volume[day], moved > 0 {
-                Text("·")
-                Text(UnitFormatter.volume(moved, in: units))
-            }
-        }
-        .font(.captionM)
-        .foregroundStyle(Theme.Palette.violet)
     }
 
     private func accessibilityLabel(_ day: Date, sets: Int?) -> String {

@@ -51,7 +51,7 @@ struct RootTabView: View {
             case .home: "Home"
             case .plan: "Plan"
             case .library: "Library"
-            case .registry: "Registry"
+            case .registry: "Log"
             case .you: "You"
             }
         }

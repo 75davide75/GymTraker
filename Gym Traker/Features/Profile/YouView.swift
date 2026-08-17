@@ -201,7 +201,10 @@ struct YouView: View {
                     }
                     .padding(.vertical, 2)
                 }
-                .scrollClipDisabled()
+                // Clipped to the card. Left undipped so the press animation
+                // could overflow, the row of medals ran out past the card's
+                // own edge and over the screen margin.
+                .scrollIndicators(.hidden)
 
                 if let next = achievements.first(where: { !$0.isEarned }) {
                     Text("Next: \(next.detail.lowercased()).")

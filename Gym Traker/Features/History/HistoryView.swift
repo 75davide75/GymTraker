@@ -20,6 +20,7 @@ struct HistoryView: View {
 
     @State private var expanded: Set<PersistentIdentifier> = []
     @State private var mode: Mode = .list
+    @State private var openSession: WorkoutSession?
 
     private enum Mode: String, CaseIterable, Identifiable {
         case list, calendar
@@ -46,7 +47,9 @@ struct HistoryView: View {
                         modePicker
 
                         if mode == .calendar {
-                            TrainingCalendar(days: trainedDays, units: units, volume: volumePerDay)
+                            TrainingCalendar(days: trainedDays, volume: volumePerDay) { day in
+                                openSession = session(on: day)
+                            }
                         }
 
                         ForEach(mode == .list ? grouped : [], id: \.title) { group in
@@ -64,6 +67,9 @@ struct HistoryView: View {
             }
         }
         .auroraVariant(.registry)
+        .navigationDestination(item: $openSession) { session in
+            SessionDetailView(session: session)
+        }
         .navigationTitle("History")
         .navigationBarTitleDisplayMode(.large)
     }
@@ -76,6 +82,12 @@ struct HistoryView: View {
             }
         }
         .pickerStyle(.segmented)
+    }
+
+    /// The workout on a given day, for the calendar's tap.
+    private func session(on day: Date) -> WorkoutSession? {
+        let calendar = Calendar.current
+        return finished.first { calendar.isDate($0.startedAt, inSameDayAs: day) }
     }
 
     /// Calendar day → sets logged that day, and day → volume moved.
@@ -157,6 +169,16 @@ struct HistoryView: View {
 
                         Spacer(minLength: 4)
 
+                        Button {
+                            openSession = session
+                        } label: {
+                            Image(systemName: "chevron.forward.circle.fill")
+                                .font(.system(size: 20))
+                                .foregroundStyle(.tertiary)
+                        }
+                        .buttonStyle(.pressableSilent)
+                        .accessibilityLabel("Open details")
+
                         Image(systemName: "chevron.down")
                             .font(.system(size: 12, weight: .bold))
                             .foregroundStyle(.tertiary)
@@ -218,6 +240,7 @@ struct HistoryView: View {
 
     private func subtitle(_ session: WorkoutSession) -> String {
         var parts = [session.startedAt.formatted(date: .abbreviated, time: .shortened)]
+        if let activity = session.activityName, session.isImported { parts.append(activity) }
         if session.setCount > 0 {
             parts.append("\(session.setCount) set\(session.setCount == 1 ? "" : "s")")
         }

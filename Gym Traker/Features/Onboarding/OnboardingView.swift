@@ -214,13 +214,21 @@ struct OnboardingView: View {
                                 .background(Circle().fill(level.tint.opacity(experience == level ? 0.26 : 0.14)))
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(level.displayName).font(.titleS).foregroundStyle(.primary)
-                                Text(level.blurb).font(.captionM).foregroundStyle(.secondary)
+                                Text(level.blurb)
+                                    .font(.captionM)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.85)
                             }
                             Spacer(minLength: 0)
-                            if experience == level {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .foregroundStyle(level.tint)
-                            }
+                            // Always in the layout, invisible when unselected.
+                            // Appearing on selection, it stole the width the
+                            // longest blurb needed and pushed that one row onto
+                            // a second line — so picking Advanced made the card
+                            // grow and the other two not.
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(level.tint)
+                                .opacity(experience == level ? 1 : 0)
                         }
                         .padding(14)
                         .frame(maxWidth: .infinity, alignment: .leading)

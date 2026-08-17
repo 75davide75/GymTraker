@@ -37,6 +37,10 @@ final class HealthStore {
         if let sex = HKCharacteristicType.characteristicType(forIdentifier: .biologicalSex) { types.insert(sex) }
         if let dob = HKCharacteristicType.characteristicType(forIdentifier: .dateOfBirth) { types.insert(dob) }
         if let height = HKQuantityType.quantityType(forIdentifier: .height) { types.insert(height) }
+        // The numbers a workout detail is made of.
+        if let heartRate = HKQuantityType.quantityType(forIdentifier: .heartRate) { types.insert(heartRate) }
+        if let energy = HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned) { types.insert(energy) }
+        if let distance = HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning) { types.insert(distance) }
         return types
     }
 
@@ -120,6 +124,10 @@ final class HealthStore {
         let end: Date
         let source: String
         let energyKcal: Double?
+        let distanceMeters: Double?
+        let activityName: String?
+        var averageHeartRate: Double?
+        var maxHeartRate: Double?
     }
 
     /// Strength-shaped workouts from the trailing window, newest first.
@@ -145,7 +153,10 @@ final class HealthStore {
                         end: workout.endDate,
                         source: workout.sourceRevision.source.name,
                         energyKcal: workout.statistics(for: HKQuantityType(.activeEnergyBurned))?
-                            .sumQuantity()?.doubleValue(for: .kilocalorie())
+                            .sumQuantity()?.doubleValue(for: .kilocalorie()),
+                        distanceMeters: workout.statistics(for: HKQuantityType(.distanceWalkingRunning))?
+                            .sumQuantity()?.doubleValue(for: .meter()),
+                        activityName: workout.workoutActivityType.displayName
                     )
                 }
                 continuation.resume(returning: workouts)
@@ -166,11 +177,22 @@ final class HealthStore {
         var imported = 0
 
         for workout in workouts where !existing.contains(workout.uuid) {
-            let session = WorkoutSession(planDayLetter: "—", planDayTitle: "Imported workout")
+            let session = WorkoutSession(
+                planDayLetter: "—",
+                planDayTitle: workout.activityName ?? "Imported workout"
+            )
             session.startedAt = workout.start
             session.endedAt = workout.end
             session.healthKitUUID = workout.uuid
             session.sourceName = workout.source
+            session.energyKcal = workout.energyKcal
+            session.distanceMeters = workout.distanceMeters
+            session.activityName = workout.activityName
+            // Averaged once, at import. The samples themselves stay in Health;
+            // the detail screen goes and gets them when it needs a chart.
+            let beats = await heartRate(from: workout.start, to: workout.end)
+            session.averageHeartRate = beats.average
+            session.maxHeartRate = beats.maximum
             context.insert(session)
             imported += 1
         }
@@ -178,6 +200,50 @@ final class HealthStore {
         if imported > 0 { try? context.save() }
         lastImportCount = imported
         return imported
+    }
+
+    /// Average and peak heart rate across a window.
+    func heartRate(from start: Date, to end: Date) async -> (average: Double?, maximum: Double?) {
+        guard let type = HKQuantityType.quantityType(forIdentifier: .heartRate) else { return (nil, nil) }
+        let predicate = HKQuery.predicateForSamples(withStart: start, end: end)
+        let unit = HKUnit.count().unitDivided(by: .minute())
+
+        return await withCheckedContinuation { continuation in
+            let query = HKStatisticsQuery(
+                quantityType: type,
+                quantitySamplePredicate: predicate,
+                options: [.discreteAverage, .discreteMax]
+            ) { _, statistics, _ in
+                continuation.resume(returning: (
+                    statistics?.averageQuantity()?.doubleValue(for: unit),
+                    statistics?.maximumQuantity()?.doubleValue(for: unit)
+                ))
+            }
+            store.execute(query)
+        }
+    }
+
+    /// Every heart-rate sample in a window, for the chart on a workout.
+    func heartRateSeries(from start: Date, to end: Date) async -> [(date: Date, bpm: Double)] {
+        guard availability == .ready,
+              let type = HKQuantityType.quantityType(forIdentifier: .heartRate) else { return [] }
+        let predicate = HKQuery.predicateForSamples(withStart: start, end: end)
+        let unit = HKUnit.count().unitDivided(by: .minute())
+
+        return await withCheckedContinuation { continuation in
+            let query = HKSampleQuery(
+                sampleType: type,
+                predicate: predicate,
+                limit: HKObjectQueryNoLimit,
+                sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)]
+            ) { _, samples, _ in
+                let points = (samples as? [HKQuantitySample] ?? []).map {
+                    (date: $0.startDate, bpm: $0.quantity.doubleValue(for: unit))
+                }
+                continuation.resume(returning: points)
+            }
+            store.execute(query)
+        }
     }
 
     // MARK: - Writing
@@ -197,6 +263,24 @@ final class HealthStore {
             _ = try await builder.finishWorkout()
         } catch {
             lastError = error.localizedDescription
+        }
+    }
+}
+
+extension HKWorkoutActivityType {
+    /// The handful this app imports, named the way Health names them.
+    var displayName: String {
+        switch self {
+        case .traditionalStrengthTraining: "Strength training"
+        case .functionalStrengthTraining: "Functional strength"
+        case .coreTraining: "Core training"
+        case .crossTraining: "Cross training"
+        case .running: "Running"
+        case .walking: "Walking"
+        case .cycling: "Cycling"
+        case .rowing: "Rowing"
+        case .highIntensityIntervalTraining: "HIIT"
+        default: "Workout"
         }
     }
 }

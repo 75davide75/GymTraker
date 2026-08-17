@@ -32,14 +32,16 @@ struct AuroraVariant: Equatable {
     // screen, so moving between two of them swept a bright patch right across
     // the display: a movement, not a change.
     //
-    // The blooms now sit in nearly the same place everywhere and differ mostly
-    // in colour, within one blue-to-orchid arc. Going next door is a shift in
-    // the light. Sport mode is the deliberate exception, and it announces
-    // itself.
+    // The blooms sit in nearly the same place everywhere and differ in colour,
+    // walking one arc across the five sections: blue-violet at Home, through
+    // indigo and teal, to green and amber by the last screen. Going next door
+    // is a shift in the light rather than a patch of it sweeping past. Sport
+    // mode is the deliberate exception, and it announces itself.
 
-    private static let orchid = Color(red: 0.71, green: 0.44, blue: 0.93)
     private static let indigo = Color(red: 0.36, green: 0.44, blue: 0.92)
     private static let teal = Color(red: 0.24, green: 0.62, blue: 0.86)
+    private static let seagreen = Color(red: 0.18, green: 0.71, blue: 0.59)
+    private static let amber = Color(red: 0.94, green: 0.63, blue: 0.24)
 
     static let home = AuroraVariant(
         primaryColor: Theme.Palette.violetDeep, secondaryColor: Theme.Palette.cyan,
@@ -52,20 +54,21 @@ struct AuroraVariant: Equatable {
         intensity: 0.97
     )
     static let library = AuroraVariant(
-        primaryColor: teal, secondaryColor: Theme.Palette.violet,
+        primaryColor: teal, secondaryColor: indigo,
         primary: UnitPoint(x: 0.80, y: 0.09), secondary: UnitPoint(x: 0.16, y: 0.88),
         intensity: 0.95
     )
     static let registry = AuroraVariant(
-        primaryColor: Theme.Palette.sportCool, secondaryColor: Theme.Palette.violetDeep,
+        primaryColor: seagreen, secondaryColor: teal,
         primary: UnitPoint(x: 0.70, y: 0.07), secondary: UnitPoint(x: 0.24, y: 0.82),
         intensity: 0.93
     )
     static let profile = AuroraVariant(
-        primaryColor: orchid, secondaryColor: Theme.Palette.violetDeep,
+        primaryColor: amber, secondaryColor: seagreen,
         primary: UnitPoint(x: 0.78, y: 0.11), secondary: UnitPoint(x: 0.20, y: 0.87),
-        intensity: 1
+        intensity: 0.98
     )
+
     /// Sport mode: red overhead, ember below.
     static let session = AuroraVariant(
         primaryColor: Theme.Palette.sportRed, secondaryColor: Theme.Palette.sportEmber,

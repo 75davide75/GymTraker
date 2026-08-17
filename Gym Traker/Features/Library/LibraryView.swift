@@ -28,6 +28,8 @@ struct LibraryView: View {
     @State private var showingNewExercise = false
     @State private var detailExercise: Exercise?
     @State private var scrollPosition = ScrollPosition()
+    /// Measured so the fade can end exactly where the header does.
+    @State private var headerHeight: CGFloat = 120
     @FocusState private var searchFocused: Bool
 
     /// Only equipment the archive actually has exercises for. A chip that
@@ -52,9 +54,29 @@ struct LibraryView: View {
             .padding(.horizontal, Theme.Spacing.screenMargin)
             .padding(.bottom, 24)
         }
+        // Rows disappear rather than pass legibly behind the search field.
+        //
+        // A blur — the system's or a hand-made one — leaves the row readable
+        // underneath, and a half-legible row under a label is a smudge. This
+        // takes the rows to nothing over the last twenty points before the
+        // header ends, so nothing ever overlaps anything.
+        .mask {
+            LinearGradient(
+                stops: [
+                    .init(color: .clear, location: 0),
+                    .init(color: .clear, location: max(0.001, (headerHeight - 26) / 874)),
+                    .init(color: .black, location: max(0.002, headerHeight / 874)),
+                    .init(color: .black, location: 1)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        }
         .scrollPosition($scrollPosition)
         .scrollDismissesKeyboard(.immediately)
         .scrollIndicators(.hidden)
+        // The system's own edge blur would fight the fade above.
+        .scrollEdgeEffectHidden(true, for: .top)
         // Changing the filter changes what the list is, so it starts at the
         // start. Landing halfway down a different set of exercises reads as a
         // scroll position that failed to reset.
@@ -67,7 +89,10 @@ struct LibraryView: View {
         // A safe-area inset is what "pinned" should have been all along: the
         // header stays put, the list scrolls under it, and the scroll view
         // works out its own top inset instead of being handed a measured one.
-        .safeAreaInset(edge: .top, spacing: 0) { pinnedHeader }
+        .safeAreaInset(edge: .top, spacing: 0) {
+            pinnedHeader
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { headerHeight = $0 }
+        }
         .auroraVariant(.library)
         .navigationTitle(mode == .picker ? "Add exercise" : "Library")
         .navigationBarTitleDisplayMode(mode == .picker ? .inline : .large)
@@ -113,7 +138,7 @@ struct LibraryView: View {
         }
         .padding(.horizontal, Theme.Spacing.screenMargin)
         .padding(.top, 4)
-        .padding(.bottom, 10)
+        .padding(.bottom, 12)
     }
 
     private var searchField: some View {
@@ -133,14 +158,20 @@ struct LibraryView: View {
                     search = ""
                 } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 15))
+                        .font(.system(size: 16))
                         .foregroundStyle(.secondary)
+                        // The glyph is sixteen points across. Without a shape
+                        // of its own the touch had to land on the drawn cross,
+                        // which is most of the reason it "did not work".
+                        .frame(width: 40, height: 40)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.pressableSilent)
                 .transition(.opacity)
             }
         }
-        .padding(.horizontal, 14)
+        .padding(.leading, 14)
+        .padding(.trailing, search.isEmpty ? 14 : 2)
         .frame(height: 40)
         .glassEffect(.regular, in: .rect(cornerRadius: Theme.Radius.control))
         .animation(Theme.Motion.snappy, value: search.isEmpty)

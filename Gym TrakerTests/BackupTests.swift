@@ -64,6 +64,11 @@ struct BackupTests {
         let session = WorkoutSession(planDayLetter: "A", planDayTitle: "Push")
         session.endedAt = session.startedAt.addingTimeInterval(3600)
         session.sourceName = "Watch"
+        session.energyKcal = 412
+        session.averageHeartRate = 131
+        session.maxHeartRate = 168
+        session.distanceMeters = 1450
+        session.activityName = "Strength training"
         context.insert(session)
         let entry = SessionEntry(order: 1, exerciseID: "my-lift", exerciseName: "My Lift",
                                  restSeconds: 75,
@@ -111,6 +116,12 @@ struct BackupTests {
 
         let restored = try #require(Store.sessions(in: target).first)
         #expect(restored.sourceName == "Watch")
+        // Everything Health told us, which the import used to drop on the floor.
+        #expect(restored.energyKcal == 412)
+        #expect(restored.averageHeartRate == 131)
+        #expect(restored.maxHeartRate == 168)
+        #expect(restored.distanceMeters == 1450)
+        #expect(restored.activityName == "Strength training")
         #expect(restored.orderedEntries.first?.sets.first?.weightKg == 42.5)
 
         let custom = try #require(Store.allExercises(in: target).first { $0.id == "my-lift" })
