@@ -173,7 +173,12 @@ struct PersistenceTests {
         try ArchiveSeeder.seedIfNeeded(context, force: true)
 
         let all = try context.fetch(FetchDescriptor<Exercise>())
-        let bare = all.filter { !$0.hasIllustrations }
+        // Cardio machines are excused. The drawn set is of a body performing a
+        // movement, and there is no useful drawing of "treadmill" that is not
+        // a picture of a treadmill — a different kind of image, which is the
+        // thing the one-consistent-style rule exists to prevent. They carry an
+        // equipment badge and a tint instead.
+        let bare = all.filter { !$0.hasIllustrations && $0.equipment != .cardio }
         #expect(bare.isEmpty, "\(bare.count) archive exercises have no illustration")
 
         // And the files those names point at are actually in the bundle.
