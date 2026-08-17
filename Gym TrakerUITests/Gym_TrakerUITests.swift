@@ -188,13 +188,18 @@ final class Gym_TrakerUITests: XCTestCase {
         tapTab("You")
         app.buttons["Settings"].tap()
 
-        let export = app.buttons["Export data as JSON"]
-        XCTAssertTrue(export.waitForExistence(timeout: 5), "Export button is missing")
-        export.tap()
+        let backup = app.buttons["Create a backup"]
+        XCTAssertTrue(backup.waitForExistence(timeout: 5), "Backup button is missing")
+        backup.tap()
 
         XCTAssertTrue(
-            app.buttons["Share export"].waitForExistence(timeout: 5),
-            "Export did not produce a file to share"
+            app.buttons["Share backup"].waitForExistence(timeout: 5),
+            "Backup did not produce a file to share"
+        )
+        // The way back in is the point of a backup, so the door has to be here.
+        XCTAssertTrue(
+            app.buttons["Restore from a backup"].exists,
+            "There is no way to restore what was just written"
         )
         shoot("19-export-ready")
     }
