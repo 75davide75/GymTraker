@@ -43,9 +43,7 @@ struct TrainingCalendar: View {
 
     var body: some View {
         GlassSection(title: "Calendar") {
-            VStack(alignment: .leading, spacing: 14) {
-                weekdayHeader
-
+            VStack(alignment: .leading, spacing: 18) {
                 // Newest month first, and every earlier one below it. The whole
                 // thing scrolls with the screen rather than in its own box:
                 // a scroll view inside a scroll view is a trap for a thumb.
@@ -96,6 +94,11 @@ struct TrainingCalendar: View {
                     .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(.tertiary)
             }
+
+            // Repeated per month, directly over the columns it names. One row
+            // at the top of the card labelled the first month and then floated
+            // above nothing.
+            weekdayHeader
 
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 7), spacing: 4) {
                 ForEach(Array(cells.enumerated()), id: \.offset) { _, day in

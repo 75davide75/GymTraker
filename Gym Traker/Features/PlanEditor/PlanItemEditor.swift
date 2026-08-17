@@ -72,7 +72,10 @@ struct PlanItemEditor: View {
         .navigationTitle(item.exerciseName)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .destructiveAction) {
+            // Leading, away from Done. Sharing the trailing capsule put
+            // "delete this" and "I'm finished" one thumb-width apart inside
+            // what reads as a single control.
+            ToolbarItem(placement: .topBarLeading) {
                 Button(role: .destructive) {
                     confirmingDelete = true
                 } label: {

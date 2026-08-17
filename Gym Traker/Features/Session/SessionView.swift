@@ -94,6 +94,8 @@ struct SessionView: View {
         .sheet(isPresented: $showingSummary) {
             if let summary {
                 SummarySheet(summary: summary, units: units) { dismiss() }
+                    // Three numbers and a button do not need a full screen.
+                    .presentationDetents([.medium])
             }
         }
         .fullScreenCover(item: $promotion) { promotion in

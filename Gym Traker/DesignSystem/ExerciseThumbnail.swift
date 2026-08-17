@@ -171,7 +171,9 @@ struct ExerciseDemo: View {
     @State private var showingSecond = false
 
     private var names: [String] { exercise.illustrationNames }
-    private var tint: Color { Theme.Palette.glyph(hue: exercise.glyphHue, scheme: scheme) }
+    /// The same tint the thumbnail uses. These disagreed: an amber icon next
+    /// to a violet panel, for one exercise, on one screen.
+    private var tint: Color { exercise.group.tint }
 
     var body: some View {
         if names.isEmpty {

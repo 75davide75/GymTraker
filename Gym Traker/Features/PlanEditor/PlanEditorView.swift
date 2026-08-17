@@ -111,7 +111,10 @@ struct PlanEditorView: View {
     private func content(_ plan: Plan) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
-                planName(plan).entryTransition(0)
+                // A large title leaves almost no gap under itself, and the
+                // first thing here is a section label rather than prose, so
+                // the two ran together.
+                planName(plan).entryTransition(0).padding(.top, 6)
                 schedule(plan).entryTransition(1)
                 dayTabs(plan).entryTransition(2)
                 exerciseList.entryTransition(3)

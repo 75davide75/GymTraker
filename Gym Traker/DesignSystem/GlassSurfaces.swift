@@ -132,6 +132,10 @@ struct GlassChip: View {
             Text(title)
                 .font(.captionM)
                 .foregroundStyle(isSelected ? .primary : .secondary)
+                // A chip is one word wide. Left to wrap, "45s" broke into "45"
+                // over "s" and stood a head taller than its neighbours.
+                .lineLimit(1)
+                .fixedSize(horizontal: true, vertical: false)
                 .padding(.horizontal, 14)
                 .frame(height: 34)
                 .glassEffect(

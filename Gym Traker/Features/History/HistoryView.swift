@@ -218,7 +218,9 @@ struct HistoryView: View {
 
     private func subtitle(_ session: WorkoutSession) -> String {
         var parts = [session.startedAt.formatted(date: .abbreviated, time: .shortened)]
-        if session.setCount > 0 { parts.append("\(session.setCount) sets") }
+        if session.setCount > 0 {
+            parts.append("\(session.setCount) set\(session.setCount == 1 ? "" : "s")")
+        }
         if session.totalVolumeKg > 0 { parts.append(UnitFormatter.volume(session.totalVolumeKg, in: units)) }
         parts.append(UnitFormatter.clock(Int(session.duration)))
         return parts.joined(separator: " · ")

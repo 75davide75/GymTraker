@@ -136,6 +136,12 @@ struct OnboardingView: View {
         // reading what the app does is clearer than being asked mid-task.
         .task {
             guard health.availability == .notRequested else { return }
+            // Not during a UI test. The permission sheet belongs to the system,
+            // not to the app, so a test cannot dismiss it and every run that
+            // started from a clean device stalled on this screen — silently, in
+            // the sense that the tests only passed on a device that had already
+            // been asked once.
+            guard !ProcessInfo.processInfo.arguments.contains("-resetStore") else { return }
             await health.requestAuthorization()
             await prefillFromHealth()
         }
@@ -375,6 +381,9 @@ struct OnboardingView: View {
                     .padding(.vertical, 4)
                 }
                 .scrollIndicators(.hidden)
+                // The Continue button floats over the list, and without this
+                // the last split was cut clean through the middle.
+                .scrollEdgeEffectStyle(.soft, for: .bottom)
             case false?:
                 // Choosing to start empty used to drop you into the list of
                 // ready-made plans anyway, which reads as the choice not having
@@ -390,7 +399,7 @@ struct OnboardingView: View {
         switch wantsPlan {
         case nil: "Where do you start?"
         case true?: "Pick a split"
-        case false?: "Nothing to pick"
+        case false?: "Starting empty"
         }
     }
 
@@ -402,20 +411,19 @@ struct OnboardingView: View {
         }
     }
 
+    /// One panel, not a heading and a second heading with a hole between them.
+    /// The step's own title already says what was chosen.
     private var emptyChoiceConfirmation: some View {
-        VStack(spacing: 14) {
+        VStack(spacing: 16) {
             Spacer(minLength: 0)
             Image(systemName: "square.dashed")
-                .font(.system(size: 40, weight: .semibold))
+                .font(.system(size: 44, weight: .semibold))
                 .foregroundStyle(Theme.Palette.violet)
-            Text("You'll start with an empty plan")
-                .font(.titleL)
-                .multilineTextAlignment(.center)
-            Text("Build it from the library whenever you like. The ready-made splits stay available on the Plan screen, so this is not a door closing.")
-                .font(.bodyS)
+            Text("Build it from the library whenever you like. The ready-made splits stay on the Plan screen, so this is not a door closing.")
+                .font(.bodyM)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, 24)
+                .padding(.horizontal, 28)
             Spacer(minLength: 0)
         }
     }

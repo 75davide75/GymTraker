@@ -130,25 +130,33 @@ private struct ZoomableImage: View {
                 .frame(width: geometry.size.width, height: geometry.size.height)
                 .contentShape(Rectangle())
                 .gesture(
-                    SimultaneousGesture(
-                        MagnifyGesture()
+                    MagnifyGesture()
+                        .onChanged { value in
+                            scale = min(maxScale, max(1, lastScale * value.magnification))
+                        }
+                        .onEnded { _ in
+                            lastScale = scale
+                            if scale <= 1 { resetPan() }
+                        }
+                )
+                // The pan only exists while there is something to pan.
+                //
+                // It used to be attached always, no-oping when the image was
+                // not zoomed — but a gesture that does nothing still claims the
+                // touch, so it took every horizontal drag from the page view
+                // underneath and the photographs could not be swiped through at
+                // all. Attached conditionally, the pager gets the drag back.
+                .gesture(
+                    scale > 1
+                        ? DragGesture()
                             .onChanged { value in
-                                scale = min(maxScale, max(1, lastScale * value.magnification))
-                            }
-                            .onEnded { _ in
-                                lastScale = scale
-                                if scale <= 1 { resetPan() }
-                            },
-                        DragGesture()
-                            .onChanged { value in
-                                guard scale > 1 else { return }
                                 offset = CGSize(
                                     width: lastOffset.width + value.translation.width,
                                     height: lastOffset.height + value.translation.height
                                 )
                             }
                             .onEnded { _ in lastOffset = offset }
-                    )
+                        : nil
                 )
                 .onTapGesture(count: 2) {
                     Haptics.light()

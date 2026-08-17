@@ -504,6 +504,7 @@
 				DEVELOPMENT_TEAM = ZR86H7JQD2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Gym Tracker";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Gym Tracker reads your bodyweight, sex and age so strength tiers are measured against the right numbers, and imports workouts you record elsewhere.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Gym Tracker saves the sessions you log as workouts in Health.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
@@ -540,6 +541,7 @@
 				DEVELOPMENT_TEAM = ZR86H7JQD2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Gym Tracker";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Gym Tracker reads your bodyweight, sex and age so strength tiers are measured against the right numbers, and imports workouts you record elsewhere.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Gym Tracker saves the sessions you log as workouts in Health.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
