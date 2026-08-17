@@ -3,7 +3,13 @@
 //  Gym Traker
 //
 //  Full-screen viewer for an exercise's artwork. Pinch or double-tap to zoom,
-//  drag to pan, swipe between the illustrations and the reference photos.
+//  drag to pan, swipe between the pages.
+//
+//  It shows one kind of picture at a time. It used to put the drawings and the
+//  photographs in one run of pages and open at whichever index the caller
+//  wanted, so opening the reference photos and swiping back landed on the
+//  drawing that is already on the screen behind — and already the exercise's
+//  icon. Two collections of two, not one of four.
 //
 //  The complaint that started this: the pictures were too small to read and
 //  there was no way to make them bigger.
@@ -15,8 +21,14 @@ struct ExerciseImageViewer: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var scheme
 
+    enum Kind {
+        case illustrations
+        case photos
+    }
+
     let exercise: Exercise
-    /// Which page to open on.
+    var kind: Kind = .illustrations
+    /// Which page within that kind to open on.
     var startIndex: Int = 0
 
     @State private var page: Int = 0
@@ -31,25 +43,36 @@ struct ExerciseImageViewer: View {
 
     private var pages: [Page] {
         var result: [Page] = []
-        for (index, name) in exercise.illustrationNames.enumerated() {
-            guard let image = ExerciseArtwork.illustration(name) else { continue }
-            result.append(Page(
-                id: result.count,
-                image: image,
-                caption: index == 0 ? "Contracted position" : "Stretched position",
-                isLineArt: true
-            ))
-        }
-        for (index, name) in exercise.photoNames.enumerated() {
-            guard let image = ExerciseArtwork.photo(name) else { continue }
-            result.append(Page(
-                id: result.count,
-                image: image,
-                caption: index == 0 ? "Reference photo · start" : "Reference photo · end",
-                isLineArt: false
-            ))
+        switch kind {
+        case .illustrations:
+            for (index, name) in exercise.illustrationNames.enumerated() {
+                guard let image = ExerciseArtwork.illustration(name) else { continue }
+                result.append(Page(
+                    id: result.count,
+                    image: image,
+                    caption: index == 0 ? "Contracted position" : "Stretched position",
+                    isLineArt: true
+                ))
+            }
+        case .photos:
+            for (index, name) in exercise.photoNames.enumerated() {
+                guard let image = ExerciseArtwork.photo(name) else { continue }
+                result.append(Page(
+                    id: result.count,
+                    image: image,
+                    caption: index == 0 ? "Start position" : "End position",
+                    isLineArt: false
+                ))
+            }
         }
         return result
+    }
+
+    private var title: String {
+        switch kind {
+        case .illustrations: exercise.name
+        case .photos: "Reference photos"
+        }
     }
 
     var body: some View {
@@ -74,7 +97,7 @@ struct ExerciseImageViewer: View {
                 }
             }
         }
-        .navigationTitle(exercise.name)
+        .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {

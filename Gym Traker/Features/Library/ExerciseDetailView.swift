@@ -9,16 +9,17 @@
 import SwiftUI
 import SwiftData
 
-/// Wraps the page index so it can drive an item-based sheet.
-private struct ViewerStart: Identifiable {
+/// Which set of pictures to open, and where in it.
+private struct ViewerRoute: Identifiable {
+    let kind: ExerciseImageViewer.Kind
     let index: Int
-    var id: Int { index }
+    var id: String { "\(kind)-\(index)" }
 }
 
 struct ExerciseDetailView: View {
     @Environment(\.modelContext) private var context
     let exercise: Exercise
-    @State private var viewerIndex: Int?
+    @State private var viewer: ViewerRoute?
     @State private var ranking = RankingSnapshot.empty
 
     private var units: Units { Store.units(in: context) }
@@ -52,13 +53,15 @@ struct ExerciseDetailView: View {
         .task { ranking = Store.rankingSnapshot(in: context) }
         .navigationTitle(exercise.name)
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(item: Binding(
-            get: { viewerIndex.map { ViewerStart(index: $0) } },
-            set: { viewerIndex = $0?.index }
-        )) { start in
+        .sheet(item: $viewer) { route in
             NavigationStack {
-                ExerciseImageViewer(exercise: exercise, startIndex: start.index)
+                ExerciseImageViewer(
+                    exercise: exercise,
+                    kind: route.kind,
+                    startIndex: route.index
+                )
             }
+            .appAppearance()
         }
     }
 
@@ -90,12 +93,12 @@ struct ExerciseDetailView: View {
             GlassSection(title: "How it looks") {
                 VStack(spacing: 12) {
                     ExerciseDemo(exercise: exercise) { index in
-                        viewerIndex = index
+                        viewer = ViewerRoute(kind: .illustrations, index: index)
                     }
 
                     if exercise.hasPhotos {
                         Button {
-                            viewerIndex = exercise.illustrationNames.count
+                            viewer = ViewerRoute(kind: .photos, index: 0)
                         } label: {
                             HStack(spacing: 6) {
                                 Image(systemName: "photo.on.rectangle")

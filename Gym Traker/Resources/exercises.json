@@ -1,6 +1,6 @@
 {
-  "version": 4,
-  "count": 270,
+  "version": 5,
+  "count": 278,
   "exercises": [
     {
       "id": "ab-rollout-on-knees-with-barbell",
@@ -232,6 +232,27 @@
       "primer": "This is the most simple of all exercises for the calves.",
       "level": null,
       "muscleGroup": "quads"
+    },
+    {
+      "id": "assault-bike",
+      "name": "Assault Bike",
+      "primaryMuscle": "Cardio",
+      "equipment": "Cardio",
+      "rankAnchor": null,
+      "tracking": "timeDistance",
+      "isCustom": false,
+      "glyph": {
+        "shape": "wave",
+        "hue": 330
+      },
+      "illustrations": [],
+      "photos": [],
+      "instructions": [],
+      "tips": [],
+      "primer": null,
+      "level": null,
+      "muscleGroup": "fullBody",
+      "symbol": "figure.indoor.cycle"
     },
     {
       "id": "back-extension-stability-ball",
@@ -2401,6 +2422,27 @@
       "muscleGroup": "biceps"
     },
     {
+      "id": "elliptical-trainer",
+      "name": "Elliptical Trainer",
+      "primaryMuscle": "Cardio",
+      "equipment": "Cardio",
+      "rankAnchor": null,
+      "tracking": "timeDistance",
+      "isCustom": false,
+      "glyph": {
+        "shape": "wave",
+        "hue": 330
+      },
+      "illustrations": [],
+      "photos": [],
+      "instructions": [],
+      "tips": [],
+      "primer": null,
+      "level": null,
+      "muscleGroup": "fullBody",
+      "symbol": "figure.elliptical"
+    },
+    {
       "id": "exercise-ball-pull-in",
       "name": "Exercise Ball Pull In",
       "primaryMuscle": "Core",
@@ -3454,6 +3496,27 @@
       "primer": "This exercise builds and shapes the inner thighs.",
       "level": null,
       "muscleGroup": "quads"
+    },
+    {
+      "id": "jump-rope",
+      "name": "Jump Rope",
+      "primaryMuscle": "Cardio",
+      "equipment": "Cardio",
+      "rankAnchor": null,
+      "tracking": "timeDistance",
+      "isCustom": false,
+      "glyph": {
+        "shape": "wave",
+        "hue": 330
+      },
+      "illustrations": [],
+      "photos": [],
+      "instructions": [],
+      "tips": [],
+      "primer": null,
+      "level": null,
+      "muscleGroup": "fullBody",
+      "symbol": "figure.jumprope"
     },
     {
       "id": "knee-circles",
@@ -5711,6 +5774,27 @@
       "muscleGroup": "hamstrings"
     },
     {
+      "id": "rowing-machine",
+      "name": "Rowing Machine",
+      "primaryMuscle": "Cardio",
+      "equipment": "Cardio",
+      "rankAnchor": null,
+      "tracking": "timeDistance",
+      "isCustom": false,
+      "glyph": {
+        "shape": "wave",
+        "hue": 330
+      },
+      "illustrations": [],
+      "photos": [],
+      "instructions": [],
+      "tips": [],
+      "primer": null,
+      "level": null,
+      "muscleGroup": "fullBody",
+      "symbol": "figure.rower"
+    },
+    {
       "id": "seated-ab-crunch-with-cable",
       "name": "Seated Ab Crunch with Cable",
       "primaryMuscle": "Core",
@@ -6250,7 +6334,7 @@
       "primaryMuscle": "Core",
       "equipment": "Bodyweight",
       "rankAnchor": "bw",
-      "tracking": "repsOptionalLoad",
+      "tracking": "time",
       "isCustom": false,
       "glyph": {
         "shape": "ring",
@@ -6984,6 +7068,27 @@
       "muscleGroup": "abs"
     },
     {
+      "id": "stair-climber",
+      "name": "Stair Climber",
+      "primaryMuscle": "Cardio",
+      "equipment": "Cardio",
+      "rankAnchor": null,
+      "tracking": "timeDistance",
+      "isCustom": false,
+      "glyph": {
+        "shape": "wave",
+        "hue": 330
+      },
+      "illustrations": [],
+      "photos": [],
+      "instructions": [],
+      "tips": [],
+      "primer": null,
+      "level": null,
+      "muscleGroup": "fullBody",
+      "symbol": "figure.stair.stepper"
+    },
+    {
       "id": "standing-barbell-calf-raise",
       "name": "Standing Barbell Calf Raise",
       "primaryMuscle": "Legs",
@@ -7306,7 +7411,7 @@
       "primaryMuscle": "Full body",
       "equipment": "Bodyweight",
       "rankAnchor": null,
-      "tracking": "repsOptionalLoad",
+      "tracking": "time",
       "isCustom": false,
       "glyph": {
         "shape": "ring",
@@ -7336,7 +7441,7 @@
       "primaryMuscle": "Full body",
       "equipment": "Bodyweight",
       "rankAnchor": null,
-      "tracking": "repsOptionalLoad",
+      "tracking": "time",
       "isCustom": false,
       "glyph": {
         "shape": "ring",
@@ -7366,7 +7471,7 @@
       "primaryMuscle": "Core",
       "equipment": "Bodyweight",
       "rankAnchor": null,
-      "tracking": "repsOptionalLoad",
+      "tracking": "time",
       "isCustom": false,
       "glyph": {
         "shape": "ring",
@@ -7390,6 +7495,27 @@
       "primer": "This is an exercise for abdominal and core strengthening which are vital in supporting the spine.",
       "level": null,
       "muscleGroup": "abs"
+    },
+    {
+      "id": "stationary-bike",
+      "name": "Stationary Bike",
+      "primaryMuscle": "Cardio",
+      "equipment": "Cardio",
+      "rankAnchor": null,
+      "tracking": "timeDistance",
+      "isCustom": false,
+      "glyph": {
+        "shape": "wave",
+        "hue": 330
+      },
+      "illustrations": [],
+      "photos": [],
+      "instructions": [],
+      "tips": [],
+      "primer": null,
+      "level": null,
+      "muscleGroup": "fullBody",
+      "symbol": "figure.indoor.cycle"
     },
     {
       "id": "step-up-single-leg-balance-with-biceps-curl-using-dumbbells",
@@ -7763,6 +7889,48 @@
       "primer": "This exercise targets and works the muscles of the inner thigh.",
       "level": null,
       "muscleGroup": "quads"
+    },
+    {
+      "id": "treadmill-run",
+      "name": "Treadmill Run",
+      "primaryMuscle": "Cardio",
+      "equipment": "Cardio",
+      "rankAnchor": null,
+      "tracking": "timeDistance",
+      "isCustom": false,
+      "glyph": {
+        "shape": "wave",
+        "hue": 330
+      },
+      "illustrations": [],
+      "photos": [],
+      "instructions": [],
+      "tips": [],
+      "primer": null,
+      "level": null,
+      "muscleGroup": "fullBody",
+      "symbol": "figure.run"
+    },
+    {
+      "id": "treadmill-walk",
+      "name": "Treadmill Walk",
+      "primaryMuscle": "Cardio",
+      "equipment": "Cardio",
+      "rankAnchor": null,
+      "tracking": "timeDistance",
+      "isCustom": false,
+      "glyph": {
+        "shape": "wave",
+        "hue": 330
+      },
+      "illustrations": [],
+      "photos": [],
+      "instructions": [],
+      "tips": [],
+      "primer": null,
+      "level": null,
+      "muscleGroup": "fullBody",
+      "symbol": "figure.walk"
     },
     {
       "id": "tricep-dips-using-body-weight",

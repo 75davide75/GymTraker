@@ -13,6 +13,8 @@ struct ExerciseCard: View {
 
     let entry: SessionEntry
     let item: PlanItem
+    /// Needed only to know whether this is measured in minutes.
+    let isTimed: Bool
     let units: Units
     let isExpanded: Bool
 
@@ -26,6 +28,8 @@ struct ExerciseCard: View {
     var onAcceptSuggestion: () -> Void
     var onDeclineSuggestion: () -> Void
     var onStats: () -> Void
+    var onDurationChange: (Int) -> Void
+    var onLogDuration: () -> Void
 
     private var completed: Int { entry.sets.filter(\.isCompleted).count }
     private var hasSuggestion: Bool { item.suggestedWeightKg != nil }
@@ -35,12 +39,19 @@ struct ExerciseCard: View {
             header
 
             if isExpanded {
-                if hasSuggestion { suggestionBanner }
-                weightControl
-                setRows
-                addSetButton
-                progressionToggle
-                footerControls
+                if isTimed {
+                    // No weight, no sets, no rest. A treadmill has none of
+                    // them, and offering them invites a number that means
+                    // nothing to record.
+                    durationControl
+                } else {
+                    if hasSuggestion { suggestionBanner }
+                    weightControl
+                    setRows
+                    addSetButton
+                    progressionToggle
+                    footerControls
+                }
             }
         }
         .padding(Theme.Spacing.cardPadding)
@@ -79,7 +90,9 @@ struct ExerciseCard: View {
                         // Collapsed cards dim their title to secondary text.
                         .foregroundStyle(isExpanded ? .primary : .secondary)
                         .lineLimit(1)
-                    Text("\(entry.sets.count)×\(item.repsSummary) · \(UnitFormatter.weight(item.workingWeightKg, in: units))")
+                    Text(isTimed
+                         ? UnitFormatter.minutes(item.durationSeconds)
+                         : "\(entry.sets.count)×\(item.repsSummary) · \(UnitFormatter.weight(item.workingWeightKg, in: units))")
                         .font(.captionM)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
@@ -129,6 +142,42 @@ struct ExerciseCard: View {
     }
 
     // MARK: - Weight
+
+    /// Minutes, in five-minute steps, and a button that says it is done.
+    private var durationControl: some View {
+        VStack(spacing: 12) {
+            Text("Duration").overlineStyle()
+
+            StepperControl(
+                canDecrease: item.durationSeconds > 300,
+                canIncrease: item.durationSeconds < 7200,
+                buttonSize: 52,
+                onDecrease: { onDurationChange(item.durationSeconds - 300) },
+                onIncrease: { onDurationChange(item.durationSeconds + 300) }
+            ) {
+                HStack(alignment: .firstTextBaseline, spacing: 5) {
+                    Text("\(item.durationSeconds / 60)")
+                        .font(.numberL)
+                        .contentTransition(.numericText(value: Double(item.durationSeconds)))
+                    Text("min").font(.bodyS).foregroundStyle(.secondary)
+                }
+            }
+
+            Button {
+                onLogDuration()
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: completed > 0 ? "checkmark.circle.fill" : "circle")
+                    Text(completed > 0 ? "Logged" : "Mark as done")
+                }
+                .font(.bodyM)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 13)
+            }
+            .buttonStyle(.glassProminent)
+            .tint(completed > 0 ? Theme.Palette.increase : Theme.Palette.sportRed)
+        }
+    }
 
     private var weightControl: some View {
         VStack(spacing: 8) {

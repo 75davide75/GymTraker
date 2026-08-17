@@ -71,7 +71,11 @@ struct PlanEditorView: View {
         }
         .sheet(item: $editingItem) { item in
             NavigationStack {
-                PlanItemEditor(item: item, units: units) {
+                PlanItemEditor(
+                    item: item,
+                    units: units,
+                    isTimed: Store.exercise(id: item.exerciseID, in: context)?.tracking.isTimed ?? false
+                ) {
                     if let day = item.day { remove(item, from: day) }
                 }
             }
@@ -220,9 +224,32 @@ struct PlanEditorView: View {
                         // The context menu sits on the row, not on the button.
                         // Attached to the button it competed with the tap and
                         // the long press only registered some of the time.
-                        PlanItemRow(item: item, units: units)
+                        PlanItemRow(
+                            item: item,
+                            units: units,
+                            isTimed: Store.exercise(id: item.exerciseID, in: context)?.tracking.isTimed ?? false
+                        )
                             .contentShape(.rect(cornerRadius: Theme.Radius.row))
                             .onTapGesture { editingItem = item }
+                            // Press and drag moves it. The menu's Move up and
+                            // Move down stay: dragging is quicker for one place
+                            // and worse for six, and neither is the right
+                            // answer for someone who cannot drag accurately.
+                            //
+                            // The rows live in a stack rather than a List — the
+                            // screen scrolls as a whole — so this is a drag and
+                            // a drop rather than `.onMove`. The payload is the
+                            // item's position, which is unique within the day.
+                            .draggable("\(item.order)") {
+                                PlanItemRow(item: item, units: units)
+                                    .frame(width: 300)
+                                    .opacity(0.92)
+                            }
+                            .dropDestination(for: String.self) { payload, _ in
+                                guard let from = payload.first.flatMap(Int.init) else { return false }
+                                moveItem(fromOrder: from, toOrder: item.order, in: day)
+                                return true
+                            }
                             .contextMenu {
                                 Button {
                                     move(item, in: day, by: -1)
@@ -369,6 +396,26 @@ struct PlanEditorView: View {
         try? context.save()
         Haptics.light()
     }
+
+    /// Lifts the dragged exercise out and puts it back where it was dropped,
+    /// rather than swapping the two. Swapping is right for a one-place nudge
+    /// and wrong for a drag across five rows, which is the whole reason to drag.
+    private func moveItem(fromOrder: Int, toOrder: Int, in day: PlanDay) {
+        guard fromOrder != toOrder else { return }
+        var items = day.orderedItems
+        guard let source = items.firstIndex(where: { $0.order == fromOrder }),
+              let target = items.firstIndex(where: { $0.order == toOrder })
+        else { return }
+
+        let moved = items.remove(at: source)
+        items.insert(moved, at: target)
+
+        withAnimation(Theme.Motion.spring) {
+            for (position, entry) in items.enumerated() { entry.order = position + 1 }
+        }
+        try? context.save()
+        Haptics.play(.commit)
+    }
 }
 
 // MARK: - Row
@@ -377,6 +424,7 @@ struct PlanItemRow: View {
     @Environment(\.colorScheme) private var scheme
     let item: PlanItem
     let units: Units
+    var isTimed: Bool = false
 
     var body: some View {
         HStack(spacing: 12) {
@@ -391,7 +439,9 @@ struct PlanItemRow: View {
                 Text(item.exerciseName)
                     .font(.titleS)
                     .lineLimit(1)
-                Text("\(item.schemeSummary) · \(UnitFormatter.weight(item.workingWeightKg, in: units))")
+                Text(isTimed
+                     ? UnitFormatter.minutes(item.durationSeconds)
+                     : "\(item.schemeSummary) · \(UnitFormatter.weight(item.workingWeightKg, in: units))")
                     .font(.captionM)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)

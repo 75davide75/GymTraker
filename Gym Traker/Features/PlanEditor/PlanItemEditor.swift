@@ -15,6 +15,8 @@ struct PlanItemEditor: View {
 
     let item: PlanItem
     let units: Units
+    /// Measured in minutes rather than in kilograms and reps.
+    var isTimed: Bool = false
     /// Called when the user removes the exercise from the plan.
     var onDelete: (() -> Void)?
 
@@ -23,15 +25,45 @@ struct PlanItemEditor: View {
     /// Rest values the pill cycles through, per design/SPEC.md §2.3.
     static let restLadder = [45, 60, 75, 90, 105, 120, 150, 180]
 
+    /// Five-minute steps, from five minutes to two hours.
+    private var durationCard: some View {
+        GlassSection(title: "Duration") {
+            VStack(spacing: 10) {
+                StepperControl(
+                    canDecrease: item.durationSeconds > 300,
+                    canIncrease: item.durationSeconds < 7200,
+                    buttonSize: 52,
+                    onDecrease: { item.durationSeconds -= 300 },
+                    onIncrease: { item.durationSeconds += 300 }
+                ) {
+                    HStack(alignment: .firstTextBaseline, spacing: 5) {
+                        Text("\(item.durationSeconds / 60)")
+                            .font(.numberL)
+                            .contentTransition(.numericText(value: Double(item.durationSeconds)))
+                        Text("min").font(.bodyS).foregroundStyle(.secondary)
+                    }
+                }
+
+                Text("This one is measured in time. There is no weight, no rep count and no rest to set.")
+                    .font(.captionM)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
     var body: some View {
         ZStack {
             AuroraBackground()
 
             ScrollView {
                 VStack(spacing: 18) {
-                    weightCard
-                    setsCard
-                    restCard
+                    if isTimed {
+                        durationCard
+                    } else {
+                        weightCard
+                        setsCard
+                        restCard
+                    }
                 }
                 .padding(Theme.Spacing.screenMargin)
                 .padding(.bottom, 30)

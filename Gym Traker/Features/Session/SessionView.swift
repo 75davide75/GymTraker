@@ -146,6 +146,7 @@ struct SessionView: View {
                 ExerciseCard(
                     entry: entry,
                     item: item,
+                    isTimed: Store.exercise(id: entry.exerciseID, in: context)?.tracking.isTimed ?? false,
                     units: units,
                     isExpanded: index == expandedIndex,
                     onTap: {
@@ -161,7 +162,9 @@ struct SessionView: View {
                     onToggleProgression: { toggleProgression(item: item) },
                     onAcceptSuggestion: { acceptSuggestion(item: item, entry: entry) },
                     onDeclineSuggestion: { Progression.decline(item); try? context.save() },
-                    onStats: { statsExercise = Store.exercise(id: entry.exerciseID, in: context) }
+                    onStats: { statsExercise = Store.exercise(id: entry.exerciseID, in: context) },
+                    onDurationChange: { changeDuration(item: item, to: $0) },
+                    onLogDuration: { logDuration(entry: entry, item: item) }
                 )
                 .entryTransition(index + 1)
             }
@@ -298,6 +301,32 @@ struct SessionView: View {
     }
 
     // MARK: - Mutations
+
+    private func changeDuration(item: PlanItem, to seconds: Int) {
+        let clamped = min(7200, max(60, seconds))
+        guard clamped != item.durationSeconds else { return }
+        item.durationSeconds = clamped
+        try? context.save()
+    }
+
+    /// A timed exercise is one set: it either happened or it did not. The
+    /// duration goes in the reps field, which is what the summary counts, and
+    /// the weight stays at zero so it never lands in a volume total.
+    private func logDuration(entry: SessionEntry, item: PlanItem) {
+        let minutes = item.durationSeconds / 60
+        if entry.sets.isEmpty {
+            entry.sets = [PerformedSet(reps: minutes, weightKg: 0, targetReps: minutes, completedAt: .now)]
+        } else if entry.sets[0].isCompleted {
+            entry.sets[0].completedAt = nil
+        } else {
+            entry.sets[0].reps = minutes
+            entry.sets[0].targetReps = minutes
+            entry.sets[0].weightKg = 0
+            entry.sets[0].completedAt = .now
+        }
+        Haptics.play(.commit)
+        try? context.save()
+    }
 
     private func changeWeight(item: PlanItem, entry: SessionEntry, to newValue: Double) {
         let old = item.workingWeightKg

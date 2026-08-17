@@ -151,6 +151,8 @@ final class PlanItem {
     var stepKg: Double = 2.5
     var restSeconds: Int = 90
     var progressionArmed: Bool = false
+    /// How long a timed exercise runs for. Ignored by everything else.
+    var durationSeconds: Int = 900
     var suggestedWeightKg: Double?
     var day: PlanDay?
 
@@ -181,9 +183,13 @@ final class PlanItem {
         return reps.map(String.init).joined(separator: "/")
     }
 
-    /// "4 sets · 8/8/6/6 reps"
+    /// "4 sets · 8/8/6/6 reps", or "20 min" for something timed.
     var schemeSummary: String {
         "\(targetSets.count) set\(targetSets.count == 1 ? "" : "s") · \(repsSummary) reps"
+    }
+
+    func schemeSummary(timed: Bool) -> String {
+        timed ? UnitFormatter.minutes(durationSeconds) : schemeSummary
     }
 
     /// The weight the next session should open with.

@@ -44,6 +44,13 @@ enum UnitFormatter {
     }
 
     /// "1:45" for a duration in seconds.
+    /// "20 min", or "1h 05" once it runs past the hour.
+    static func minutes(_ seconds: Int) -> String {
+        let total = max(0, seconds) / 60
+        guard total >= 60 else { return "\(total) min" }
+        return "\(total / 60)h \(String(format: "%02d", total % 60))"
+    }
+
     static func clock(_ seconds: Int) -> String {
         let s = max(0, seconds)
         return String(format: "%d:%02d", s / 60, s % 60)

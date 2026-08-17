@@ -58,6 +58,11 @@ enum Tracking: String, Codable, CaseIterable {
     case repsOptionalLoad  // bodyweight, optionally weighted
     case time              // planks, holds
     case timeDistance      // cardio
+
+    /// A treadmill asks how long, not how heavy or how many. These two modes
+    /// existed in the model from the start and no screen ever read them, so a
+    /// twenty-minute run was logged as sets of reps at a weight.
+    var isTimed: Bool { self == .time || self == .timeDistance }
 }
 
 /// The lift an exercise is ranked against. `nil` means the exercise is tracked
