@@ -14,6 +14,7 @@ struct ContentView: View {
     @Environment(\.modelContext) private var context
     @Environment(HealthStore.self) private var health
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.locale) private var locale
     @Query private var profiles: [UserProfile]
 
     private var profile: UserProfile? { profiles.first }
@@ -35,6 +36,7 @@ struct ContentView: View {
             Task { await health.importWorkouts(into: context) }
         }
         .preferredColorScheme(profile?.appearance.colorScheme ?? .dark)
+        .environment(\.locale, profile?.language.locale ?? locale)
         .tint(Theme.Palette.violet)
     }
 }

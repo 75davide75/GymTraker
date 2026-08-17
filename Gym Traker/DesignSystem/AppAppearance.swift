@@ -16,19 +16,24 @@ import SwiftUI
 import SwiftData
 
 extension View {
-    /// Applies the profile's chosen appearance. Needed on the root of anything
-    /// presented — sheets, covers — not on pushed screens.
+    /// Applies the profile's chosen appearance and language. Needed on the root
+    /// of anything presented — sheets, covers — not on pushed screens.
     func appAppearance() -> some View {
         modifier(AppAppearanceModifier())
     }
 }
 
 private struct AppAppearanceModifier: ViewModifier {
+    @Environment(\.locale) private var systemLocale
     @Query private var profiles: [UserProfile]
 
     func body(content: Content) -> some View {
         content
             .preferredColorScheme(profiles.first?.appearance.colorScheme ?? .dark)
+            // SwiftUI resolves every `Text` literal against the environment's
+            // locale, so setting it here switches the whole subtree — including
+            // a sheet, which is why this modifier exists at all.
+            .environment(\.locale, profiles.first?.language.locale ?? systemLocale)
             .tint(Theme.Palette.violet)
     }
 }

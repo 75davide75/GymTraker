@@ -93,7 +93,7 @@ struct OnboardingView: View {
         .padding(.bottom, 8)
     }
 
-    private var continueTitle: String {
+    private var continueTitle: LocalizedStringKey {
         if step == lastStep { return wantsPlan == false ? "Start empty" : "Start training" }
         if step == 3 { return "Continue" }
         return "Continue"
@@ -161,7 +161,7 @@ struct OnboardingView: View {
         if let height = data.heightCm, height > 80 { heightCm = height }
     }
 
-    private func pitch(_ symbol: String, _ title: String, _ body: String) -> some View {
+    private func pitch(_ symbol: String, _ title: LocalizedStringKey, _ body: LocalizedStringKey) -> some View {
         HStack(alignment: .top, spacing: 14) {
             Image(systemName: symbol)
                 .font(.system(size: 17, weight: .semibold))
@@ -403,7 +403,7 @@ struct OnboardingView: View {
         }
     }
 
-    private var planStepTitle: String {
+    private var planStepTitle: LocalizedStringKey {
         switch wantsPlan {
         case nil: "Where do you start?"
         case true?: "Pick a split"
@@ -411,10 +411,10 @@ struct OnboardingView: View {
         }
     }
 
-    private var planStepSubtitle: String {
+    private var planStepSubtitle: LocalizedStringKey {
         switch wantsPlan {
         case nil: "Either way you can change everything afterwards."
-        case true?: "Suggested for a \(experience.displayName.lowercased()) lifter first."
+        case true?: "Suggested for your level first."
         case false?: "Tap Back if you would rather take one after all."
         }
     }
@@ -475,7 +475,7 @@ struct OnboardingView: View {
         }
     }
 
-    private func choiceCard(title: String, blurb: String, symbol: String,
+    private func choiceCard(title: LocalizedStringKey, blurb: LocalizedStringKey, symbol: String,
                             isSelected: Bool, action: @escaping () -> Void) -> some View {
         Button {
             Haptics.play(.selection)

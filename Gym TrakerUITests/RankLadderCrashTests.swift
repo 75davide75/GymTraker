@@ -15,7 +15,10 @@ final class RankLadderCrashTests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
         app = XCUIApplication()
-        app.launchArguments = ["-resetStore"]
+        // Pinned to English. These assert on button labels, and the app now
+        // follows the device language — on an Italian simulator every one of
+        // them would look for a word the app no longer shows.
+        app.launchArguments = ["-resetStore", "-AppleLanguages", "(en)", "-AppleLocale", "en_GB"]
         app.launch()
     }
 

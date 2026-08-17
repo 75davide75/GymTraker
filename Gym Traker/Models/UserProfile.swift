@@ -29,6 +29,7 @@ final class UserProfile {
     var heightCm: Double?
     var experienceRaw: String = ExperienceLevel.beginner.rawValue
     var avatarData: Data?
+    var languageRaw: String = AppLanguage.system.rawValue
 
     init(
         name: String = "",
@@ -68,6 +69,11 @@ final class UserProfile {
     var experience: ExperienceLevel {
         get { ExperienceLevel(rawValue: experienceRaw) ?? .beginner }
         set { experienceRaw = newValue.rawValue }
+    }
+
+    var language: AppLanguage {
+        get { AppLanguage(rawValue: languageRaw) ?? .system }
+        set { languageRaw = newValue.rawValue }
     }
 
     var restAlert: RestAlert {

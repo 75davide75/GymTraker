@@ -16,7 +16,10 @@ final class Gym_TrakerUITests: XCTestCase {
         continueAfterFailure = false
         app = XCUIApplication()
         // Start from a clean store so onboarding always runs.
-        app.launchArguments = ["-resetStore"]
+        // Pinned to English. These assert on button labels, and the app now
+        // follows the device language — on an Italian simulator every one of
+        // them would look for a word the app no longer shows.
+        app.launchArguments = ["-resetStore", "-AppleLanguages", "(en)", "-AppleLocale", "en_GB"]
         app.launch()
     }
 
@@ -77,9 +80,9 @@ final class Gym_TrakerUITests: XCTestCase {
         shoot("07-summary")
         done.tap()
 
-        // Acceptance check: the changes are readable in the registry.
-        tapTab("Registry")
-        XCTAssertTrue(app.staticTexts["Recent"].firstMatch.waitForExistence(timeout: 8), "Registry is empty")
+        // Acceptance check: the changes are readable in the log.
+        tapTab("Log")
+        XCTAssertTrue(app.staticTexts["Recent"].firstMatch.waitForExistence(timeout: 8), "Log is empty")
         shoot("08-registry")
     }
 

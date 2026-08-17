@@ -47,6 +47,7 @@ struct BackupArchive: Codable {
         var heightCm: Double?
         var experienceRaw: String
         var avatarData: Data?
+        var languageRaw: String?
     }
 
     struct Exercise: Codable {
@@ -189,7 +190,8 @@ enum Backup {
                 restAlertRaw: profile.restAlertRaw,
                 heightCm: profile.heightCm,
                 experienceRaw: profile.experienceRaw,
-                avatarData: profile.avatarData
+                avatarData: profile.avatarData,
+                languageRaw: profile.languageRaw
             )
         }
 
@@ -351,6 +353,7 @@ enum Backup {
             profile.heightCm = stored.heightCm
             profile.experienceRaw = stored.experienceRaw
             profile.avatarData = stored.avatarData
+            profile.languageRaw = stored.languageRaw ?? AppLanguage.system.rawValue
             context.insert(profile)
             summary.hasProfile = true
         }

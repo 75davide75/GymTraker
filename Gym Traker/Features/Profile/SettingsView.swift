@@ -40,6 +40,7 @@ struct SettingsView: View {
                 VStack(spacing: 18) {
                     if let profile {
                         unitsSection(profile)
+                        languageSection(profile)
                         appearanceSection(profile)
                         profileSection(profile)
                         healthSection(profile)
@@ -90,6 +91,24 @@ struct SettingsView: View {
                 ForEach(Units.allCases) { unit in
                     GlassChip(title: unit.rawValue.uppercased(), isSelected: profile.units == unit) {
                         profile.units = unit
+                        try? context.save()
+                    }
+                }
+                Spacer()
+            }
+        }
+    }
+
+    private func languageSection(_ profile: UserProfile) -> some View {
+        GlassSection(title: "Language") {
+            HStack(spacing: 10) {
+                ForEach(AppLanguage.allCases) { option in
+                    GlassChip(
+                        title: option.displayName,
+                        isSelected: profile.language == option,
+                        tint: Theme.Palette.cyan
+                    ) {
+                        profile.language = option
                         try? context.save()
                     }
                 }
@@ -381,7 +400,7 @@ struct SettingsView: View {
         }
     }
 
-    private func rowLabel(_ symbol: String, _ title: String) -> some View {
+    private func rowLabel(_ symbol: String, _ title: LocalizedStringKey) -> some View {
         HStack(spacing: 8) {
             Image(systemName: symbol)
             Text(title)

@@ -1,0 +1,2228 @@
+{
+  "sourceLanguage": "en",
+  "version": "1.0",
+  "strings": {
+    "Home": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Home"
+          }
+        }
+      }
+    },
+    "Plan": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scheda"
+          }
+        }
+      }
+    },
+    "Library": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Libreria"
+          }
+        }
+      }
+    },
+    "Log": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diario"
+          }
+        }
+      }
+    },
+    "You": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tu"
+          }
+        }
+      }
+    },
+    "Settings": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impostazioni"
+          }
+        }
+      }
+    },
+    "History": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cronologia"
+          }
+        }
+      }
+    },
+    "Ranks": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Livelli"
+          }
+        }
+      }
+    },
+    "Rank": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Livello"
+          }
+        }
+      }
+    },
+    "Gym Tracker": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gym Tracker"
+          }
+        }
+      }
+    },
+    "Three things, done properly.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tre cose, fatte bene."
+          }
+        }
+      }
+    },
+    "Track every set, watch the numbers move, and see where you sit against real strength standards.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registra ogni serie, guarda i numeri salire e scopri dove sei rispetto agli standard di forza reali."
+          }
+        }
+      }
+    },
+    "Continue": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continua"
+          }
+        }
+      }
+    },
+    "Back": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Indietro"
+          }
+        }
+      }
+    },
+    "Optional": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Facoltativo"
+          }
+        }
+      }
+    },
+    "Name": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nome"
+          }
+        }
+      }
+    },
+    "Sex": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sesso"
+          }
+        }
+      }
+    },
+    "Bodyweight": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Peso corporeo"
+          }
+        }
+      }
+    },
+    "Calibration": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calibrazione"
+          }
+        }
+      }
+    },
+    "These set the thresholds every tier is measured against.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Da qui nascono le soglie con cui viene misurato ogni livello."
+          }
+        }
+      }
+    },
+    "Standards are guidelines, not measurements.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sono riferimenti, non misure."
+          }
+        }
+      }
+    },
+    "Weights are always stored in kg.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I pesi sono sempre salvati in kg."
+          }
+        }
+      }
+    },
+    "How long have you trained?": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Da quanto ti alleni?"
+          }
+        }
+      }
+    },
+    "It sets the sets and reps a plan opens with. You can change everything after.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Decide con quante serie e ripetizioni parte la scheda. Puoi cambiare tutto dopo."
+          }
+        }
+      }
+    },
+    "Start empty": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parti da zero"
+          }
+        }
+      }
+    },
+    "Start training": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inizia ad allenarti"
+          }
+        }
+      }
+    },
+    "Use a ready-made plan": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usa una scheda pronta"
+          }
+        }
+      }
+    },
+    "Ready-made plans": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schede pronte"
+          }
+        }
+      }
+    },
+    "Use this plan": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usa questa scheda"
+          }
+        }
+      }
+    },
+    "How it loads": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Come viene caricata"
+          }
+        }
+      }
+    },
+    "Build it from the library whenever you like. The ready-made splits stay on the Plan screen, so this is not a door closing.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La costruisci dalla libreria quando vuoi. Le schede pronte restano nella sezione Scheda: non stai chiudendo nessuna porta."
+          }
+        }
+      }
+    },
+    "Start from a ready-made split, or build your own from the library.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parti da una scheda pronta, oppure costruisci la tua dalla libreria."
+          }
+        }
+      }
+    },
+    "No plan yet": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessuna scheda"
+          }
+        }
+      }
+    },
+    "Start workout": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inizia allenamento"
+          }
+        }
+      }
+    },
+    "Last change": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ultima modifica"
+          }
+        }
+      }
+    },
+    "All sessions": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tutte le sessioni"
+          }
+        }
+      }
+    },
+    "Unranked": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Senza livello"
+          }
+        }
+      }
+    },
+    "Log two of the big four lifts.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registra due dei quattro fondamentali."
+          }
+        }
+      }
+    },
+    "Nothing yet": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ancora niente"
+          }
+        }
+      }
+    },
+    "No sessions logged yet.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessuna sessione registrata."
+          }
+        }
+      }
+    },
+    "Changes land here with their date.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le modifiche finiscono qui con la loro data."
+          }
+        }
+      }
+    },
+    "My plan": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La mia scheda"
+          }
+        }
+      }
+    },
+    "Rest between sets": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recupero tra le serie"
+          }
+        }
+      }
+    },
+    "Working weight": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Carico di lavoro"
+          }
+        }
+      }
+    },
+    "Step": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Incremento"
+          }
+        }
+      }
+    },
+    "Add set": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggiungi serie"
+          }
+        }
+      }
+    },
+    "Add exercise from library": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggiungi esercizio dalla libreria"
+          }
+        }
+      }
+    },
+    "Add day template": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggiungi giornata"
+          }
+        }
+      }
+    },
+    "Delete day": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elimina giornata"
+          }
+        }
+      }
+    },
+    "Rename": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rinomina"
+          }
+        }
+      }
+    },
+    "Rename day": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rinomina giornata"
+          }
+        }
+      }
+    },
+    "Move up": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sposta su"
+          }
+        }
+      }
+    },
+    "Move down": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sposta giù"
+          }
+        }
+      }
+    },
+    "Remove": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rimuovi"
+          }
+        }
+      }
+    },
+    "Remove from plan": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Togli dalla scheda"
+          }
+        }
+      }
+    },
+    "Keep": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mantieni"
+          }
+        }
+      }
+    },
+    "The history stays in the registry.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lo storico resta nel diario."
+          }
+        }
+      }
+    },
+    "No exercises yet. Add the first one from your library.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ancora nessun esercizio. Aggiungi il primo dalla libreria."
+          }
+        }
+      }
+    },
+    "Tap a day to cycle through your templates. The same letter can sit on several days.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tocca un giorno per scorrere le tue giornate. La stessa lettera può stare su più giorni."
+          }
+        }
+      }
+    },
+    "Share plan as PDF": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Condividi la scheda in PDF"
+          }
+        }
+      }
+    },
+    "This one is measured in time. There is no weight, no rep count and no rest to set.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questo si misura a tempo: niente peso, niente ripetizioni, niente recupero."
+          }
+        }
+      }
+    },
+    "Duration": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Durata"
+          }
+        }
+      }
+    },
+    "Search name or muscle": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cerca nome o muscolo"
+          }
+        }
+      }
+    },
+    "New": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nuovo"
+          }
+        }
+      }
+    },
+    "New exercise": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nuovo esercizio"
+          }
+        }
+      }
+    },
+    "Create exercise": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crea esercizio"
+          }
+        }
+      }
+    },
+    "Add it to your own archive instead.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggiungilo al tuo archivio."
+          }
+        }
+      }
+    },
+    "Save to my library": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salva nella mia libreria"
+          }
+        }
+      }
+    },
+    "Custom": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Personalizzato"
+          }
+        }
+      }
+    },
+    "Reference photos": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foto di riferimento"
+          }
+        }
+      }
+    },
+    "Where you stand": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A che punto sei"
+          }
+        }
+      }
+    },
+    "How this is worked out": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Come viene calcolato"
+          }
+        }
+      }
+    },
+    "Requirements for": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Requisiti per"
+          }
+        }
+      }
+    },
+    "You are here": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sei qui"
+          }
+        }
+      }
+    },
+    "Log a set to see where this lift sits.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registra una serie per vedere dove sei su questo esercizio."
+          }
+        }
+      }
+    },
+    "Log this exercise twice and the trend appears here.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registra questo esercizio due volte e qui comparirà l'andamento."
+          }
+        }
+      }
+    },
+    "Accessory work is best left untiered — it keeps the ladder meaningful.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il lavoro complementare resta senza livello: è ciò che tiene la scala credibile."
+          }
+        }
+      }
+    },
+    "No changes recorded yet.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessuna modifica registrata."
+          }
+        }
+      }
+    },
+    "Finish": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termina"
+          }
+        }
+      }
+    },
+    "Finish workout": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termina allenamento"
+          }
+        }
+      }
+    },
+    "Finish this workout?": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminare l'allenamento?"
+          }
+        }
+      }
+    },
+    "End session": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chiudi la sessione"
+          }
+        }
+      }
+    },
+    "Keep going": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continua"
+          }
+        }
+      }
+    },
+    "Session complete": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sessione completata"
+          }
+        }
+      }
+    },
+    "Resting": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recupero"
+          }
+        }
+      }
+    },
+    "Skip": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salta"
+          }
+        }
+      }
+    },
+    "Stats": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Statistiche"
+          }
+        }
+      }
+    },
+    "Accept": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accetta"
+          }
+        }
+      }
+    },
+    "Suggested": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consigliato"
+          }
+        }
+      }
+    },
+    "New tier": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nuovo livello"
+          }
+        }
+      }
+    },
+    "Top of the ladder.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sei in cima alla scala."
+          }
+        }
+      }
+    },
+    "Top of the ladder — nothing above Elite.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cima della scala: sopra Elite non c'è niente."
+          }
+        }
+      }
+    },
+    "No rest timer on this exercise — start the next set when you are ready.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessun recupero impostato: riparti quando sei pronto."
+          }
+        }
+      }
+    },
+    "All fields": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tutti i campi"
+          }
+        }
+      }
+    },
+    "All exercises": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tutti gli esercizi"
+          }
+        }
+      }
+    },
+    "Show 50 more": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostra altri 50"
+          }
+        }
+      }
+    },
+    "Nothing logged yet": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ancora niente nel diario"
+          }
+        }
+      }
+    },
+    "Change a weight, a rep count, a set count or a rest time and it lands here with the date.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cambia un peso, le ripetizioni, le serie o il recupero e finisce qui con la data."
+          }
+        }
+      }
+    },
+    "No sessions yet": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessuna sessione"
+          }
+        }
+      }
+    },
+    "Finish a workout and it lands here with every set you logged.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finisci un allenamento e comparirà qui con tutte le serie registrate."
+          }
+        }
+      }
+    },
+    "Imported from Health, so there are no set details.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importato da Salute: non ci sono i dettagli delle serie."
+          }
+        }
+      }
+    },
+    "Open details": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apri i dettagli"
+          }
+        }
+      }
+    },
+    "Reading from Health…": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lettura da Salute…"
+          }
+        }
+      }
+    },
+    "Health has no heart-rate samples for this workout.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salute non ha rilevazioni di battito per questo allenamento."
+          }
+        }
+      }
+    },
+    "Your details": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I tuoi dati"
+          }
+        }
+      }
+    },
+    "Lifter": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Atleta"
+          }
+        }
+      }
+    },
+    "Save": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salva"
+          }
+        }
+      }
+    },
+    "Cancel": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annulla"
+          }
+        }
+      }
+    },
+    "Done": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fatto"
+          }
+        }
+      }
+    },
+    "Remove photo": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Togli la foto"
+          }
+        }
+      }
+    },
+    "Fill in the gaps": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Completa i dati mancanti"
+          }
+        }
+      }
+    },
+    "Only fills what you have left blank. Anything you typed here stays as you set it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Riempie solo ciò che hai lasciato vuoto. Quello che hai scritto tu resta com'è."
+          }
+        }
+      }
+    },
+    "Bodyweight drives every strength tier, so keeping it current keeps the ladder honest.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il peso corporeo determina ogni livello di forza: tenerlo aggiornato tiene onesta la scala."
+          }
+        }
+      }
+    },
+    "Pull bodyweight, sex and age from Health, and bring in workouts recorded elsewhere — including sessions from your Apple Watch.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prende peso, sesso ed età da Salute e importa gli allenamenti registrati altrove, comprese le sessioni da Apple Watch."
+          }
+        }
+      }
+    },
+    "A workout started on the Watch appears here once it ends — Health only publishes a workout when it is saved.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un allenamento iniziato su Watch compare qui quando finisce: Salute lo pubblica solo al salvataggio."
+          }
+        }
+      }
+    },
+    "Health is not available on this device.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salute non è disponibile su questo dispositivo."
+          }
+        }
+      }
+    },
+    "Rest timer alerts": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avvisi di fine recupero"
+          }
+        }
+      }
+    },
+    "Buzz when the rest is over, even with the app in your pocket.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vibra a recupero finito, anche con l'app in tasca."
+          }
+        }
+      }
+    },
+    "One file with everything: profile, plans, exercises, every session and the whole registry. Restoring replaces what is on this phone.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un unico file con tutto: profilo, schede, esercizi, ogni sessione e l'intero diario. Il ripristino sostituisce quello che c'è su questo telefono."
+          }
+        }
+      }
+    },
+    "Replace everything with this backup?": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sostituire tutto con questo backup?"
+          }
+        }
+      }
+    },
+    "Your current profile, plans, sessions and registry are removed and replaced by the ones in the file.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il profilo, le schede, le sessioni e il diario attuali vengono rimossi e sostituiti con quelli del file."
+          }
+        }
+      }
+    },
+    "Restore": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ripristina"
+          }
+        }
+      }
+    },
+    "A printable A4 sheet of your plan: the weekly schedule and every exercise with its scheme.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un foglio A4 stampabile della tua scheda: la settimana e ogni esercizio con il suo schema."
+          }
+        }
+      }
+    },
+    "Something broken, missing or just wrong? Say so — it goes straight to the person who builds this.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Qualcosa non va, manca o è sbagliato? Scrivilo: arriva direttamente a chi sviluppa l'app."
+          }
+        }
+      }
+    },
+    "Artwork": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Immagini"
+          }
+        }
+      }
+    },
+    "Exercise illustrations by Everkinetic, licensed CC BY-SA 4.0.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Illustrazioni degli esercizi di Everkinetic, licenza CC BY-SA 4.0."
+          }
+        }
+      }
+    },
+    "Reference photographs from free-exercise-db, public domain.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotografie di riferimento da free-exercise-db, pubblico dominio."
+          }
+        }
+      }
+    },
+    "Tiers come from bodyweight-relative strength standards with an age coefficient. They are guidelines, not measurements.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I livelli derivano da standard di forza rapportati al peso corporeo, con un coefficiente per l'età. Sono riferimenti, non misure."
+          }
+        }
+      }
+    },
+    "Every tier is a multiple of your bodyweight, adjusted by an age coefficient — 1.00 under 30, then 0.98, 0.92, 0.83 and 0.72 past 60. A set is scored by its estimated 1RM, capped at ten reps.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ogni livello è un multiplo del tuo peso corporeo, corretto da un coefficiente per l'età: 1,00 sotto i 30 anni, poi 0,98, 0,92, 0,83 e 0,72 oltre i 60. Una serie vale per il suo massimale stimato, calcolato fino a dieci ripetizioni."
+          }
+        }
+      }
+    },
+    "Standards are guidelines, not measurements. Elite here means roughly the top 5 % of consistent drug-free lifters, not a competitive standard.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sono riferimenti, non misure. Elite qui indica circa il 5 % migliore di chi si allena con costanza e senza doping, non uno standard agonistico."
+          }
+        }
+      }
+    },
+    "Log at least two of squat, bench, deadlift and overhead press to get a global level.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registra almeno due tra squat, panca, stacco e lento avanti per ottenere un livello globale."
+          }
+        }
+      }
+    },
+    "Log at least two of squat, bench, deadlift and overhead press to open the ladder.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registra almeno due tra squat, panca, stacco e lento avanti per sbloccare la scala."
+          }
+        }
+      }
+    },
+    "Log a few exercises and each muscle group gets its own standing.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registra qualche esercizio e ogni gruppo muscolare avrà la sua posizione."
+          }
+        }
+      }
+    },
+    "No sets logged": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessuna serie registrata"
+          }
+        }
+      }
+    },
+    "View": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vista"
+          }
+        }
+      }
+    },
+    "min": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "min"
+          }
+        }
+      }
+    },
+    "years": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "anni"
+          }
+        }
+      }
+    },
+    "of 100": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "su 100"
+          }
+        }
+      }
+    },
+    "unchanged": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "invariato"
+          }
+        }
+      }
+    },
+    "Score": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Punteggio"
+          }
+        }
+      }
+    },
+    "Where do you start?": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Da dove parti?"
+          }
+        }
+      }
+    },
+    "Pick a split": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scegli una scheda"
+          }
+        }
+      }
+    },
+    "Starting empty": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Si parte da zero"
+          }
+        }
+      }
+    },
+    "Either way you can change everything afterwards.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In ogni caso potrai cambiare tutto dopo."
+          }
+        }
+      }
+    },
+    "Suggested for your level first.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prima quelle adatte al tuo livello."
+          }
+        }
+      }
+    },
+    "Tap Back if you would rather take one after all.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tocca Indietro se preferisci prenderne una."
+          }
+        }
+      }
+    },
+    "Give me a plan": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dammi una scheda"
+          }
+        }
+      }
+    },
+    "Pick a split and the exercises are filled in, ready to train today.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scegli una scheda e gli esercizi sono già dentro, pronti per oggi."
+          }
+        }
+      }
+    },
+    "An empty plan you build yourself from the library.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Una scheda vuota, che costruisci tu dalla libreria."
+          }
+        }
+      }
+    },
+    "Every set on record": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ogni serie registrata"
+          }
+        }
+      }
+    },
+    "Weight, reps and rest per set — and a log of every time one of them moved.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Peso, ripetizioni e recupero per ogni serie, e la traccia di ogni volta che uno di questi è cambiato."
+          }
+        }
+      }
+    },
+    "A plan you can shape": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Una scheda che modelli tu"
+          }
+        }
+      }
+    },
+    "Lettered day templates, repeated across the week however you train.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giornate con una lettera, ripetute nella settimana come ti alleni davvero."
+          }
+        }
+      }
+    },
+    "Strength tiers from real standards, for every exercise and every muscle.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Livelli di forza da standard reali, per ogni esercizio e ogni muscolo."
+          }
+        }
+      }
+    },
+    "Health, if you let it": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salute, se glielo permetti"
+          }
+        }
+      }
+    },
+    "Bodyweight and height fill themselves in, and finished workouts go back.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Peso e altezza si compilano da soli, e gli allenamenti finiti tornano indietro."
+          }
+        }
+      }
+    },
+    "Create a backup": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crea un backup"
+          }
+        }
+      }
+    },
+    "Share backup": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Condividi il backup"
+          }
+        }
+      }
+    },
+    "Restore from a backup": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ripristina da un backup"
+          }
+        }
+      }
+    },
+    "Export plan as PDF": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esporta la scheda in PDF"
+          }
+        }
+      }
+    },
+    "Share plan PDF": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Condividi il PDF della scheda"
+          }
+        }
+      }
+    },
+    "Write feedback": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scrivi un commento"
+          }
+        }
+      }
+    },
+    "Units": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unità"
+          }
+        }
+      }
+    },
+    "Language": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lingua"
+          }
+        }
+      }
+    },
+    "Appearance": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aspetto"
+          }
+        }
+      }
+    },
+    "Profile": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profilo"
+          }
+        }
+      }
+    },
+    "Apple Health": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Salute"
+          }
+        }
+      }
+    },
+    "When rest ends": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quando finisce il recupero"
+          }
+        }
+      }
+    },
+    "Notifications": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifiche"
+          }
+        }
+      }
+    },
+    "Your data": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I tuoi dati"
+          }
+        }
+      }
+    },
+    "Feedback": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commenti"
+          }
+        }
+      }
+    },
+    "About": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informazioni"
+          }
+        }
+      }
+    },
+    "Medals": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Medaglie"
+          }
+        }
+      }
+    },
+    "Global rank": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Livello globale"
+          }
+        }
+      }
+    },
+    "By muscle": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per muscolo"
+          }
+        }
+      }
+    },
+    "Tier per lift": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Livello per esercizio"
+          }
+        }
+      }
+    },
+    "The ladder": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La scala"
+          }
+        }
+      }
+    },
+    "This week": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questa settimana"
+          }
+        }
+      }
+    },
+    "Up next": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prossimo"
+          }
+        }
+      }
+    },
+    "Calendar": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calendario"
+          }
+        }
+      }
+    },
+    "Sessions": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sessioni"
+          }
+        }
+      }
+    },
+    "Sets": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Serie"
+          }
+        }
+      }
+    },
+    "Volume": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Volume"
+          }
+        }
+      }
+    },
+    "Exercises": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esercizi"
+          }
+        }
+      }
+    },
+    "Source": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Provenienza"
+          }
+        }
+      }
+    },
+    "Heart rate": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Battito"
+          }
+        }
+      }
+    },
+    "Energy": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Energia"
+          }
+        }
+      }
+    },
+    "Distance": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Distanza"
+          }
+        }
+      }
+    },
+    "Plan name": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nome della scheda"
+          }
+        }
+      }
+    },
+    "Weekly schedule": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settimana"
+          }
+        }
+      }
+    },
+    "How it looks": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Come si esegue"
+          }
+        }
+      }
+    },
+    "How to do it": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Come farlo"
+          }
+        }
+      }
+    },
+    "Watch out for": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attenzione a"
+          }
+        }
+      }
+    },
+    "Recent": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recenti"
+          }
+        }
+      }
+    },
+    "Earlier": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prima"
+          }
+        }
+      }
+    },
+    "Contracted position": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Posizione di contrazione"
+          }
+        }
+      }
+    },
+    "Stretched position": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Posizione di allungamento"
+          }
+        }
+      }
+    },
+    "Start position": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Posizione iniziale"
+          }
+        }
+      }
+    },
+    "End position": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Posizione finale"
+          }
+        }
+      }
+    },
+    "Logged in Gym Tracker": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registrato in Gym Tracker"
+          }
+        }
+      }
+    },
+    "Every set on this screen is as you performed it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ogni serie in questa schermata è come l'hai eseguita."
+          }
+        }
+      }
+    },
+    "Imported, so there are no set details.": {
+      "extractionState": "manual",
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importato: non ci sono i dettagli delle serie."
+          }
+        }
+      }
+    }
+  }
+}

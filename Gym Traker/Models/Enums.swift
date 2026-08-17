@@ -52,6 +52,34 @@ enum Appearance: String, Codable, CaseIterable, Identifiable {
     }
 }
 
+/// Which language the interface is drawn in.
+///
+/// Separate from the phone's own setting on purpose: plenty of people run an
+/// English phone and want this in Italian, or the other way round. `system`
+/// follows the device and is the default.
+enum AppLanguage: String, Codable, CaseIterable, Identifiable {
+    case system, en, it
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .system: "System"
+        case .en: "EN"
+        case .it: "IT"
+        }
+    }
+
+    /// nil means "whatever the device says".
+    var locale: Locale? {
+        switch self {
+        case .system: nil
+        case .en: Locale(identifier: "en")
+        case .it: Locale(identifier: "it")
+        }
+    }
+}
+
 /// How an exercise is measured. Drives which controls the session screen shows.
 enum Tracking: String, Codable, CaseIterable {
     case weightReps        // barbell/dumbbell/machine work
