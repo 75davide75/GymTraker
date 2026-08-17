@@ -17,6 +17,7 @@ struct YouView: View {
     @State private var showingSettings = false
     @State private var ranking = RankingSnapshot.empty
     @State private var muscleRanks: [MuscleRank] = []
+    @State private var achievements: [Achievement] = []
     @State private var editingProfile = false
 
     private var profile: UserProfile? { profiles.first }
@@ -34,9 +35,10 @@ struct YouView: View {
                 VStack(spacing: 18) {
                     identity.entryTransition(0)
                     globalCard.entryTransition(1)
-                    muscleCard.entryTransition(2)
-                    perLift.entryTransition(3)
-                    ladder.entryTransition(4)
+                    medalCard.entryTransition(2)
+                    muscleCard.entryTransition(3)
+                    perLift.entryTransition(4)
+                    ladder.entryTransition(5)
                 }
                 .padding(.horizontal, Theme.Spacing.screenMargin)
                 .padding(.bottom, 24)
@@ -46,6 +48,7 @@ struct YouView: View {
         .task {
             ranking = Store.rankingSnapshot(in: context)
             muscleRanks = Store.muscleRanks(in: context, snapshot: ranking)
+            achievements = Achievements.all(in: context)
         }
         .navigationTitle("You")
         .navigationBarTitleDisplayMode(.large)
@@ -123,44 +126,88 @@ struct YouView: View {
 
     // MARK: - Global rank
 
+    /// The rank, read as one thing.
+    ///
+    /// This used to be a ring, a medal, a tier name, a note, a consistency line
+    /// and a disclaimer, all competing inside one card — six pieces of type at
+    /// five sizes, and the number you actually came for was the smallest of
+    /// them. The tier is the headline; the ring became a bar under it, because
+    /// what it shows is progress along a scale and a bar is how a scale reads.
     private var globalCard: some View {
         GlassSection(title: "Global rank") {
-            VStack(spacing: 16) {
-                if let global = globalLevel {
-                    HStack(spacing: 20) {
-                        VStack(spacing: 10) {
-                            scoreRing(global)
-                            TierMedal(tier: global.tier, division: global.division, size: 44)
-                        }
+            if let global = globalLevel {
+                VStack(alignment: .leading, spacing: 14) {
+                    HStack(alignment: .center, spacing: 14) {
+                        TierMedal(tier: global.tier, division: global.division, size: 52)
 
-                        VStack(alignment: .leading, spacing: 6) {
+                        VStack(alignment: .leading, spacing: 2) {
                             Text(global.label)
-                                .font(.titleL)
+                                .font(.system(size: 26, weight: .bold))
                                 .foregroundStyle(global.tier.tint)
                             Text(global.tier.note)
                                 .font(.captionM)
                                 .foregroundStyle(.secondary)
-                            Text(consistencyLine)
-                                .font(.system(size: 11, weight: .medium))
-                                .foregroundStyle(.tertiary)
+                                .lineLimit(2)
                         }
 
                         Spacer(minLength: 0)
-                    }
-                } else {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("Unranked").font(.titleL).foregroundStyle(.secondary)
-                        Text("Log at least two of squat, bench, deadlift and overhead press to get a global level.")
-                            .font(.captionM)
-                            .foregroundStyle(.secondary)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
 
-                Text("Standards are guidelines, not measurements — they benchmark you against lifters of the same bodyweight, sex and age band.")
-                    .font(.system(size: 11, weight: .medium))
+                        VStack(alignment: .trailing, spacing: 0) {
+                            Text("\(Int(global.score.rounded()))")
+                                .font(.system(size: 30, weight: .bold))
+                                .monospacedDigit()
+                                .contentTransition(.numericText(value: global.score))
+                            Text("of 100")
+                                .font(.system(size: 10, weight: .semibold))
+                                .foregroundStyle(.tertiary)
+                        }
+                    }
+
+                    GlassProgressBar(value: global.score / 100, tint: global.tier.tint, height: 8)
+
+                    HStack(spacing: 6) {
+                        Image(systemName: "calendar")
+                            .font(.system(size: 11, weight: .bold))
+                        Text(consistencyLine)
+                            .font(.system(size: 11, weight: .medium))
+                    }
                     .foregroundStyle(.tertiary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            } else {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Unranked").font(.titleL).foregroundStyle(.secondary)
+                    Text("Log at least two of squat, bench, deadlift and overhead press to get a global level.")
+                        .font(.captionM)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+    }
+
+    /// Medals, earned ones first.
+    private var medalCard: some View {
+        GlassSection(title: "Medals") {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("\(achievements.count(where: \.isEarned)) of \(achievements.count) earned")
+                    .font(.captionM)
+                    .foregroundStyle(.secondary)
+
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(alignment: .top, spacing: 10) {
+                        ForEach(achievements) { achievement in
+                            AchievementMedal(achievement: achievement)
+                        }
+                    }
+                    .padding(.vertical, 2)
+                }
+                .scrollClipDisabled()
+
+                if let next = achievements.first(where: { !$0.isEarned }) {
+                    Text("Next: \(next.detail.lowercased()).")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(.tertiary)
+                }
             }
         }
     }

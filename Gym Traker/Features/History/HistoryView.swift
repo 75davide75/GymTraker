@@ -19,6 +19,18 @@ struct HistoryView: View {
     @Query private var profiles: [UserProfile]
 
     @State private var expanded: Set<PersistentIdentifier> = []
+    @State private var mode: Mode = .list
+
+    private enum Mode: String, CaseIterable, Identifiable {
+        case list, calendar
+        var id: String { rawValue }
+        var displayName: String {
+            switch self {
+            case .list: "Sessions"
+            case .calendar: "Calendar"
+            }
+        }
+    }
 
     private var units: Units { profiles.first?.units ?? .kg }
     private var finished: [WorkoutSession] { sessions.filter(\.isFinished) }
@@ -31,7 +43,13 @@ struct HistoryView: View {
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 18) {
                         summary
-                        ForEach(grouped, id: \.title) { group in
+                        modePicker
+
+                        if mode == .calendar {
+                            TrainingCalendar(days: trainedDays, units: units, volume: volumePerDay)
+                        }
+
+                        ForEach(mode == .list ? grouped : [], id: \.title) { group in
                             VStack(alignment: .leading, spacing: 8) {
                                 Text(group.title).overlineStyle().padding(.horizontal, 4)
                                 ForEach(group.sessions) { session in
@@ -48,6 +66,37 @@ struct HistoryView: View {
         .auroraVariant(.registry)
         .navigationTitle("History")
         .navigationBarTitleDisplayMode(.large)
+    }
+
+    /// The same log, two ways of reading it.
+    private var modePicker: some View {
+        Picker("View", selection: $mode) {
+            ForEach(Mode.allCases) { option in
+                Text(option.displayName).tag(option)
+            }
+        }
+        .pickerStyle(.segmented)
+    }
+
+    /// Calendar day → sets logged that day, and day → volume moved.
+    private var trainedDays: [Date: Int] {
+        var result: [Date: Int] = [:]
+        let calendar = Calendar.current
+        for session in finished {
+            let day = calendar.startOfDay(for: session.startedAt)
+            result[day, default: 0] += session.setCount
+        }
+        return result
+    }
+
+    private var volumePerDay: [Date: Double] {
+        var result: [Date: Double] = [:]
+        let calendar = Calendar.current
+        for session in finished {
+            let day = calendar.startOfDay(for: session.startedAt)
+            result[day, default: 0] += session.totalVolumeKg
+        }
+        return result
     }
 
     // MARK: - Summary

@@ -1,0 +1,189 @@
+//
+//  TrainingCalendar.swift
+//  Gym Traker
+//
+//  Every month you have trained, scrolling back through the years.
+//
+//  A list of sessions answers "what did I do that day". It answers "how often
+//  am I actually going" badly, because a gap in a list looks like the end of
+//  the list. A month grid makes the gaps the same size as the sessions, which
+//  is the only honest way to show consistency.
+//
+
+import SwiftUI
+
+struct TrainingCalendar: View {
+    /// The days that have a finished session, and how many sets were logged.
+    let days: [Date: Int]
+    let units: Units
+    /// Total volume per day, for the tooltip line under the grid.
+    let volume: [Date: Double]
+
+    @State private var selected: Date?
+
+    private var calendar: Calendar { Calendar.current }
+
+    /// Every month from the first session to this one, oldest last so the
+    /// current month is what you land on.
+    private var months: [Date] {
+        let today = calendar.startOfDay(for: .now)
+        let thisMonth = calendar.dateInterval(of: .month, for: today)?.start ?? today
+        guard let earliest = days.keys.min(),
+              var cursor = calendar.dateInterval(of: .month, for: earliest)?.start
+        else { return [thisMonth] }
+
+        var result: [Date] = []
+        while cursor <= thisMonth {
+            result.append(cursor)
+            guard let next = calendar.date(byAdding: .month, value: 1, to: cursor) else { break }
+            cursor = next
+        }
+        return result.reversed()
+    }
+
+    var body: some View {
+        GlassSection(title: "Calendar") {
+            VStack(alignment: .leading, spacing: 14) {
+                weekdayHeader
+
+                // Newest month first, and every earlier one below it. The whole
+                // thing scrolls with the screen rather than in its own box:
+                // a scroll view inside a scroll view is a trap for a thumb.
+                ForEach(months, id: \.self) { month in
+                    monthGrid(month)
+                }
+
+                if let selected, let sets = days[selected] {
+                    selectionLine(selected, sets: sets)
+                } else {
+                    Text("\(days.count) day\(days.count == 1 ? "" : "s") trained in total.")
+                        .font(.captionM)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+    }
+
+    private var weekdayHeader: some View {
+        HStack(spacing: 4) {
+            ForEach(Array(weekdaySymbols.enumerated()), id: \.offset) { _, symbol in
+                Text(symbol)
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundStyle(.tertiary)
+                    .frame(maxWidth: .infinity)
+            }
+        }
+    }
+
+    /// Monday first, whatever the locale's own first weekday is, because the
+    /// plan's week is Monday-based everywhere else in the app.
+    private var weekdaySymbols: [String] {
+        let symbols = calendar.veryShortStandaloneWeekdaySymbols
+        guard symbols.count == 7 else { return ["M", "T", "W", "T", "F", "S", "S"] }
+        return Array(symbols[1...6]) + [symbols[0]]
+    }
+
+    private func monthGrid(_ month: Date) -> some View {
+        let cells = self.cells(for: month)
+
+        return VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                Text(month.formatted(.dateTime.month(.wide).year()))
+                    .font(.system(size: 13, weight: .semibold))
+                Spacer()
+                let trained = cells.compactMap { $0 }.count { days[$0] != nil }
+                Text("\(trained) session\(trained == 1 ? "" : "s")")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.tertiary)
+            }
+
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 7), spacing: 4) {
+                ForEach(Array(cells.enumerated()), id: \.offset) { _, day in
+                    if let day {
+                        dayCell(day)
+                    } else {
+                        Color.clear.frame(height: 30)
+                    }
+                }
+            }
+        }
+    }
+
+    private func dayCell(_ day: Date) -> some View {
+        let sets = days[day]
+        let isToday = calendar.isDateInToday(day)
+        let isSelected = selected == day
+
+        return Button {
+            guard sets != nil else { return }
+            Haptics.play(.selection)
+            withAnimation(Theme.Motion.snappy) {
+                selected = isSelected ? nil : day
+            }
+        } label: {
+            Text("\(calendar.component(.day, from: day))")
+                .font(.system(size: 11, weight: sets != nil ? .bold : .medium))
+                .monospacedDigit()
+                .foregroundStyle(foreground(trained: sets != nil, isToday: isToday))
+                .frame(maxWidth: .infinity)
+                .frame(height: 30)
+                .background {
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .fill(sets != nil
+                              ? Theme.Palette.violet.opacity(isSelected ? 0.85 : 0.5)
+                              : Color.secondary.opacity(0.08))
+                }
+                .overlay {
+                    if isToday {
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .strokeBorder(Theme.Palette.cyan, lineWidth: 1.5)
+                    }
+                }
+        }
+        .buttonStyle(.pressableSilent)
+        .disabled(sets == nil)
+        .accessibilityLabel(accessibilityLabel(day, sets: sets))
+    }
+
+    private func foreground(trained: Bool, isToday: Bool) -> Color {
+        if trained { return .white }
+        return isToday ? Theme.Palette.cyan : .secondary
+    }
+
+    private func selectionLine(_ day: Date, sets: Int) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: "dumbbell.fill").font(.system(size: 11, weight: .bold))
+            Text(day.formatted(date: .abbreviated, time: .omitted))
+            Text("·")
+            Text("\(sets) set\(sets == 1 ? "" : "s")")
+            if let moved = volume[day], moved > 0 {
+                Text("·")
+                Text(UnitFormatter.volume(moved, in: units))
+            }
+        }
+        .font(.captionM)
+        .foregroundStyle(Theme.Palette.violet)
+    }
+
+    private func accessibilityLabel(_ day: Date, sets: Int?) -> String {
+        let date = day.formatted(date: .abbreviated, time: .omitted)
+        guard let sets else { return "\(date), no session" }
+        return "\(date), \(sets) sets logged"
+    }
+
+    /// A month's days, padded with nils so the first lands on its weekday.
+    private func cells(for month: Date) -> [Date?] {
+        guard let range = calendar.range(of: .day, in: .month, for: month) else { return [] }
+
+        // Monday is column 0; `weekday` is 1 for Sunday.
+        let firstWeekday = calendar.component(.weekday, from: month)
+        let leading = (firstWeekday + 5) % 7
+
+        var cells: [Date?] = Array(repeating: nil, count: leading)
+        for offset in range {
+            let day = calendar.date(byAdding: .day, value: offset - 1, to: month)
+            cells.append(day.map { calendar.startOfDay(for: $0) })
+        }
+        return cells
+    }
+}

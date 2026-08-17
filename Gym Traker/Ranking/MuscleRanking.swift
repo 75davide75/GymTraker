@@ -15,20 +15,24 @@ import SwiftUI
 
 /// Where one muscle group stands.
 struct MuscleRank: Identifiable, Equatable {
-    let muscle: Muscle
+    let muscle: MuscleGroup
     let result: RankResult
     /// How many exercises fed the average.
     let exerciseCount: Int
     /// The exercise carrying the group.
     let bestExerciseName: String?
 
-    var id: Muscle { muscle }
+    var id: MuscleGroup { muscle }
 }
 
 extension RankingSnapshot {
-    /// Muscle groups worth showing on a profile — cardio and mobility are
-    /// tracked but not ranked.
-    static let rankedMuscles: [Muscle] = [.chest, .back, .shoulders, .arms, .legs, .glutes, .core]
+    /// Eleven groups rather than seven coarse ones.
+    ///
+    /// "Arms" covered a hundred exercises and could not tell you that your
+    /// triceps were behind your biceps, which is exactly the kind of thing a
+    /// per-muscle rank exists to say. Cardio and mobility are tracked and not
+    /// ranked: there is no bodyweight-relative standard for a treadmill.
+    static let rankedMuscles: [MuscleGroup] = MuscleGroup.ranked
 }
 
 extension Store {
@@ -37,10 +41,10 @@ extension Store {
     static func muscleRanks(in context: ModelContext, snapshot: RankingSnapshot) -> [MuscleRank] {
         guard !snapshot.perExercise.isEmpty else { return [] }
 
-        var byMuscle: [Muscle: [(score: Double, name: String)]] = [:]
+        var byMuscle: [MuscleGroup: [(score: Double, name: String)]] = [:]
         for exercise in allExercises(in: context) {
             guard let result = snapshot.perExercise[exercise.id] else { continue }
-            byMuscle[exercise.muscleGroup, default: []].append((result.score, exercise.name))
+            byMuscle[exercise.group, default: []].append((result.score, exercise.name))
         }
 
         return RankingSnapshot.rankedMuscles.compactMap { muscle in
@@ -134,16 +138,12 @@ struct MuscleRankRow: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            MuscleMapIcon(
-                muscle: rank.muscle,
-                equipment: .barbell,
-                size: 46,
-                showsEquipmentBadge: false
-            )
+            BodyMap(highlighted: rank.muscle, size: 30)
+                .frame(width: 34)
 
             VStack(alignment: .leading, spacing: 5) {
                 HStack {
-                    Text(rank.muscle.rawValue)
+                    Text(rank.muscle.displayName)
                         .font(.bodyM)
                     Spacer()
                     Text(rank.result.label)

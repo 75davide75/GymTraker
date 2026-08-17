@@ -131,7 +131,7 @@ struct ExerciseThumbnail: View {
             } else {
                 // Only a user-created exercise gets here.
                 MuscleMapIcon(
-                    muscle: exercise.muscleGroup,
+                    muscle: exercise.group,
                     equipment: exercise.equipment,
                     size: size
                 )
