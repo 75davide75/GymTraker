@@ -25,6 +25,52 @@ enum ExerciseArtwork {
         load(name, extension: "png")
     }
 
+    /// The same drawing with the empty margin cut away.
+    ///
+    /// The set is drawn on a fixed 512 canvas, and the figure occupies anywhere
+    /// from a quarter of it to four fifths depending on whether the exercise is
+    /// standing, lying down or holding a long barbell. Shown as-is at row size
+    /// that reads as a set of drawings at random scales, most of them too small
+    /// to make out. Cropped to the ink, every one of them fills its tile.
+    static func trimmedIllustration(_ name: String) -> UIImage? {
+        let key = "trimmed:\(name)" as NSString
+        if let hit = cache.object(forKey: key) { return hit }
+        guard let image = illustration(name), let cgImage = image.cgImage else { return nil }
+        guard let box = inkBounds(cgImage), let cropped = cgImage.cropping(to: box) else { return image }
+
+        let trimmed = UIImage(cgImage: cropped, scale: image.scale, orientation: image.imageOrientation)
+            .withRenderingMode(.alwaysTemplate)
+        cache.setObject(trimmed, forKey: key)
+        return trimmed
+    }
+
+    /// The smallest rectangle containing any non-transparent pixel.
+    private static func inkBounds(_ image: CGImage) -> CGRect? {
+        let width = image.width, height = image.height
+        var alpha = [UInt8](repeating: 0, count: width * height)
+
+        guard let context = CGContext(
+            data: &alpha, width: width, height: height,
+            bitsPerComponent: 8, bytesPerRow: width,
+            space: CGColorSpaceCreateDeviceGray(),
+            bitmapInfo: CGImageAlphaInfo.alphaOnly.rawValue
+        ) else { return nil }
+        context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+
+        var minX = width, minY = height, maxX = -1, maxY = -1
+        for y in 0..<height {
+            let row = y * width
+            for x in 0..<width where alpha[row + x] > 8 {
+                if x < minX { minX = x }
+                if x > maxX { maxX = x }
+                if y < minY { minY = y }
+                if y > maxY { maxY = y }
+            }
+        }
+        guard maxX >= minX, maxY >= minY else { return nil }
+        return CGRect(x: minX, y: minY, width: maxX - minX + 1, height: maxY - minY + 1)
+    }
+
     static func photo(_ name: String) -> UIImage? {
         load(name, extension: "heic")
     }
@@ -49,17 +95,49 @@ struct ExerciseThumbnail: View {
     let exercise: Exercise
     var size: CGFloat = 52
 
-    private var tint: Color { Theme.Palette.glyph(hue: exercise.glyphHue, scheme: scheme) }
+    /// One tint for the whole archive.
+    ///
+    /// These used to be tinted per equipment, which put a gold tile between two
+    /// violet ones and made a list of the same kind of thing look like a list of
+    /// different kinds of thing. The equipment is already written under the
+    /// name, where it can be read rather than decoded.
+    private var tint: Color { Theme.Palette.violet }
+
+    /// The contracted phase — the position that identifies the movement.
+    private var artwork: UIImage? {
+        guard let name = exercise.illustrationNames.first else { return nil }
+        return ExerciseArtwork.trimmedIllustration(name)
+    }
 
     var body: some View {
-        // A drawing of the movement is too fine to read at row size, so the
-        // list wears a muscle map instead and the drawings live on the detail
-        // screen at a size where they mean something.
-        MuscleMapIcon(
-            muscle: exercise.muscleGroup,
-            equipment: exercise.equipment,
-            size: size
-        )
+        // The list used to wear a generated muscle map, on the grounds that a
+        // drawing of the movement was too fine to read this small. It was too
+        // fine because it was shown inside its whole 512 canvas, most of which
+        // is empty. Cropped to the ink it reads perfectly, and one drawn set
+        // across the whole archive beats a diagram that means the same thing
+        // for every press.
+        ZStack {
+            Circle().fill(tint.opacity(scheme == .dark ? 0.16 : 0.12))
+            Circle().strokeBorder(tint.opacity(0.28), lineWidth: 1)
+
+            if let artwork {
+                Image(uiImage: artwork)
+                    .renderingMode(.template)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding(size * 0.17)
+                    .foregroundStyle(tint)
+            } else {
+                // Only a user-created exercise gets here.
+                MuscleMapIcon(
+                    muscle: exercise.muscleGroup,
+                    equipment: exercise.equipment,
+                    size: size
+                )
+            }
+        }
+        .frame(width: size, height: size)
+        .accessibilityHidden(true)
     }
 }
 

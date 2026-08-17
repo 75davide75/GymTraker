@@ -15,6 +15,7 @@ struct PlanEditorView: View {
 
     @State private var selectedLetter: String?
     @State private var showingPicker = false
+    @State private var showingPresets = false
     @State private var editingItem: PlanItem?
     @State private var renamingDay: PlanDay?
     /// Cleared whenever the plan changes, so a shared PDF is never stale.
@@ -37,12 +38,22 @@ struct PlanEditorView: View {
                 emptyState
             }
         }
-        .reportsScrollDirection()
         .auroraVariant(.plan)
         .navigationTitle("Plan")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarVisibility(.hidden, for: .navigationBar)
+        .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            if let plan {
+                ToolbarItem(placement: .topBarTrailing) { planToolbar(plan) }
+            }
+        }
         .onChange(of: selectedLetter) { _, _ in pdfURL = nil }
+        .sheet(isPresented: $showingPresets) {
+            NavigationStack {
+                PlanPresetSheet { built in
+                    selectedLetter = built.orderedDays.first?.letter
+                }
+            }
+        }
         .sheet(isPresented: $showingPicker) {
             NavigationStack {
                 LibraryView(mode: .picker) { exercise in
@@ -66,28 +77,21 @@ struct PlanEditorView: View {
         }
     }
 
+    /// The bar button already sits on system glass, so the icon is drawn plain
+    /// — a second sheet of glass inside the first reads as a smudge.
     @ViewBuilder
     private func planToolbar(_ plan: Plan) -> some View {
         if let pdfURL {
             ShareLink(item: pdfURL) {
                 Image(systemName: "square.and.arrow.up")
-                    .font(.system(size: 16, weight: .semibold))
-                    .frame(width: 38, height: 38)
-                    .glassEffect(.regular, in: .circle)
             }
-            .buttonStyle(.pressable)
         } else {
             Button {
                 pdfURL = try? PlanPDF.write(plan: plan, profile: Store.profile(in: context))
                 Haptics.play(.success)
             } label: {
                 Image(systemName: "doc.richtext")
-                    .font(.system(size: 16, weight: .semibold))
-                    .frame(width: 38, height: 38)
-                    .glassEffect(.regular, in: .circle)
-                    .contentShape(Circle())
             }
-            .buttonStyle(.pressable)
             .accessibilityLabel("Export PDF")
         }
     }
@@ -97,15 +101,13 @@ struct PlanEditorView: View {
     private func content(_ plan: Plan) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
-                ScreenTitle(title: "Plan") { planToolbar(plan) }
-                    .padding(.horizontal, -Theme.Spacing.screenMargin)
                 planName(plan).entryTransition(0)
                 schedule(plan).entryTransition(1)
                 dayTabs(plan).entryTransition(2)
                 exerciseList.entryTransition(3)
             }
             .padding(.horizontal, Theme.Spacing.screenMargin)
-            .padding(.bottom, 96)
+            .padding(.bottom, 24)
         }
     }
 
@@ -247,14 +249,28 @@ struct PlanEditorView: View {
         }
     }
 
+    /// Starting empty is a choice, not a sentence. The ready-made splits stay
+    /// on offer here for anyone who took the empty road at onboarding and would
+    /// rather not build a week from nothing.
     private var emptyState: some View {
         VStack(spacing: 14) {
             Image(systemName: "calendar")
                 .font(.system(size: 32, weight: .semibold))
                 .foregroundStyle(.secondary)
             Text("No plan yet").font(.titleL)
-            Button("Create a plan") { createPlan() }
-                .buttonStyle(.glassProminent)
+            Text("Start from a ready-made split, or build your own from the library.")
+                .font(.bodyS)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 40)
+
+            VStack(spacing: 10) {
+                Button("Use a ready-made plan") { showingPresets = true }
+                    .buttonStyle(.glassProminent)
+                Button("Start empty") { createPlan() }
+                    .buttonStyle(.glass)
+            }
+            .padding(.top, 2)
         }
     }
 

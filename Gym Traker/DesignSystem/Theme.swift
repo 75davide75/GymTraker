@@ -93,7 +93,10 @@ enum Theme {
     }
 
     enum Spacing {
-        static let screenMargin: CGFloat = 20
+        /// Matches the inset iOS gives a large navigation title, so a heading
+        /// and the content under it share one left edge instead of missing each
+        /// other by four points.
+        static let screenMargin: CGFloat = 16
         static let cardPadding: CGFloat = 18
         static let stack: CGFloat = 14
     }

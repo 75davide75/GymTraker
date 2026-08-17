@@ -5,6 +5,7 @@
 
 import SwiftUI
 import SwiftData
+import UniformTypeIdentifiers
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var context
@@ -18,6 +19,10 @@ struct SettingsView: View {
     @State private var recalcNotice: String?
     @State private var healthNotice: String?
     @State private var isSyncing = false
+    @State private var importing = false
+    @State private var pendingBackup: URL?
+    @State private var backupNotice: String?
+    @State private var backupFailed = false
 
     private var profile: UserProfile? { profiles.first }
     private var units: Units { profile?.units ?? .kg }
@@ -49,6 +54,25 @@ struct SettingsView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Done") { dismiss() }
             }
+        }
+        .fileImporter(isPresented: $importing, allowedContentTypes: [.json]) { result in
+            switch result {
+            case .success(let url):
+                pendingBackup = url
+            case .failure(let error):
+                showBackupNotice(error.localizedDescription, failed: true)
+            }
+        }
+        // Asked before, not reported after: a restore replaces everything on
+        // the phone, and there is no undo for it.
+        .alert("Replace everything with this backup?", isPresented: Binding(
+            get: { pendingBackup != nil },
+            set: { if !$0 { pendingBackup = nil } }
+        )) {
+            Button("Restore", role: .destructive) { restoreBackup() }
+            Button("Cancel", role: .cancel) { pendingBackup = nil }
+        } message: {
+            Text("Your current profile, plans, sessions and registry are removed and replaced by the ones in the file.")
         }
     }
 
@@ -300,46 +324,41 @@ struct SettingsView: View {
             VStack(alignment: .leading, spacing: 10) {
                 if let exportURL {
                     ShareLink(item: exportURL) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "square.and.arrow.up")
-                            Text("Share export")
-                        }
-                        .font(.bodyM)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
+                        rowLabel("square.and.arrow.up", "Share backup")
                     }
                     .buttonStyle(.glassProminent)
                 } else {
                     Button {
-                        exportURL = try? DataExporter.writeTemporaryFile(from: context)
+                        exportURL = try? Backup.writeTemporaryFile(from: context)
                         Haptics.success()
                     } label: {
-                        HStack(spacing: 8) {
-                            Image(systemName: "arrow.down.doc")
-                            Text("Export data as JSON")
-                        }
-                        .font(.bodyM)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
+                        rowLabel("arrow.down.doc", "Create a backup")
                     }
                     .buttonStyle(.glass)
                 }
 
-                Text("Profile, plan, custom exercises, every session and the whole registry in one file.")
+                Button {
+                    importing = true
+                } label: {
+                    rowLabel("arrow.up.doc", "Restore from a backup")
+                }
+                .buttonStyle(.glass)
+
+                Text("One file with everything: profile, plans, exercises, every session and the whole registry. Restoring replaces what is on this phone.")
                     .font(.captionM)
                     .foregroundStyle(.secondary)
+
+                if let backupNotice {
+                    Text(backupNotice)
+                        .font(.captionM)
+                        .foregroundStyle(backupFailed ? Theme.Palette.sportRed : Theme.Palette.cyan)
+                }
 
                 Divider().opacity(0.4).padding(.vertical, 2)
 
                 if let planPDFURL {
                     ShareLink(item: planPDFURL) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "square.and.arrow.up")
-                            Text("Share plan PDF")
-                        }
-                        .font(.bodyM)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
+                        rowLabel("square.and.arrow.up", "Share plan PDF")
                     }
                     .buttonStyle(.glassProminent)
                 } else {
@@ -348,13 +367,7 @@ struct SettingsView: View {
                         planPDFURL = try? PlanPDF.write(plan: plan, profile: profile)
                         Haptics.play(.success)
                     } label: {
-                        HStack(spacing: 8) {
-                            Image(systemName: "doc.richtext")
-                            Text("Export plan as PDF")
-                        }
-                        .font(.bodyM)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
+                        rowLabel("doc.richtext", "Export plan as PDF")
                     }
                     .buttonStyle(.glass)
                     .disabled(Store.activePlan(in: context) == nil)
@@ -365,6 +378,16 @@ struct SettingsView: View {
                     .foregroundStyle(.secondary)
             }
         }
+    }
+
+    private func rowLabel(_ symbol: String, _ title: String) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: symbol)
+            Text(title)
+        }
+        .font(.bodyM)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 12)
     }
 
     private var aboutSection: some View {
@@ -402,6 +425,32 @@ struct SettingsView: View {
         profile.updateBodyweight(profile.bodyweightKg + delta)
         try? context.save()
         noteRecalculation(profile)
+    }
+
+    private func restoreBackup() {
+        guard let url = pendingBackup else { return }
+        pendingBackup = nil
+        do {
+            let summary = try Backup.restore(contentsOf: url, into: context)
+            Haptics.success()
+            var parts: [String] = []
+            if summary.hasProfile { parts.append("profile") }
+            if summary.plans > 0 { parts.append("\(summary.plans) plan\(summary.plans == 1 ? "" : "s")") }
+            if summary.sessions > 0 { parts.append("\(summary.sessions) session\(summary.sessions == 1 ? "" : "s")") }
+            if summary.records > 0 { parts.append("\(summary.records) registry entr\(summary.records == 1 ? "y" : "ies")") }
+            showBackupNotice(parts.isEmpty ? "Restored an empty backup." : "Restored: " + parts.joined(separator: ", ") + ".",
+                             failed: false)
+        } catch {
+            Haptics.play(.failure)
+            showBackupNotice(error.localizedDescription, failed: true)
+        }
+    }
+
+    private func showBackupNotice(_ text: String, failed: Bool) {
+        withAnimation(Theme.Motion.spring) {
+            backupFailed = failed
+            backupNotice = text
+        }
     }
 
     private func noteRecalculation(_ profile: UserProfile) {

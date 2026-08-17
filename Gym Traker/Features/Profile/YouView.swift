@@ -32,20 +32,6 @@ struct YouView: View {
         ZStack {
             ScrollView {
                 VStack(spacing: 18) {
-                    ScreenTitle(title: "You") {
-                        Button {
-                            showingSettings = true
-                        } label: {
-                            Image(systemName: "gearshape")
-                                .font(.system(size: 17, weight: .semibold))
-                                .frame(width: 38, height: 38)
-                                .glassEffect(.regular, in: .circle)
-                                .contentShape(Circle())
-                        }
-                        .buttonStyle(.pressable)
-                        .accessibilityLabel("Settings")
-                    }
-                    .padding(.horizontal, -Theme.Spacing.screenMargin)
                     identity.entryTransition(0)
                     globalCard.entryTransition(1)
                     muscleCard.entryTransition(2)
@@ -53,18 +39,26 @@ struct YouView: View {
                     ladder.entryTransition(4)
                 }
                 .padding(.horizontal, Theme.Spacing.screenMargin)
-                .padding(.bottom, 96)
+                .padding(.bottom, 24)
             }
         }
-        .reportsScrollDirection()
         .auroraVariant(.profile)
         .task {
             ranking = Store.rankingSnapshot(in: context)
             muscleRanks = Store.muscleRanks(in: context, snapshot: ranking)
         }
         .navigationTitle("You")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarVisibility(.hidden, for: .navigationBar)
+        .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showingSettings = true
+                } label: {
+                    Image(systemName: "gearshape")
+                }
+                .accessibilityLabel("Settings")
+            }
+        }
         .sheet(isPresented: $showingSettings) {
             NavigationStack { SettingsView() }
         }

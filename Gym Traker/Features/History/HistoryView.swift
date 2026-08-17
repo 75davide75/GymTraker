@@ -41,11 +41,10 @@ struct HistoryView: View {
                         }
                     }
                     .padding(.horizontal, Theme.Spacing.screenMargin)
-                    .padding(.bottom, 30)
+                    .padding(.bottom, 24)
                 }
             }
         }
-        .reportsScrollDirection()
         .auroraVariant(.registry)
         .navigationTitle("History")
         .navigationBarTitleDisplayMode(.large)

@@ -54,8 +54,6 @@ struct RegistryView: View {
             } else {
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 18) {
-                        ScreenTitle("Registry")
-                            .padding(.horizontal, -Theme.Spacing.screenMargin)
                         filterBar
 
                         ForEach(RegistryGroup.group(page), id: \.title) { group in
@@ -86,15 +84,13 @@ struct RegistryView: View {
                         }
                     }
                     .padding(.horizontal, Theme.Spacing.screenMargin)
-                    .padding(.bottom, 96)
+                    .padding(.bottom, 24)
                 }
             }
         }
-        .reportsScrollDirection()
         .auroraVariant(.registry)
         .navigationTitle("Registry")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarVisibility(.hidden, for: .navigationBar)
+        .navigationBarTitleDisplayMode(.large)
     }
 
     // MARK: - Filters

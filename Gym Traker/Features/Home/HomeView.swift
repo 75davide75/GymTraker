@@ -57,8 +57,6 @@ struct HomeView: View {
         ZStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
-                    ScreenTitle("Home")
-                        .padding(.horizontal, -Theme.Spacing.screenMargin)
                     greeting.entryTransition(0)
                     weekStrip.entryTransition(1)
                     upNext.entryTransition(2)
@@ -66,15 +64,13 @@ struct HomeView: View {
                     weekVolume.entryTransition(4)
                 }
                 .padding(.horizontal, Theme.Spacing.screenMargin)
-                .padding(.bottom, 96)
+                .padding(.bottom, 24)
             }
         }
-        .reportsScrollDirection()
         .auroraVariant(.home)
         .task { ranking = Store.rankingSnapshot(in: context) }
         .navigationTitle("Home")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarVisibility(.hidden, for: .navigationBar)
+        .navigationBarTitleDisplayMode(.large)
         .navigationDestination(item: $route) { destination in
             switch destination {
             case .session(let day): SessionView(day: day)

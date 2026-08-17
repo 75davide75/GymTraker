@@ -37,9 +37,8 @@ struct RankLadderView: View {
                 footnote.entryTransition(3)
             }
             .padding(.horizontal, Theme.Spacing.screenMargin)
-            .padding(.bottom, 30)
+            .padding(.bottom, 24)
         }
-        .reportsScrollDirection()
         .auroraVariant(.profile)
         .task { ranking = Store.rankingSnapshot(in: context) }
         .navigationTitle("Ranks")

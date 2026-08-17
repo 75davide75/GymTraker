@@ -61,6 +61,9 @@ struct SessionView: View {
         .auroraVariant(.session)
         .navigationTitle(day.title)
         .navigationBarTitleDisplayMode(.inline)
+        // A workout is not a place you tab away from, and while the bar was
+        // there the rest clock sat behind it.
+        .toolbar(.hidden, for: .tabBar)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Finish") { confirmingFinish = true }

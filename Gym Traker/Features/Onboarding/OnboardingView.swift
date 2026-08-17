@@ -12,6 +12,7 @@ import SwiftData
 
 struct OnboardingView: View {
     @Environment(\.modelContext) private var context
+    @Environment(HealthStore.self) private var health
 
     @State private var step = 0
     @State private var name = ""
@@ -19,6 +20,7 @@ struct OnboardingView: View {
     @State private var sex: Sex = .male
     @State private var age = 27
     @State private var bodyweightKg: Double = 75
+    @State private var heightCm: Double?
     @State private var selectedPreset: PlanPreset?
     @State private var experience: ExperienceLevel = .beginner
     @State private var variant: PlanPreset.Variant = .balanced
@@ -124,10 +126,35 @@ struct OnboardingView: View {
                       "Lettered day templates, repeated across the week however you train.")
                 pitch("chart.line.uptrend.xyaxis", "Where you stand",
                       "Strength tiers from real standards, for every exercise and every muscle.")
+                pitch("heart.text.square", "Health, if you let it",
+                      "Bodyweight and height fill themselves in, and finished workouts go back.")
             }
 
             Spacer()
         }
+        // Asked here, on the first screen, rather than the first time something
+        // needs it. The next step is the one Health can fill in, so permission
+        // has to have been settled before it is shown — and being asked while
+        // reading what the app does is clearer than being asked mid-task.
+        .task {
+            guard health.availability == .notRequested else { return }
+            await health.requestAuthorization()
+            await prefillFromHealth()
+        }
+    }
+
+    /// Health seeds the fields; it never overrules them. Anything typed later
+    /// wins, and anything Health will not give simply stays as it was.
+    private func prefillFromHealth() async {
+        guard health.availability == .ready else { return }
+        let data = await health.readBodyData()
+        if let weight = data.bodyweightKg, weight > 20 { bodyweightKg = weight }
+        if let sex = data.sex { self.sex = sex }
+        if let year = data.birthYear {
+            let computed = Calendar.current.component(.year, from: .now) - year
+            if (13...100).contains(computed) { age = computed }
+        }
+        if let height = data.heightCm, height > 80 { heightCm = height }
     }
 
     private func pitch(_ symbol: String, _ title: String, _ body: String) -> some View {
@@ -339,12 +366,11 @@ struct OnboardingView: View {
                 startChoice
             } else {
                 ScrollView {
-                    VStack(spacing: 10) {
-                        variantPicker
-                        ForEach(sortedPresets) { preset in
-                            presetRow(preset)
-                        }
-                    }
+                    PlanPresetList(
+                        experience: experience,
+                        selection: $selectedPreset,
+                        variant: $variant
+                    )
                     .padding(.vertical, 4)
                 }
                 .scrollIndicators(.hidden)
@@ -424,79 +450,6 @@ struct OnboardingView: View {
         .buttonStyle(.pressableSilent)
     }
 
-    /// The same split loaded three ways.
-    private var variantPicker: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("How it loads").overlineStyle().padding(.horizontal, 4)
-            HStack(spacing: 8) {
-                ForEach(PlanPreset.Variant.allCases) { option in
-                    GlassChip(title: option.displayName, isSelected: variant == option) {
-                        withAnimation(Theme.Motion.snappy) { variant = option }
-                    }
-                }
-                Spacer(minLength: 0)
-            }
-            Text(variant.blurb)
-                .font(.captionM)
-                .foregroundStyle(.secondary)
-                .padding(.horizontal, 4)
-        }
-        .padding(.bottom, 4)
-    }
-
-    private func presetRow(_ preset: PlanPreset) -> some View {
-        let isSelected = preset.id == selectedPreset?.id
-
-        return Button {
-            Haptics.selection()
-            withAnimation(Theme.Motion.snappy) { selectedPreset = preset }
-        } label: {
-            HStack(alignment: .top, spacing: 12) {
-                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                    .font(.system(size: 21))
-                    .foregroundStyle(isSelected ? Theme.Palette.violet : Color.secondary)
-
-                VStack(alignment: .leading, spacing: 3) {
-                    HStack(spacing: 8) {
-                        Text(preset.name)
-                            .font(.titleS)
-                        if true {
-                            let days = preset.dayCount
-                            Text("\(days)×")
-                                .font(.system(size: 11, weight: .bold))
-                                .monospacedDigit()
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(Capsule().fill(Theme.Palette.violet.opacity(0.22)))
-                                .foregroundStyle(Theme.Palette.violet)
-                        }
-                    }
-                    Text(preset.subtitle)
-                        .font(.captionM)
-                        .foregroundStyle(.secondary)
-                    if true {
-                        let note = preset.note
-                        Text(note)
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundStyle(.tertiary)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .multilineTextAlignment(.leading)
-                    }
-                }
-
-                Spacer(minLength: 0)
-            }
-            .padding(14)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .glassEffect(
-                isSelected ? .regular.tint(Theme.Palette.violet.opacity(0.3)) : .regular,
-                in: .rect(cornerRadius: Theme.Radius.row)
-            )
-            .contentShape(.rect(cornerRadius: Theme.Radius.row))
-        }
-        .buttonStyle(.pressable)
-    }
-
     // MARK: - Completion
 
     private func advance() {
@@ -519,6 +472,7 @@ struct OnboardingView: View {
             units: units
         )
         profile.experience = experience
+        profile.heightCm = heightCm
         context.insert(profile)
         if wantsPlan == true { selectedPreset?.build(in: context, variant: variant) }
         try? context.save()

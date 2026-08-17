@@ -65,64 +65,57 @@ struct RootTabView: View {
             case .you: "person"
             }
         }
+
+        var aurora: AuroraVariant {
+            switch self {
+            case .home: .home
+            case .plan: .plan
+            case .library: .library
+            case .registry: .registry
+            case .you: .profile
+            }
+        }
     }
 
     @State private var selection: AppSection = .home
-    @State private var isBarCompact = false
+    @State private var chrome = ChromeState()
 
-    var body: some View {
-        ZStack(alignment: .bottom) {
-            pages
-            GlassTabBar(
-                selection: $selection,
-                items: AppSection.allCases.map {
-                    GlassTabBar.Item(section: $0, title: $0.title, symbol: $0.symbol)
-                },
-                isCompact: isBarCompact
-            )
-        }
-        .onPreferenceChange(ScrollDirectionKey.self) { goingDown in
-            guard isBarCompact != goingDown else { return }
-            isBarCompact = goingDown
-        }
-    }
-
-    /// Paging TabView, with the system bar hidden and our own drawn on top.
+    /// The system tab view, on top of the one aurora.
     ///
-    /// Three approaches got here. A drag gesture on the standard TabView stole
-    /// horizontal scrolls as a simultaneous gesture and delayed every tap as a
-    /// plain one. A horizontal paging ScrollView fixed the taps but swallowed
-    /// the swipe: with a vertical scroll view on each page, the inner one wins
-    /// the gesture and the page never turns. A page-style TabView is backed by
-    /// UIPageViewController, which is built for exactly this nesting — so the
-    /// swipe lands, the slide is interactive, and each screen carries its own
-    /// gradient across with it.
-    private var pages: some View {
+    /// A bespoke bar and pager were tried first, to get swiping between
+    /// sections. Every version cost more than it bought: a drag gesture stole
+    /// horizontal scrolls, then delayed every tap; a paging scroll view never
+    /// turned a page, because the vertical scroll on each screen wins the
+    /// gesture; a page-style TabView finally swiped, but it is backed by a page
+    /// controller whose children get no layout margins and no scroll edge
+    /// behaviour — large titles came out flush against the left edge, the bar
+    /// sat on top of the last row of every list, and the hand-rolled glass was
+    /// a flat panel next to the real thing.
+    ///
+    /// The system bar is actual Liquid Glass, minimises itself on scroll, and
+    /// reserves the space its own height needs. What it does not do is swipe,
+    /// which is why the gradient behind it animates instead: moving between
+    /// sections is a change of light, not a slide.
+    var body: some View {
         TabView(selection: $selection) {
-            ForEach(AppSection.allCases) { section in
-                screen(section)
-                    .tag(section)
+            Tab(AppSection.home.title, systemImage: AppSection.home.symbol, value: .home) {
+                NavigationStack { HomeView(onOpenPlan: { selection = .plan }) }
+            }
+            Tab(AppSection.plan.title, systemImage: AppSection.plan.symbol, value: .plan) {
+                NavigationStack { PlanEditorView() }
+            }
+            Tab(AppSection.library.title, systemImage: AppSection.library.symbol, value: .library) {
+                NavigationStack { LibraryView() }
+            }
+            Tab(AppSection.registry.title, systemImage: AppSection.registry.symbol, value: .registry) {
+                NavigationStack { RegistryView() }
+            }
+            Tab(AppSection.you.title, systemImage: AppSection.you.symbol, value: .you) {
+                NavigationStack { YouView() }
             }
         }
-        .tabViewStyle(.page(indexDisplayMode: .never))
-        .ignoresSafeArea()
-        .background(Theme.Palette.backgroundDark.ignoresSafeArea())
-    }
-
-    @ViewBuilder
-    private func screen(_ section: AppSection) -> some View {
-        switch section {
-        case .home:
-            NavigationStack { HomeView(onOpenPlan: { selection = .plan }) }
-        case .plan:
-            NavigationStack { PlanEditorView() }
-        case .library:
-            NavigationStack { LibraryView() }
-        case .registry:
-            NavigationStack { RegistryView() }
-        case .you:
-            NavigationStack { YouView() }
-        }
+        .tabBarMinimizeBehavior(.onScrollDown)
+        .environment(chrome)
     }
 }
 
